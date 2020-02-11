@@ -1,5 +1,7 @@
-Environment variables you might want to set
+Environment variables you might want to set (or just use docker-compose and set
+them in the file)
 - `FLASK_ENV`
+  Values:
   - `DEVELOPMENT`
   - `TESTING`
   - `PRODUCTION`
@@ -10,3 +12,5 @@ Environment variables you might want to set
 - `DB_PASSWORD`
 - `PYTHONPATH`
 - `PORT`
+
+To run the smoke test, `green tests/integration/smoke.py`
