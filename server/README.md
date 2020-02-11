@@ -1,0 +1,12 @@
+Environment variables you might want to set
+- `FLASK_ENV`
+  - `DEVELOPMENT`
+  - `TESTING`
+  - `PRODUCTION`
+- `DB_HOST`
+- `DB_USER`
+- `DB_PORT`
+- `DB_NAME`
+- `DB_PASSWORD`
+- `PYTHONPATH`
+- `PORT`
