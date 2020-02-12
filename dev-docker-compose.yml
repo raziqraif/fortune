@@ -2,13 +2,15 @@ version: '3'
 services:
   postgres:
     image: 'postgres'
-  # TODO add this when this gets merged with client-react changes
-  # client:
-  #   build:
-  #     dockerfile: Dockerfile.dev
-  #     context: ./client-react
-  #   volumes:
-  #     - ./client-react:/app
+  client:
+    ports:
+      - "3000:3000"
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client-react/
+    volumes:
+      - ./client-react:/app
+      - /app/node_modules
   api:
     depends_on:
       - postgres
