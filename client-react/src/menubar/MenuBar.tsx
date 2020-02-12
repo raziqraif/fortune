@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import logo from '../logo.svg';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 
-export default class MenuBar extends Component {
+export default class MenuBar extends React.Component {
     render() {
         return (
             <Navbar collapseOnSelect expand="md" bg="dark" variant="dark">
