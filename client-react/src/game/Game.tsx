@@ -8,7 +8,6 @@ export interface GameProps {
 export default class Game extends React.Component<GameProps> {
     render() {
         const gameId = this.props.gameId;
-        console.log(this.props);
         return (
             <div>{gameId ? `Private: ${gameId}` : `Global`}</div>
         )
