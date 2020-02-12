@@ -1,3 +1,5 @@
+import traceback
+
 from flask import Flask
 from flask_cors import CORS
 
@@ -26,6 +28,7 @@ def create_app():
     @app.errorhandler(Exception)
     def catchall(e: Exception):
         # TODO handle this
+        print(traceback.format_exc())
         return '500 error'
 
     @app.route('/')
