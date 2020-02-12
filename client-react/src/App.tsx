@@ -9,7 +9,7 @@ import * as H from 'history';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MenuBar from './menubar';
-import Game from './game/Game';
+import Game from './game';
 
 
 interface MatchParams {
