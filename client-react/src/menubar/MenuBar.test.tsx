@@ -13,7 +13,7 @@ test('Shows dropdown item only after clicking on dropdown', () => {
   const {getByText, queryByText} = render(<MenuBar/>)
   // get* methods will throw an exception if nothing matches,
   // query* methods will return null instead
-  expect(queryByText('Action')).toBeNull()
-  fireEvent.click(getByText('Dropdown'))
-  expect(getByText('Action')).toBeInTheDocument()
+  expect(queryByText('Logout')).toBeNull()
+  fireEvent.click(getByText('Username'))
+  expect(getByText('Logout')).toBeInTheDocument()
 })

@@ -10,6 +10,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MenuBar from './menubar';
 import Game from './game';
+import Login from './login';
 
 
 interface MatchParams {
@@ -31,6 +32,7 @@ function App() {
           <Route exact path="/" render={({match}) => {
             return <Game gameId={match.params.gameId} />
           }} />
+          <Route path="/login" component={Login} />
         </Switch>
       </Router>
     </div>
