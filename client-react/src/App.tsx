@@ -12,6 +12,7 @@ import MenuBar from './menubar';
 import Game from './game';
 import Login from './login';
 import Play from './play';
+import Register from './register';
 
 
 interface MatchParams {
@@ -34,6 +35,7 @@ function App() {
             return <Game gameId={match.params.gameId} />
           }} />
           <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
           <Route path="/play" component={Play} />
         </Switch>
       </Router>
