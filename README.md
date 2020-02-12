@@ -6,3 +6,7 @@ If npm doesn't work in general, you may not have Node installed.
 If you wanna use docker, `docker-compose -f dev-docker-compose.yml up`.
 Whenever you add a dependency, you should `docker-compose -f dev-docker-compose
 build`
+
+You can run client tests with docker if you want with `docker-compose -f
+testing-docker-compose.yml run client` and server tests with `docker-compose -f
+testing-docker-compose.yml run api`
