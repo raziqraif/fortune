@@ -11,6 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import MenuBar from './menubar';
 import Game from './game';
 import Login from './login';
+import Play from './play';
 
 
 interface MatchParams {
@@ -33,6 +34,7 @@ function App() {
             return <Game gameId={match.params.gameId} />
           }} />
           <Route path="/login" component={Login} />
+          <Route path="/play" component={Play} />
         </Switch>
       </Router>
     </div>
