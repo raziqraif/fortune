@@ -2,7 +2,7 @@ import * as Types from '../actions/Types'
 
 
 const initialState = {
-  signedIn: false,
+  loggedIn: false,
 }
 
 export default (state = initialState, action) => {
@@ -10,7 +10,7 @@ export default (state = initialState, action) => {
     case Types.SET_SIGNIN_STATUS:
       return {
         ...state,
-        signedIn: action.payload,
+        loggedIn: action.payload,
       }
     default:
       return state

@@ -1,17 +1,18 @@
 import * as React from 'react';
 import logo from '../logo.svg';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import {connect} from 'react-redux'
+import Actions from '../redux/actions'
 
-interface MenuBarState {
+interface MenuBarProps {
     loggedIn: boolean;
+    login: (email: string, password: string) => void;
+    logout: () => void;
 }
 
-export default class MenuBar extends React.Component<{}, MenuBarState> {
+class MenuBar extends React.Component<MenuBarProps, {}> {
     constructor(props: any) {
         super(props);
-        this.state = {
-            loggedIn: true, // TODO: we shouldn't do logging in this way, but that's a later task
-        }
     }
     render() {
         return (
@@ -38,17 +39,17 @@ export default class MenuBar extends React.Component<{}, MenuBarState> {
     }
 
     private renderLoginOrUsername = () => {
-        if (this.state.loggedIn) {
+        if (this.props.loggedIn) {
             return (
                 <NavDropdown title="Username" id="basic-nav-dropdown" alignRight>
                     <NavDropdown.Item href="play">Games</NavDropdown.Item>
                     <NavDropdown.Divider />
-                    <NavDropdown.Item onClick={this.logOut}>Logout</NavDropdown.Item>
+                    <NavDropdown.Item onClick={this.props.logout}>Logout</NavDropdown.Item>
                 </NavDropdown>
             )
         } else {
             return (
-                <Nav.Link href="login">Sign In</Nav.Link>
+                <Nav.Link onClick={() => this.props.login('email', 'passwd')}>Sign In</Nav.Link>
             )
         }
     }
@@ -57,3 +58,12 @@ export default class MenuBar extends React.Component<{}, MenuBarState> {
         this.setState({ loggedIn: false });
     }
 }
+
+const mapStateToProps = state => ({
+  loggedIn: state.auth.loggedIn,
+})
+const mapDispatchToProps = {
+  login: Actions.auth.login,
+  logout: Actions.auth.logout,
+}
+export default connect(mapStateToProps, mapDispatchToProps)(MenuBar)
