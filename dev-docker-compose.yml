@@ -1,0 +1,38 @@
+version: '3'
+services:
+  postgres:
+    image: 'postgres'
+  client:
+    ports:
+      - "3000:3000"
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client-react/
+    volumes:
+      - ./client-react:/app
+      - /app/node_modules
+  api:
+    depends_on:
+      - postgres
+    # might want to have `command:` for migrations
+    # command: bash -c ''
+
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./server/
+    volumes:
+      - ./server:/app
+    ports:
+      - "5000:5000"
+    tty: true
+    stdin_open: true
+    environment:
+      - PORT=5000
+      - FLASK_ENV=development
+      - DB_HOST=postgres
+      - DB_USER=postgres
+      - DB_PORT=5432
+      - DB_NAME=postgres
+      - DB_PASSWORD=
+      # NOTE do this
+      - PYTHONPATH=
