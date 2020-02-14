@@ -1,0 +1,6 @@
+from python:buster
+workdir /app
+copy requirements.txt ./
+run pip install -r requirements.txt
+copy . .
+cmd ["python", "run-dev.py"]
