@@ -1,9 +1,9 @@
-import traceback
-
+import flask
 from flask import Flask
 from flask_cors import CORS
 
 from auth.routes import auth_bp
+from errors.handlers import errors_bp
 
 
 def create_app():
@@ -20,20 +20,12 @@ def create_app():
         # TODO return DB connection to pool
         return res
 
-    # register blueprints
+    # Register blueprints
     app.register_blueprint(auth_bp)
-
-    # add app error handlers, could have separate blueprint for this
-    # Handle 404, 405, etc etc
-    @app.errorhandler(Exception)
-    def catchall(e: Exception):
-        # TODO handle this
-        print(traceback.format_exc())
-        return '500 error'
+    app.register_blueprint(errors_bp)
 
     @app.route('/')
     def hello():
         return 'hello world'
 
     return app
-
