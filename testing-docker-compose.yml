@@ -30,7 +30,7 @@ services:
     stdin_open: true
     environment:
       - PORT=5000
-      - FLASK_ENV=development
+      - FLASK_ENV=testing
       - DB_HOST=postgres
       - DB_USER=postgres
       - DB_PORT=5432
