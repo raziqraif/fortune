@@ -1,6 +1,6 @@
 from tests.utils import IntegrationTest
 
-from auth.models import Profile
+from db import Profile
 
 
 class SmokeTest(IntegrationTest):
