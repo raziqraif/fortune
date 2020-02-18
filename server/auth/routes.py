@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 
+from db import AuthToken, Profile
 from .serializers import LoginRequest
 
 
