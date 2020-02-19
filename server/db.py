@@ -4,18 +4,18 @@ import peewee
 
 # FIXME research the specificity of each api's ticker prices
 DECIMAL_FIELD = peeweee.DecimalField(max_digits=20, decimal_places=8)
-
+db = PooledPostgresqlDatabase(
+	'fortune_db',
+	max_connections=None,
+	stale_timeout=300,
+	timeout=None,
+	user='postgres',
+	password='cs307team11',
+	host = 'fortune-db.cxu1dfkxusyr.us-east-2.rds.amazonaws.com')
+	
 class BaseModel(peewee.Model):
     class Meta:
         # TODO put the database here
-		db = PooledPostgresqlDatabase(
-			'fortune_db',
-			max_connections=None,
-			stale_timeout=300,
-			timeout=None,
-			user='postgres',
-			password='cs307team11',
-			host = 'fortune-db.cxu1dfkxusyr.us-east-2.rds.amazonaws.com')
         database = db
 
 
