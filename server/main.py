@@ -1,10 +1,11 @@
 import flask
 from flask import Flask
+from flask import g
 from flask_cors import CORS
 
 from auth.routes import auth_bp
 from errors.handlers import errors_bp
-
+from db import db
 
 def create_app():
     app = Flask(__name__)
@@ -12,12 +13,15 @@ def create_app():
 
     @app.before_request
     def before_request():
-        # TODO set up DB connection
-        pass
+        if not hasattr(g, 'psql_db'):
+            g.psql_db = db.connect()
+        return g.psql_db
+        #pass
 
     @app.after_request
     def after_request(res):
-        # TODO return DB connection to pool
+        if hasattr(g, 'psql_db'):
+            g.psql_db.close()
         return res
 
     # Register blueprints

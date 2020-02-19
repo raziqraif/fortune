@@ -10,7 +10,7 @@ If you wanna use docker for an oh-so-clean, system-dependency-free, and
 effortless testing setup, run `docker-compose -f dev-docker-compose.yml up` to
 spin up a local db, api, and client.  Whenever you add a dependency to
 package.json or requirements.txt, you should rebuild: `docker-compose -f
-dev-docker-compose build`.
+dev-docker-compose.yml build`.
 
 You can run client tests with `docker-compose -f testing-docker-compose.yml run
 client`
