@@ -27,12 +27,12 @@ services:
     tty: true
     stdin_open: true
     environment:
-      - PORT=5000
-      - FLASK_ENV=development
-      - DB_HOST=postgres
-      - DB_USER=postgres
-      - DB_PORT=5432
-      - DB_NAME=postgres
-      - DB_PASSWORD=
+      - PORT='5000'
+      - FLASK_ENV='development'
+      - DB_HOST='postgres'
+      - DB_USER='postgres'
+      - DB_PORT='5432'
+      - DB_NAME='postgres'
+      - DB_PASSWORD=''
       # NOTE do this
       - PYTHONPATH=

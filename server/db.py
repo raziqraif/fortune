@@ -15,17 +15,16 @@ DATABASE = {
 }
 
 db = PooledPostgresqlDatabase(
-	DATABASE.NAME,
+	DATABASE['NAME'],
 	max_connections=None,
 	stale_timeout=300,
 	timeout=None,
-	user=DATABASE.USER,
-	password=DATABASE.PASSWORD,
-	host = DATABASE.HOST)
+	user=DATABASE['USER'],
+	password=DATABASE['PASSWORD'],
+	host = DATABASE['HOST'])
 	
 class BaseModel(peewee.Model):
     class Meta:
-        # TODO put the database here
         database = db
 
 
