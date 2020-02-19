@@ -1,7 +1,7 @@
 import flask
 import traceback
 
-from flask import Flask,g 
+from flask import Flask 
 from flask_cors import CORS
 
 from auth.routes import auth_bp
@@ -14,15 +14,12 @@ def create_app():
 
     @app.before_request
     def before_request():
-        if not hasattr(g, 'psql_db'):
-            g.psql_db = db.connect()
-        return g.psql_db
+        db.connect()
         #pass
 
     @app.after_request
     def after_request(res):
-        if hasattr(g, 'psql_db'):
-            g.psql_db.close()
+        db.close()
         return res
 
     # Register blueprints
