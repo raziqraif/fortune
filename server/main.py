@@ -1,6 +1,7 @@
 import traceback
 
 from flask import Flask
+from flask import g
 from flask_cors import CORS
 
 from auth.routes import auth_bp
@@ -12,7 +13,6 @@ def create_app():
 
     @app.before_request
     def before_request():
-        # TODO set up DB connection
         if not hasattr(g, 'psql_db'):
             g.psql_db = db.connect()
         return g.psql_db
@@ -20,7 +20,6 @@ def create_app():
 
     @app.after_request
     def after_request(res):
-        # TODO return DB connection to pool
         if hasattr(g, 'psql_db'):
             g.psql_db.close()
         return res
