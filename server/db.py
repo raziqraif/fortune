@@ -1,9 +1,10 @@
 import datetime
 
 import peewee
+from playhouse.pool import PooledPostgresqlDatabase
 
 # FIXME research the specificity of each api's ticker prices
-DECIMAL_FIELD = peeweee.DecimalField(max_digits=20, decimal_places=8)
+DECIMAL_FIELD = peewee.DecimalField(max_digits=20, decimal_places=8)
 db = PooledPostgresqlDatabase(
 	'fortune_db',
 	max_connections=None,

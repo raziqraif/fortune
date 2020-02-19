@@ -13,16 +13,16 @@ def create_app():
     @app.before_request
     def before_request():
         # TODO set up DB connection
-		if not hasattr(g, 'psql_db'):
-			g.psql_db = db.connect()
-		return g.psql_db
+        if not hasattr(g, 'psql_db'):
+            g.psql_db = db.connect()
+        return g.psql_db
         #pass
 
     @app.after_request
     def after_request(res):
         # TODO return DB connection to pool
-		if hasattr(g, 'psql_db'):
-			g.psql_db.close()
+        if hasattr(g, 'psql_db'):
+            g.psql_db.close()
         return res
 
     # register blueprints
