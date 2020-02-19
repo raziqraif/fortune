@@ -1,7 +1,6 @@
 import traceback
 
-from flask import Flask
-from flask import g
+from flask import Flask,g 
 from flask_cors import CORS
 
 from auth.routes import auth_bp
