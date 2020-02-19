@@ -1,15 +1,31 @@
 import datetime
 
 import peewee
+from playhouse.pool import PooledPostgresqlDatabase
+
+import os
 
 # FIXME research the specificity of each api's ticker prices
-DECIMAL_FIELD = peeweee.DecimalField(max_digits=20, decimal_places=8)
+DECIMAL_FIELD = peewee.DecimalField(max_digits=20, decimal_places=8)
+DATABASE = {
+    'HOST': os.environ['DB_HOST'],
+    'NAME': os.environ['DB_NAME'],
+    'USER': os.environ['DB_USER'],
+    'PASSWORD': os.environ['DB_PASSWORD'],
+}
 
-
+db = PooledPostgresqlDatabase(
+	DATABASE['NAME'],
+	max_connections=None,
+	stale_timeout=300,
+	timeout=None,
+	user=DATABASE['USER'],
+	password=DATABASE['PASSWORD'],
+	host = DATABASE['HOST'])
+	
 class BaseModel(peewee.Model):
     class Meta:
-        # TODO put the database here
-        database = None
+        database = db
 
 
 class Profile(BaseModel):
