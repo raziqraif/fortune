@@ -9,7 +9,7 @@ import * as H from 'history';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MenuBar from './menubar';
-import Game from './game';
+import Game, { CreateGame } from './game';
 import Login from './login';
 import Play from './play';
 import Register from './register';
@@ -37,6 +37,7 @@ function App() {
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/play" component={Play} />
+          <Route path="/create" component={CreateGame} />
         </Switch>
       </Router>
     </div>
