@@ -9,7 +9,7 @@ interface CreateGameProps {
 interface CreateGameState {
     [key: string]: any;
     coinFilter: string,
-    coinsActive: [],
+    coinsActive: Array<{ name: string }>,
     endsOn: Date,
     startingCash: number,
     title: string,
@@ -46,7 +46,7 @@ export default class CreateGame extends React.Component<CreateGameProps, CreateG
 
         this.state = {
             coinFilter: '',
-            coinsActive: [],
+            coinsActive: tempCoins,
             endsOn: new Date(),
             startingCash: 10000,
             title: '',
@@ -62,7 +62,35 @@ export default class CreateGame extends React.Component<CreateGameProps, CreateG
         this.setState({ [event.currentTarget.name]: event.currentTarget.value });
     };
 
-    private filterCoins = (coin: { name: string }) => coin.name.toLowerCase().includes(this.state.coinFilter.toLowerCase());
+    private filteredCoins = () => tempCoins.filter((coin: { name: string }) => 
+        coin.name.toLowerCase().includes(this.state.coinFilter.toLowerCase()));
+    
+    private isCoinInActiveList = (name: string) => {
+        return this.state.coinsActive.some(coin => coin.name === name);
+    }
+
+    private handleCheckboxChange = (name: string) => (event: any) => {
+        this.changeCoinStatusOnActiveList(name);
+    }
+
+    private changeCoinStatusOnActiveList = (name: string) => {
+        let coinsActive = this.state.coinsActive;
+        if (this.isCoinInActiveList(name)) {
+            coinsActive = coinsActive.filter(coin => coin.name !== name);
+            this.setState({ coinsActive });
+        } else {
+            coinsActive.push({ name });
+            this.setState({ coinsActive });
+        }
+    }
+
+    private selectAllCoins = () => {
+        this.setState({ coinsActive: tempCoins });
+    }
+
+    private deselectAllCoins = () => {
+        this.setState({ coinsActive: [] });
+    }
 
     render() {
         return (
@@ -84,17 +112,41 @@ export default class CreateGame extends React.Component<CreateGameProps, CreateG
                 </Form.Row>
 
                 <Form.Row className="mb-3">
-                    <Form.Label>Coins available to your players</Form.Label>
-                    <Form.Control type="text" placeholder="Filter coins" name="coinFilter" value={this.state.coinFilter} onChange={this.handleChange} />
-                    {tempCoins.filter(this.filterCoins).map((coin: { name: string }) => {
-                        return <Form.Check
-                            style={checkbox}
-                            className="col-sm-3"
-                            key={coin.name}
-                            type='checkbox'
-                            label={coin.name}
+                    <Form.Group className="col-sm-6">
+                        <Form.Label>Coins available to your players</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="Filter coins"
+                            name="coinFilter"
+                            value={this.state.coinFilter}
+                            onChange={this.handleChange}
                         />
-                    })}
+                        {this.filteredCoins().map((coin: { name: string }) => {
+                            return <Form.Check
+                                style={checkbox}
+                                key={coin.name}
+                                type='checkbox'
+                                label={coin.name}
+                                checked={this.isCoinInActiveList(coin.name)}
+                                onChange={this.handleCheckboxChange(coin.name)}
+                            />
+                        })}
+                    </Form.Group>
+                    <Form.Group className="col-sm-6">
+                        <Form.Label className="col-sm-12">Selected Coins</Form.Label>
+                        <Button onClick={this.selectAllCoins} className="btn-success">Select All</Button>
+                        <Button onClick={this.deselectAllCoins} className="btn-warning">Deselect All</Button>
+                        {this.state.coinsActive.map((coin: { name: string }) => {
+                            return <Form.Check
+                                style={checkbox}
+                                key={coin.name}
+                                type='checkbox'
+                                label={coin.name}
+                                checked={this.isCoinInActiveList(coin.name)}
+                                onChange={this.handleCheckboxChange(coin.name)}
+                            />
+                        })}
+                    </Form.Group>
                 </Form.Row>
                 
                 <Button variant="primary" type="submit">
