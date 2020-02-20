@@ -3,9 +3,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
 } from "react-router-dom";
-import * as H from 'history';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MenuBar from './menubar';
@@ -24,21 +22,23 @@ function App() {
     <div className="App">
       <Router>
         <MenuBar />
-        <Switch>
-          <Route path="/global" render={({match}) => {
-            return <Game gameId={match.params.gameId} />
-          }} />
-          <Route path="/game/:gameId" render={({match}) => {
-            return <Game gameId={match.params.gameId} />
-          }} />
-          <Route exact path="/" render={({match}) => {
-            return <Game gameId={match.params.gameId} />
-          }} />
-          <Route path="/login" component={Login} />
-          <Route path="/register" component={Register} />
-          <Route path="/play" component={Play} />
-          <Route path="/create" component={CreateGame} />
-        </Switch>
+        <div className="container">
+          <Switch>
+            <Route path="/global" render={({match}) => {
+              return <Game gameId={match.params.gameId} />
+            }} />
+            <Route path="/game/:gameId" render={({match}) => {
+              return <Game gameId={match.params.gameId} />
+            }} />
+            <Route exact path="/" render={({match}) => {
+              return <Game gameId={match.params.gameId} />
+            }} />
+            <Route path="/login" component={Login} />
+            <Route path="/register" component={Register} />
+            <Route path="/play" component={Play} />
+            <Route path="/create" component={CreateGame} />
+          </Switch>
+        </div>
       </Router>
     </div>
   );

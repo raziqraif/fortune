@@ -5,6 +5,6 @@ import CreateGame from './CreateGame';
 
 
 test('Shows global if global game', () => {
-  const {getByText} = render(<CreateGame/>)
+  const {getByText} = render(<CreateGame allCoins={[]} />)
   expect(getByText('Create Game')).toBeInTheDocument()
 })

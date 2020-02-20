@@ -1,24 +1,102 @@
 import * as React from 'react';
 import { Button, Form } from 'react-bootstrap';
+import CSS from 'csstype';
 
-export default class CreateGame extends React.Component {
+interface CreateGameProps {
+    allCoins: Array<{ name: string }>
+}
+
+interface CreateGameState {
+    [key: string]: any;
+    coinFilter: string,
+    coinsActive: [],
+    endsOn: Date,
+    startingCash: number,
+    title: string,
+}
+
+const checkbox: CSS.Properties = {
+    paddingLeft: '1.5rem'
+}
+
+const tempCoins = [
+    {
+        name: "Bitcoin"
+    },
+    {
+        name: "Etherium"
+    },
+    {
+        name: "Coin 3"
+    },
+    {
+        name: "Coin 4"
+    },
+    {
+        name: "Coin 5"
+    },
+    {
+        name: "Coin 6"
+    },
+]
+
+export default class CreateGame extends React.Component<CreateGameProps, CreateGameState>  {
     constructor(props: any) {
         super(props);
-    }
 
+        this.state = {
+            coinFilter: '',
+            coinsActive: [],
+            endsOn: new Date(),
+            startingCash: 10000,
+            title: '',
+        }
+    }
+    
     private submitForm = (event: any) => {
         event.preventDefault();
-        console.log(event.currentTarget);
-      };
+        console.log(this.state);
+    };
+
+    private handleChange = (event: any) => {
+        this.setState({ [event.currentTarget.name]: event.currentTarget.value });
+    };
+
+    private filterCoins = (coin: { name: string }) => coin.name.toLowerCase().includes(this.state.coinFilter.toLowerCase());
 
     render() {
         return (
-            <Form onSubmit={this.submitForm}>
-                <Form.Label>Create Game</Form.Label>
-                <Form.Group controlId="formBasicTitle">
-                    <Form.Label>Title</Form.Label>
-                    <Form.Control type="text" placeholder="Enter game title" />
-                </Form.Group>
+            <Form onSubmit={this.submitForm} >
+                <h1>Create Game</h1>
+                <Form.Row>
+                    <Form.Group controlId="title" className="col-sm-4">
+                        <Form.Label>Title</Form.Label>
+                        <Form.Control type="text" placeholder="Enter game title" name="title" value={this.state.title} onChange={this.handleChange}/>
+                    </Form.Group>
+                    <Form.Group controlId="cash" className="col-sm-4">
+                        <Form.Label>Starting Cash</Form.Label>
+                        <Form.Control type="number" placeholder="Enter starting cash" name="startingCash" value={this.state.startingCash} onChange={this.handleChange}/>
+                    </Form.Group>
+                    <Form.Group controlId="endsOn" className="col-sm-4">
+                        <Form.Label>Ends At</Form.Label>
+                        <Form.Control type="date" placeholder="Date and time game ends" name="endsOn"/>
+                    </Form.Group>
+                </Form.Row>
+
+                <Form.Row className="mb-3">
+                    <Form.Label>Coins available to your players</Form.Label>
+                    <Form.Control type="text" placeholder="Filter coins" name="coinFilter" value={this.state.coinFilter} onChange={this.handleChange} />
+                    {tempCoins.filter(this.filterCoins).map((coin: { name: string }) => {
+                        return <Form.Check
+                            style={checkbox}
+                            className="col-sm-3"
+                            key={coin.name}
+                            type='checkbox'
+                            label={coin.name}
+                        />
+                    })}
+                </Form.Row>
+                
                 <Button variant="primary" type="submit">
                     Submit
                 </Button>
