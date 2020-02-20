@@ -3,6 +3,7 @@ import os
 os.environ['FLASK_ENV'] = 'testing'
 from unittest import TestCase
 
+from db import *
 from main import create_app
 
 
@@ -19,21 +20,22 @@ class DbTest(IntegrationTest):
         super().setUpClass()
         # TODO connect to to test database,
         # migrate tables
-        raise NotImplementedError
+        # db.create_tables() <<-- we already do this in main.py
     
     @classmethod
     def tearDownClass(cls):
         # TODO migrate down/delete tables
-        raise NotImplementedError
+        db.drop_tables([Profile, AuthToken, Game, GameProfile, Coin, GameCoin,
+            Ticker, Trade, GameProfileCoin])
 
     def setUp(self):
         # TODO insert test data into DB for each test, not strictly necessary
         # though
-        raise NotImplementedError
+        pass
 
     def tearDown(self):
         # TODO drop test data from DB after each test
-        raise NotImplementedError
+        pass
 
     # TODO maybe have other helpers used across DB test cases
 
