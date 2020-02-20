@@ -49,8 +49,11 @@ class Game(BaseModel):
 
     @property
     def coins(self):
-        # TODO tyler please do this
-        raise NotImplementedError
+        return (Coin
+            .select()
+            .join(GameCoin)
+            .join(Game)
+            .where(GameCoin.game_id == self.id))
 
 
 class GameProfile(BaseModel):
