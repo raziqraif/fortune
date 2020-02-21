@@ -3,6 +3,7 @@ import logo from '../logo.svg';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import {connect} from 'react-redux'
 import Actions from '../redux/actions'
+import { RootState } from '../redux/reducers';
 
 interface MenuBarProps {
     loggedIn: boolean;
@@ -10,10 +11,7 @@ interface MenuBarProps {
     logout: () => void;
 }
 
-class MenuBar extends React.Component<MenuBarProps, {}> {
-    constructor(props: any) {
-        super(props);
-    }
+class MenuBar extends React.Component<MenuBarProps> {
     render() {
         return (
             <Navbar collapseOnSelect expand="md" bg="dark" variant="dark">
@@ -53,13 +51,9 @@ class MenuBar extends React.Component<MenuBarProps, {}> {
             )
         }
     }
-
-    private logOut = () => {
-        this.setState({ loggedIn: false });
-    }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   loggedIn: state.auth.loggedIn,
 })
 const mapDispatchToProps = {

@@ -1,13 +1,22 @@
-import * as Types from '../actions/Types'
+import { Type } from '../actions/Types'
 
-
+export type State = typeof initialState;
 const initialState = {
   loggedIn: false,
 }
 
-export default (state = initialState, action) => {
+export type Action = {
+  type: Type;
+  payload?: any;
+}
+
+export type Auth = {
+  loggedIn: boolean;
+}
+
+export default (state = initialState, action: Action) => {
   switch (action.type) {
-    case Types.SET_SIGNIN_STATUS:
+    case Type.SET_SIGNIN_STATUS:
       return {
         ...state,
         loggedIn: action.payload,

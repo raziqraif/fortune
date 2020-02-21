@@ -12,7 +12,7 @@ import reducers from '../redux/reducers'
  * This served as inspiration to this function, and was borrowed from:
  * https://github.com/kentcdodds/react-testing-library-examples/blob/master/src/__tests__/react-router.js#L35
  */
-export function deeplyRenderComponentWithRedux(jsx) {
+export function deeplyRenderComponentWithRedux(jsx: React.ReactElement) {
   const history = createMemoryHistory({initialEntries: ['/']})
   const store = createStore(
     reducers(history),

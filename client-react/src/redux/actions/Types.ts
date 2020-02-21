@@ -1,1 +1,3 @@
-export const SET_SIGNIN_STATUS = 'SET_SIGNIN_STATUS'
+export enum Type {
+    SET_SIGNIN_STATUS
+}
