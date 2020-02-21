@@ -103,7 +103,7 @@ export default class CreateGame extends React.Component<CreateGameProps, CreateG
                     </Form.Group>
                     <Form.Group controlId="cash" className="col-sm-4">
                         <Form.Label>Starting Cash</Form.Label>
-                        <Form.Control type="number" placeholder="Enter starting cash" name="startingCash" value={this.state.startingCash} onChange={this.handleChange}/>
+                        <Form.Control type="number" placeholder="Enter starting cash" name="startingCash" value={this.state.startingCash.toString()} onChange={this.handleChange}/>
                     </Form.Group>
                     <Form.Group controlId="endsOn" className="col-sm-4">
                         <Form.Label>Ends At</Form.Label>
