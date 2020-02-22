@@ -1,9 +1,19 @@
 import * as React from 'react';
 import { Button, Form } from 'react-bootstrap';
 import CoinSelector from './coinselector/CoinSelector';
+import Actions from '../../redux/actions';
+import { RootState } from '../../redux/reducers';
+import { connect } from 'react-redux';
 
 interface CreateGameProps {
-    allCoins: Array<{ id: string, name: string }>
+    allCoins: Array<{ id: string, name: string }>,
+    createGame: (
+        activeCoins: Array<{ id: string, name: string }>,
+        endsOn: Date,
+        startingCash: string,
+        title: string
+    ) => void;
+    getAllCoins: () => {};
 }
 
 interface CreateGameState {
@@ -11,54 +21,35 @@ interface CreateGameState {
     coinFilter: string,
     activeCoins: Array<{ id: string, name: string }>,
     endsOn: Date,
-    startingCash: number,
+    startingCash: string,
     title: string,
 }
 
-
-const tempCoins = [
-    {
-        id: "1",
-        name: "Bitcoin"
-    },
-    {
-        id: "2",
-        name: "Etherium"
-    },
-    {
-        id: "3",
-        name: "Coin 3"
-    },
-    {
-        id: "4",
-        name: "Coin 4"
-    },
-    {
-        id: "5",
-        name: "Coin 5"
-    },
-    {
-        id: "6",
-        name: "Coin 6"
-    },
-]
-
-export default class CreateGame extends React.Component<CreateGameProps, CreateGameState>  {
+class CreateGame extends React.Component<CreateGameProps, CreateGameState>  {
     constructor(props: any) {
         super(props);
 
         this.state = {
             coinFilter: '',
-            activeCoins: tempCoins,
+            activeCoins: this.props.allCoins,
             endsOn: new Date(),
-            startingCash: 10000,
+            startingCash: '10000',
             title: '',
         }
+    }
+
+    componentDidMount() {
+        this.props.getAllCoins();
     }
     
     private submitForm = (event: any) => {
         event.preventDefault();
-        console.log(this.state);
+        this.props.createGame(
+            this.state.activeCoins,
+            this.state.endsOn,
+            this.state.startingCash,
+            this.state.title
+        )
     };
 
     private handleChange = (event: any) => {
@@ -90,7 +81,7 @@ export default class CreateGame extends React.Component<CreateGameProps, CreateG
 
                 <CoinSelector
                     activeCoins={this.state.activeCoins}
-                    allCoins={tempCoins}
+                    allCoins={this.props.allCoins}
                     setActiveCoins={this.setActiveCoins}
                 />
                 
@@ -101,3 +92,12 @@ export default class CreateGame extends React.Component<CreateGameProps, CreateG
         )
     }
 }
+
+const mapStateToProps = (state: RootState) => ({
+    allCoins: state.coins.coins,
+})
+const mapDispatchToProps = {
+    createGame: Actions.game.createGame,
+    getAllCoins: Actions.coins.getAllCoins,
+}
+export default connect(mapStateToProps, mapDispatchToProps)(CreateGame);
