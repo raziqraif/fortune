@@ -2,10 +2,8 @@ import React from 'react';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
-import * as H from 'history';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MenuBar from './menubar';
