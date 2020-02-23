@@ -6,6 +6,7 @@ from flask_cors import CORS
 
 from auth.routes import auth_bp
 from errors.handlers import errors_bp
+from game.routes import game_bp
 from db import * # FIXME get rid of * when you have db migrations
 
 def create_app():
@@ -28,6 +29,7 @@ def create_app():
     # Register blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(errors_bp)
+    game.register_blueprint(game_bp)
 
     @app.route('/')
     def hello():
