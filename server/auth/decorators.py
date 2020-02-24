@@ -38,12 +38,13 @@ def require_authentication(route_func):
         if len(split) <= 1:
             raise BadRequest('Malformed Authorization header')
         tok = split[1]
-        auth_token = (AuthToken
-            .select()
-            .join(Profile)
-            .where(AuthToken.token == tok)
-            .get())
-        if not auth_token:
+        try:
+            auth_token = (AuthToken
+                .select()
+                .join(Profile)
+                .where(AuthToken.token == tok)
+                .get())
+        except AuthToken.DoesNotExist:
             # FIXME use a more fine-grained exception when such a pr gets merged
             raise Unauthorized('Invalid token')
         return route_func(auth_token.profile, *args, **kwargs)

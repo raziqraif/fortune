@@ -8,16 +8,24 @@ from tests.utils import AuthDbTest
 class RequireAuthenticationTest(AuthDbTest):
 
     def setUp(self):
-        profile = Profile.create(
-            username='someusername',
-            hashed_password='th3p455w0rd'
-        )
-        tok = 'correct-token'
-        auth_token = AuthToken.create(profile=profile, token=tok)
+        with db.atomic() as txn:
+            profile = Profile.create(
+                username='someusername',
+                hashed_password='th3p455w0rd'
+            )
+            tok = 'correct-token'
+            AuthToken.create(profile=profile, token=tok)
+            profile = Profile.create(
+                username='someotherusername',
+                hashed_password='th3p455w0rd'
+            )
+            tok = 'correct-token1'
+            AuthToken.create(profile=profile, token=tok)
 
     def tearDown(self):
-        AuthToken.delete().where(AuthToken.token == 'correct-token')
-        Profile.delete().where(Profile.username == 'someusername')
+        with db.atomic() as txn:
+            AuthToken.delete().execute()
+            Profile.delete().execute()
 
     def test_stops_missing_header(self):
         res = self.client.get('/testauth')
