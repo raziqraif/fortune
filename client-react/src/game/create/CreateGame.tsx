@@ -4,6 +4,7 @@ import CoinSelector from './coinselector/CoinSelector';
 import Actions from '../../redux/actions';
 import { RootState } from '../../redux/reducers';
 import { connect } from 'react-redux';
+import Datepicker from "../../datepicker";
 
 interface CreateGameProps {
     allCoins: Array<{ id: string, name: string }>,
@@ -56,6 +57,10 @@ class CreateGame extends React.Component<CreateGameProps, CreateGameState>  {
         this.setState({ [event.currentTarget.name]: event.currentTarget.value });
     };
 
+    private handleDateChange = (date: Date) => {
+        this.setState({endsOn: date})
+    }
+
     private setActiveCoins = (activeCoins: Array<{ id: string, name: string }>) => {
         this.setState({ activeCoins });
     }
@@ -75,7 +80,7 @@ class CreateGame extends React.Component<CreateGameProps, CreateGameState>  {
                     </Form.Group>
                     <Form.Group controlId="endsOn" className="col-sm-4">
                         <Form.Label>Ends At</Form.Label>
-                        <Form.Control type="date" placeholder="Date and time game ends" name="endsOn"/>
+                        <Datepicker onChange={this.handleDateChange} />
                     </Form.Group>
                 </Form.Row>
 
