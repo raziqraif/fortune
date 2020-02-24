@@ -7,7 +7,7 @@ import {
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MenuBar from './menubar';
-import Game from './game';
+import Game, { CreateGame } from './game';
 import Login from './login';
 import Play from './play';
 import Register from './register';
@@ -22,20 +22,23 @@ function App() {
     <div className="App">
       <Router>
         <MenuBar />
-        <Switch>
-          <Route path="/global" render={({match}) => {
-            return <Game gameId={match.params.gameId} />
-          }} />
-          <Route path="/game/:gameId" render={({match}) => {
-            return <Game gameId={match.params.gameId} />
-          }} />
-          <Route exact path="/" render={({match}) => {
-            return <Game gameId={match.params.gameId} />
-          }} />
-          <Route path="/login" component={Login} />
-          <Route path="/register" component={Register} />
-          <Route path="/play" component={Play} />
-        </Switch>
+        <div className="container">
+          <Switch>
+            <Route path="/global" render={({match}) => {
+              return <Game gameId={match.params.gameId} />
+            }} />
+            <Route path="/game/:gameId" render={({match}) => {
+              return <Game gameId={match.params.gameId} />
+            }} />
+            <Route exact path="/" render={({match}) => {
+              return <Game gameId={match.params.gameId} />
+            }} />
+            <Route path="/login" component={Login} />
+            <Route path="/register" component={Register} />
+            <Route path="/play" component={Play} />
+            <Route path="/create" component={CreateGame} />
+          </Switch>
+        </div>
       </Router>
     </div>
   );
