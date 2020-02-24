@@ -6,6 +6,17 @@ from werkzeug.exceptions import BadRequest, Unauthorized
 from db import AuthToken, Profile
 
 
+def get_auth_token(tok):
+    try:
+        return (AuthToken
+            .select()
+            .join(Profile)
+            .where(AuthToken.token == tok)
+            .get())
+    except AuthToken.DoesNotExist:
+        return None
+
+
 def require_authentication(route_func):
     """
     Inspired by/partially taken from:
@@ -38,13 +49,8 @@ def require_authentication(route_func):
         if len(split) <= 1:
             raise BadRequest('Malformed Authorization header')
         tok = split[1]
-        try:
-            auth_token = (AuthToken
-                .select()
-                .join(Profile)
-                .where(AuthToken.token == tok)
-                .get())
-        except AuthToken.DoesNotExist:
+        auth_token = get_auth_token(tok)
+        if auth_token is None:
             # FIXME use a more fine-grained exception when such a pr gets merged
             raise Unauthorized('Invalid token')
         return route_func(auth_token.profile, *args, **kwargs)
