@@ -8,7 +8,7 @@ import {Form} from "react-bootstrap";
 // import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 
 interface DatepickerProps {
-    onChange: (event: any) => void  // Will be called in handleChange()
+    onChange: (event: any) => void  // Will be called in handleChange(). Can be an empty function
 }
 
 interface DatepickerState {
@@ -23,8 +23,6 @@ export default class Datepicker extends React.Component<DatepickerProps, Datepic
             selectedDate: new Date()
         }
     }
-
-    name="name"
 
     handleChange = (date: Date) => {
         this.setState({

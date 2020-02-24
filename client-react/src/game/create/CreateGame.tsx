@@ -59,11 +59,11 @@ class CreateGame extends React.Component<CreateGameProps, CreateGameState>  {
 
     private handleDateChange = (date: Date) => {
         this.setState({endsOn: date})
-    }
+    };
 
     private setActiveCoins = (activeCoins: Array<{ id: string, name: string }>) => {
         this.setState({ activeCoins });
-    }
+    };
 
     render() {
         return (
@@ -100,9 +100,9 @@ class CreateGame extends React.Component<CreateGameProps, CreateGameState>  {
 
 const mapStateToProps = (state: RootState) => ({
     allCoins: state.coins.coins,
-})
+});
 const mapDispatchToProps = {
     createGame: Actions.game.createGame,
     getAllCoins: Actions.coins.getAllCoins,
-}
+};
 export default connect(mapStateToProps, mapDispatchToProps)(CreateGame);
