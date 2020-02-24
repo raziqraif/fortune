@@ -22,6 +22,7 @@ def create_app():
 
     @app.after_request
     def after_request(res):
+        print('closing')
         db.close()
         return res
 

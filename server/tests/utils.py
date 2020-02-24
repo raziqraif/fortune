@@ -3,6 +3,7 @@ import os
 os.environ['FLASK_ENV'] = 'testing'
 from unittest import TestCase
 
+from auth.decorators import require_authentication
 from db import *
 from main import create_app
 
@@ -12,6 +13,20 @@ class IntegrationTest(TestCase):
     def setUpClass(cls):
         cls.app = create_app()
         cls.client = cls.app.test_client()
+
+
+class AuthTest(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.app = create_app()
+
+        @cls.app.route('/testauth')
+        @require_authentication
+        def testauth(profile):
+            return 'authenticated'
+        
+        cls.client = cls.app.test_client()
+
 
 
 class DbTest(IntegrationTest):
@@ -38,4 +53,14 @@ class DbTest(IntegrationTest):
         pass
 
     # TODO maybe have other helpers used across DB test cases
+
+
+class AuthDbTest(AuthTest, DbTest):
+    """
+    The purpose of this class is to be the same as a DbTest, but to take
+    advantage of multiple inheritance. The __mro__ will resolve AuthTest's
+    setUpClass and will add our /testauth route but will still get all of the
+    other features of a DbTest too
+    """
+    pass
 

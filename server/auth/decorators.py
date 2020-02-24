@@ -1,6 +1,7 @@
 from functools import wraps
 
 from flask import request
+from werkzeug.exceptions import BadRequest, Unauthorized
 
 from db import AuthToken, Profile
 
@@ -30,10 +31,13 @@ def require_authentication(route_func):
         auth = request.headers.get('Authorization')
         if not auth:
             # FIXME use a more fine-grained exception when such a pr gets merged
-            raise Excpetion('Missing authorization token')
+            raise BadRequest('Missing authorization token')
         # I figure we have a 'Bearer' prefix, e.g. Authorization: 'Bearer thetoken'
         # Although with this it could really be any prefix
-        tok = auth.split(' ')[1]
+        split = auth.split(' ')
+        if len(split) <= 1:
+            raise BadRequest('Malformed Authorization header')
+        tok = split[1]
         auth_token = (AuthToken
             .select()
             .join(Profile)
@@ -41,7 +45,7 @@ def require_authentication(route_func):
             .get())
         if not auth_token:
             # FIXME use a more fine-grained exception when such a pr gets merged
-            raise Excpetion('Invalid token')
+            raise Unauthorized('Invalid token')
         return route_func(auth_token.profile, *args, **kwargs)
     return wrapper
 
