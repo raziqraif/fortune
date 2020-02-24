@@ -41,7 +41,7 @@ class AuthToken(BaseModel):
 
 
 class Game(BaseModel):
-    name = peewee.TextField(unique=True)
+    name = peewee.TextField()
     starting_cash = DECIMAL_FIELD
     shareable_link = peewee.TextField(unique=True)
     shareable_code = peewee.TextField(unique=True)
@@ -49,7 +49,7 @@ class Game(BaseModel):
 
     @property
     def coins(self):
-        return (Coin
+        return list(Coin
             .select()
             .join(GameCoin)
             .join(Game)
