@@ -64,7 +64,7 @@ class GameProfile(BaseModel):
 
 class Coin(BaseModel):
     name = peewee.TextField(unique=True)
-    symbol = peewee.TextField(unique=True)
+    id = peewee.TextField(unique=True)
 
 
 class GameCoin(BaseModel):
