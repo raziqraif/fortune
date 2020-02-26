@@ -17,14 +17,14 @@ def get_coin_from_symbol(symbol):
 
 def get_bitfinex_time(split):
     captured_at = datetime.strptime(split[0], '%Y-%m-%d %I-%p')
-    return timestamp, captured_at
+    return captured_at
 
 
-def insert_bitfinex_line(line):
+def get_bitfinex_data(line) -> tuple:
     split = line.split(',')
-    timestamp, captured_at = get_bitfinex_time(split)
+    captured_at = get_bitfinex_time(split)
     currency_pair = split[1]
-    open, high, low, close, volume = tuple(split[2:])
+    open, high, low, close, volume = tuple(split[2:7])
 
     # TODO watch this! Not all currencies are 3 characters!!!
     coin_symbol = currency_pair[:3]
@@ -36,11 +36,7 @@ def insert_bitfinex_line(line):
             name=get_coin_from_symbol(coin_symbol),
             symbol=coin_symbol,
         )
-    return Ticker.create(
-        coin=coin,
-        price=Decimal(close),
-        captured_at=captured_at,
-    )
+    return coin.id, Decimal(close), captured_at
 
 
 def get_gemini_time(split):
@@ -53,7 +49,7 @@ def get_gemini_time(split):
     return captured_at
 
 
-def insert_gemini_line(line):
+def get_gemini_data(line) -> tuple:
     split = line.split(',')
     captured_at = get_gemini_time(split)
     currency_pair = split[2]
@@ -69,28 +65,31 @@ def insert_gemini_line(line):
             name=get_coin_from_symbol(coin_symbol),
             symbol=coin_symbol,
         )
-    return Ticker.create(
-        coin=coin,
-        price=Decimal(close),
-        captured_at=captured_at,
-    )
+    return coin.id, Decimal(close), captured_at
 
 
-def insert_file(filename):
+def get_tickers_from_file(filename):
     with open(filename) as f:
         lines = f.readlines()
         for line in lines[2:]:
             if filename.startswith('gemini'):
-                insert_gemini_line(line)
+                data = get_gemini_data(line)
             elif filename.startswith('Bitfinex'):
-                insert_bitfinex_line(line)
+                data = get_bitfinex_data(line)
+            else:
+                print(f'Unrecognized filename: {filename}')
+                exit(1)
+            if data is not None:
+                yield data
 
 
 @db.atomic()
 def insert(*args):
     for filename in args:
         print(f'inserting {filename}')
-        insert_file(filename)
+        data = list(get_tickers_from_file(filename))
+        fields = [Ticker.coin, Ticker.price, Ticker.captured_at]
+        Ticker.insert_many(data, fields=fields).execute()
     print(f'inserted {len(args)} files.')
 
 
