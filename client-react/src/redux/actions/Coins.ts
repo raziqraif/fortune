@@ -38,10 +38,3 @@ export const getAllCoins = () => {
     dispatch({type: Type.SET_COINS, payload: tempCoins})
   }
 }
-
-export const logout = () => {
-  return async (dispatch: Dispatch<Action>) => {
-    // TODO remove token from localStorage and send to backend to delete
-    dispatch({type: Type.SET_SIGNIN_STATUS, payload: false})
-  }
-}
