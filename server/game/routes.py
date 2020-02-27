@@ -40,22 +40,22 @@ def create():
 def get():
     return str(Game.select().where(Game.id == request.args.get('id')))
 
-@game_bp.route('/edit/<id>', methods=['POST'])
+@game_bp.route('/edit', methods=['POST'])
 def edit():
     # edit game
-    # try:
-    #     game = Game.query.filter_by(id=id).first()
-    #     game.starting_cash = request.args.get('starting_cash')
-    #     game.shareable_link = request.args.get('sharable_link')
-    #     game.shareable_code = request.args.get('sharable_code')
-    #     game.ends_at = request.args.get('ends_at')
-    # except Exception as e:
-    #     return "Failure to edit Game: {}".format(str(e))
+    validated_data: dict = GameCreateRequest.deserialize(request.json)
     
-    # db.session.add(game)
-    # db.session.commit()
-    # return "Game edited. Game id={}".format(game.id)
-    return "editing game"
+    try:
+        q = Game.update({
+            Game.ends_at: validated_data['endsOn'],
+            Game.starting_cash: validated_data['startingCash'],
+            Game.name: validated_data['title']
+        }).where(Game.id == request.args.get('id'))
+        q.execute()
+    except Exception as e:
+        return "Failure to edit Game: {}".format(str(e))
+    
+    return "Game id={} formatted".format(request.args.get('id'))
 
 def randomString(length):
     options = string.ascii_uppercase.join(string.digits)
