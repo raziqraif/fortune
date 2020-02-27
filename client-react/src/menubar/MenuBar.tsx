@@ -4,15 +4,35 @@ import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import {connect} from 'react-redux'
 import Actions from '../redux/actions'
 import { RootState } from '../redux/reducers';
+import { Redirect } from 'react-router-dom';
 
 interface MenuBarProps {
     loggedIn: boolean;
-    login: (email: string, password: string) => void;
     logout: () => void;
 }
 
-class MenuBar extends React.Component<MenuBarProps> {
+interface MenuBarState {
+    toLogin: boolean;
+}
+
+class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
+    constructor(props: MenuBarProps) {
+        super(props);
+        this.state = {
+            toLogin: false,
+        }
+    }
+
+    private navigateToLogin = () => {
+        this.setState({ toLogin: true });
+    }
+
     render() {
+        if (this.state.toLogin === true) {
+            this.setState({ toLogin: false });
+            return <Redirect to='/login' />
+        }
+        
         return (
             <Navbar collapseOnSelect expand="md" bg="dark" variant="dark">
                 <Navbar.Brand href="/">
@@ -47,7 +67,7 @@ class MenuBar extends React.Component<MenuBarProps> {
             )
         } else {
             return (
-                <Nav.Link onClick={() => this.props.login('email', 'passwd')}>Sign In</Nav.Link>
+                <Nav.Link onClick={this.navigateToLogin}>Sign In</Nav.Link>
             )
         }
     }
@@ -57,7 +77,6 @@ const mapStateToProps = (state: RootState) => ({
   loggedIn: state.auth.loggedIn,
 })
 const mapDispatchToProps = {
-  login: Actions.auth.login,
   logout: Actions.auth.logout,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar)
