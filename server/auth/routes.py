@@ -13,11 +13,17 @@ def login():
     # TODO handle login
     validated_data: dict = LoginRequest.deserialize(request.json)
     username = validated_data['username']
-    hashed_password = ['password']
-    if (Profile.get(Profile.username == username) is None):
-        print("Can create profile")
-    else:
-        print("Profile exists.")
+    hashed_password = validated_data['password']
+    try:
+        profile = Profile.get(Profile.username == username)
+        # if no exception is raised, then a profile with the given username exists
+        if (profile.hashed_password == hashed_password):
+            return "Correct password"
+        else:
+            return "Incorrect password"
+    except Profile.DoesNotExist as e:
+        # if profile does not exist we can't login
+        return "Error: profile with username {} doesn't exist.".format(username)
     return jsonify(validated_data)
 
 @auth_bp.route('/register', methods=['POST'])
@@ -25,7 +31,7 @@ def register():
     # TODO handle login
     validated_data: dict = LoginRequest.deserialize(request.json)
     username = validated_data['username']
-    hashed_password = ['password']
+    hashed_password = validated_data['password']
     try:
         profile = Profile.get(Profile.username == username)
         # if no exception is raised, then a profile with the given username already exists
