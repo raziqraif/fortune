@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify
 import string
 import random
 
-from db import Game, GameProfile, Coin, db
+from db import Game, GameProfile, Coin, GameCoin, db
 from .serializers import GameCreateRequest
 
 game_bp = Blueprint('game', __name__, url_prefix='/game')
@@ -29,6 +29,11 @@ def create():
             shareable_code = shareable_code,
             ends_at = ends_at
         )
+        for coin in validated_data['activeCoins']:
+            GameCoin.create(
+                game = game,
+                coin = Coin.get(Coin.id == coin['id'])
+            )
 
     except Exception as e:
         return "Failure to create Game: {}".format(str(e))
