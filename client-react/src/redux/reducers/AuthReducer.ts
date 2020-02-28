@@ -12,6 +12,8 @@ export type Action = {
 
 export type Auth = {
   loggedIn: boolean;
+  registrationErrorMessage: string;
+  loginErrorMessage: string;
 }
 
 export default (state = initialState, action: Action) => {
@@ -20,6 +22,16 @@ export default (state = initialState, action: Action) => {
       return {
         ...state,
         loggedIn: action.payload,
+      }
+    case Type.SET_REGISTRATION_ERROR:
+      return {
+        ...state,
+        registrationErrorMessage: action.payload
+      }
+    case Type.SET_LOGIN_ERROR:
+      return {
+        ...state,
+        loginErrorMessage: action.payload
       }
     default:
       return state
