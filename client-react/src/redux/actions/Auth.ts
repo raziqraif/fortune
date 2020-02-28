@@ -19,5 +19,3 @@ export const logout = () => {
     dispatch({type: Type.SET_SIGNIN_STATUS, payload: false})
   }
 }
-
-}
