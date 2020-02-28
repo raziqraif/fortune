@@ -80,6 +80,7 @@ class CreateGame extends React.Component<CreateGameProps, CreateGameState>  {
                     </Form.Group>
                     <Form.Group controlId="endsOn" className="col-sm-4">
                         <Form.Label>Ends At</Form.Label>
+                        <br/>
                         <Datepicker onChange={this.handleDateChange} />
                     </Form.Group>
                 </Form.Row>

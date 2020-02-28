@@ -6,6 +6,7 @@ import { deeplyRenderComponentWithRedux } from '../../test-utils';
 
 
 test('Shows create game title', () => {
-  const {getByText} = deeplyRenderComponentWithRedux(<CreateGame />)
+  const {getByText} = deeplyRenderComponentWithRedux(<CreateGame />);
   expect(getByText('Create Game')).toBeInTheDocument()
-})
+});
+
