@@ -39,7 +39,7 @@ test('Render labels and buttons', () => {
     expect(getByPlaceholderText('Filter coins')).toBeInTheDocument();
 });
 
-test('Renders all coins', () => {
+test('Render all coins', () => {
     const {getByText} = render(
         <CoinSelector
             allCoins={allCoins}
@@ -50,41 +50,6 @@ test('Renders all coins', () => {
         expect(getByText(coin.name)).toBeInTheDocument();
     });
 });
-
-test('Select/Deselect all button functionality',() => {
-    const {getAllByText, getByText, queryAllByPlaceholderText} = render(
-        <CoinSelector
-            allCoins={allCoins}
-            activeCoins={activeCoins}
-            setActiveCoins={setActiveCoins}/>
-    );
-
-    let btn_select = getByText('Select All');
-    let btn_deselect = getByText('Deselect All');
-    expect(btn_select).toBeInTheDocument();
-    expect(btn_deselect).toBeInTheDocument();
-
-    // TODO: Figure out how to pass a valid setActiveCoins() and uncomment these.
-    // TODO: Should this be done in the parent component instead(?)
-    // expect(queryAllByPlaceholderText('active-coin').length).toEqual(0);
-    // fireEvent.click(btn_select);
-    // expect(queryAllByPlaceholderText('active-coin').length).toEqual(allCoins.length);
-    // allCoins.forEach((coin)=>{
-    //     let cur_coins = getAllByText(coin.name);
-    //     expect(cur_coins.length).toEqual(2);  // for active checkbox and available checkbox
-    //     expect(cur_coins[0]).toHaveAttribute("checked", "true")
-    //     expect(cur_coins[1]).toHaveAttribute("checked", "true")
-    // });
-    // fireEvent.click(btn_deselect);
-    // expect(queryAllByPlaceholderText('active-coin').length).toEqual(allCoins.length);
-    // allCoins.forEach((coin)=>{
-    //     let cur_coins = getAllByText(coin.name);
-    //     expect(cur_coins.length).toEqual(1);
-    //     expect(cur_coins[0]).toHaveAttribute("checked", "false")
-    // });
-});
-
-// TODO: Test for manually selecting coins (after setActiveCoins() is done)
 
 test('Filter an invalid coin', ()=>{
     const {queryAllByPlaceholderText, getByPlaceholderText} = render(
