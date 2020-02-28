@@ -10,4 +10,3 @@ test('Datepicker', () => {
 });
 
 // TODO: Finish the test
-
