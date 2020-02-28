@@ -8,7 +8,7 @@ class BaseSerializer(Schema):
         Shortcut method for using a serializer to serialize a Python object
         to a Python dictionary
         """
-        return cls().dump(obj, many=many).data
+        return cls().dump(obj, many=many)
 
     @classmethod
     def deserialize(cls, obj, many=False):
@@ -20,7 +20,12 @@ class BaseSerializer(Schema):
 
 username_length_validator = validate.Length(min=5, max=63)
 password_length_validator = validate.Length(min=5, max=63)
-class LoginRequest(BaseSerializer):
+class LoginRequestSerializer(BaseSerializer):
     username = fields.Str(required=True, validate=username_length_validator)
     password = fields.Str(required=True, validate=password_length_validator)
+
+
+class AuthTokenSerializer(BaseSerializer):
+    issued_at = fields.DateTime(required=True)
+    token = fields.Str(required=True)
 

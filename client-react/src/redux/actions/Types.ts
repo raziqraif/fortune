@@ -1,4 +1,6 @@
 export enum Type {
     SET_SIGNIN_STATUS,
-    SET_COINS
+    SET_COINS,
+    SET_REGISTRATION_ERROR,
+    SET_LOGIN_ERROR,
 }
