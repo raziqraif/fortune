@@ -11,6 +11,6 @@ export const createGame = (
     title: string
 ) => {
   return async () => {
-    const res = await axios.post('http://localhost:5000/game/new_game', {activeCoins, endsOn, startingCash, title});
+    await axios.post('/api/new_game', {activeCoins, endsOn, startingCash, title});
   }
 }
