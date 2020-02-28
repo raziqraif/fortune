@@ -31,12 +31,18 @@ export default class Register extends React.Component<RegisterProps, RegisterSta
   }
   private submitForm = (event: any) => {
     event.preventDefault()
-    this.props.register(this.state.username, this.state.password)
+    if(this.state.password !== this.state.confirmPassword) {
+      alert("Passwords must be equal.")
+    } else {
+      this.props.register(this.state.username, this.state.password)
+    }
+
   }
   private onChange = (event: any) => {
     this.setState({
         [event.currentTarget.name]: event.currentTarget.value
       })
+
   }
 
     render() {
@@ -49,11 +55,11 @@ export default class Register extends React.Component<RegisterProps, RegisterSta
             </Form.Group>
             <Form.Group controlId="password">
               <Form.Label>Password</Form.Label>
-              <Form.Control name="password" type="password" placeholder="Password" />
+              <Form.Control name="password" type="password" value={this.state.password} placeholder="Password" onChange={this.onChange}/>
             </Form.Group>
             <Form.Group controlId="confirmPassword">
               <Form.Label>Confirm Password</Form.Label>
-              <Form.Control name="confirmPassword" type="password" placeholder="Confirm Password" />
+              <Form.Control name="confirmPassword" type="password" value={this.state.confirmPassword} placeholder="Confirm Password" onChange={this.onChange}/>
             </Form.Group>
             <Button variant="primary" type="submit">
               Submit
@@ -64,11 +70,11 @@ export default class Register extends React.Component<RegisterProps, RegisterSta
 }
 /*
 const mapStateToProps = (state: RootState) => ({
-  state
 })
 
 const mapDispatchToProps = {
-    register:
+    register: Actions.auth.register
 }
+
 export default connect(mapStateToProps, mapDispatchToProps)(Register);
 */
