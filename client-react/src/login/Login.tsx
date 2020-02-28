@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Col } from 'react-bootstrap';
 import { RootState } from '../redux/reducers';
 import Actions from '../redux/actions';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 interface LoginProps {
     login: (
@@ -15,6 +16,7 @@ interface LoginState {
     [key: string]: any;
     username: string;
     password: string;
+    toRegister: boolean;
 }
 
 class Login extends React.Component<LoginProps, LoginState> {
@@ -23,7 +25,8 @@ class Login extends React.Component<LoginProps, LoginState> {
 
         this.state = {
             username: '',
-            password: ''
+            password: '',
+            toRegister: false,
         }
     }
 
@@ -33,11 +36,18 @@ class Login extends React.Component<LoginProps, LoginState> {
         this.props.login(this.state.username, this.state.password);
     }
 
+    private navigateToRegister = () => {
+        this.setState({ toRegister: true });
+    }
+
     private handleChange = (event: any) => {
         this.setState({ [event.currentTarget.name]: event.currentTarget.value });
     };
 
     render() {
+        if (this.state.toRegister) {
+            return <Redirect to='/register' />
+        }
         return (
             <Form onSubmit={this.login} >
                 <h1>Login</h1>
@@ -52,9 +62,18 @@ class Login extends React.Component<LoginProps, LoginState> {
                     </Form.Group>
                 </Form.Row>
                 
-                <Button variant="primary" type="submit">
-                    Login
-                </Button>
+                <Form.Row>
+                    <Col>
+                        <Button variant="primary" type="submit">
+                            Login
+                        </Button>
+                    </Col>
+                    <Col className="text-right">
+                        <Button variant="secondary" onClick={this.navigateToRegister}>
+                            Register
+                        </Button>
+                    </Col>
+                </Form.Row>
             </Form>
         )
     }
