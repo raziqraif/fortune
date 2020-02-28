@@ -28,7 +28,7 @@ export default class Datepicker extends React.Component<DatepickerProps, Datepic
         this.setState({
             selectedDate: date
         });
-            this.props.onChange(date)
+        this.props.onChange(date);
     };
 
     render() {
@@ -45,4 +45,5 @@ export default class Datepicker extends React.Component<DatepickerProps, Datepic
             />
         );
     }
+
 }
