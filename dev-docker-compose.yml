@@ -2,6 +2,8 @@ version: '3'
 services:
   postgres:
     image: 'postgres'
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
   client:
     ports:
       - "3000:3000"
@@ -15,7 +17,7 @@ services:
     depends_on:
       - postgres
     # TODO add migrations after 'done;' below:
-    # command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 1; done; python run-dev.py'
+    command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 1; done; python run-dev.py'
 
     build:
       dockerfile: Dockerfile.dev
