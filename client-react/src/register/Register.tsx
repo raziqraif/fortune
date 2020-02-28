@@ -18,7 +18,7 @@ interface RegisterState {
   confirmPassword: string,
 }
 
-class Register extends React.Component<RegisterProps, RegisterState> {
+export default class Register extends React.Component<RegisterProps, RegisterState> {
 
   constructor(props: RegisterProps){
     super(props);
@@ -62,12 +62,13 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         )
     }
 }
-
+/*
 const mapStateToProps = (state: RootState) => ({
   state
 })
 
 const mapDispatchToProps = {
-    register: Actions.auth.register
+    register:
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Register);
+*/
