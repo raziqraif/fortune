@@ -12,6 +12,12 @@ from db import * # FIXME get rid of * when you have db migrations
 def create_app():
     db.create_tables([Profile, AuthToken, Game, GameProfile, Coin, GameCoin,
         Ticker, Trade, GameProfileCoin])
+    try:
+        Coin.create(name='Bitcoin', symbol='BTC')
+        Coin.create(name='Ethereum', symbol='ETH')
+        Coin.create(name='Litecoin', symbol='LTC')
+    except:
+        pass
     # FIXME get rid of this when you have db migrations
     app = Flask(__name__)
     CORS(app)
