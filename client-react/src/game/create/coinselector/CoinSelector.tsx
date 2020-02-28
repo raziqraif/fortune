@@ -14,7 +14,7 @@ interface CoinSelectorState {
 
 const checkbox: CSS.Properties = {
     paddingLeft: '1.5rem'
-}
+};
 
 export default class CoinSelector extends React.Component<CoinSelectorProps, CoinSelectorState> {
     constructor(props: CoinSelectorProps) {
@@ -29,11 +29,11 @@ export default class CoinSelector extends React.Component<CoinSelectorProps, Coi
 
     private selectAllCoins = () => {
         this.props.setActiveCoins(this.props.allCoins);
-    }
+    };
 
     private deselectAllCoins = () => {
         this.props.setActiveCoins([]);
-    }
+    };
 
     private filteredCoins = () => this.props.allCoins.filter((coin: { name: string }) => 
         coin.name.toLowerCase().includes(this.state.filter.toLowerCase()));
@@ -41,11 +41,11 @@ export default class CoinSelector extends React.Component<CoinSelectorProps, Coi
     
     private isCoinInActiveList = (name: string) => {
         return this.props.activeCoins.some(coin => coin.name === name);
-    }
+    };
 
     private handleCheckboxChange = (name: string) => (event: any) => {
         this.changeCoinStatusOnActiveList(name);
-    }
+    };
 
     private changeCoinStatusOnActiveList = (name: string) => {
         let activeCoins = this.props.activeCoins;
@@ -59,7 +59,7 @@ export default class CoinSelector extends React.Component<CoinSelectorProps, Coi
                 this.props.setActiveCoins(activeCoins);
             }
         }
-    }
+    };
 
     render() {
         return (
@@ -81,12 +81,15 @@ export default class CoinSelector extends React.Component<CoinSelectorProps, Coi
                             label={coin.name}
                             checked={this.isCoinInActiveList(coin.name)}
                             onChange={this.handleCheckboxChange(coin.name)}
+                            placeholder={"available-coin"}
                         />
                     })}
                 </Form.Group>
                 <Form.Group className="col-sm-6">
                     <Form.Label className="col-sm-12">Selected Coins</Form.Label>
-                    <Button onClick={this.selectAllCoins} className="btn-success">Select All</Button>
+                    { !this.state.filter &&      // TODO: Ideally, the button should only be disabled
+                        <Button onClick={this.selectAllCoins} className="btn-success">Select All</Button>
+                    }
                     <Button onClick={this.deselectAllCoins} className="btn-warning">Deselect All</Button>
                     {this.props.activeCoins.map((coin: { name: string }) => {
                         return <Form.Check
@@ -96,6 +99,7 @@ export default class CoinSelector extends React.Component<CoinSelectorProps, Coi
                             label={coin.name}
                             checked={this.isCoinInActiveList(coin.name)}
                             onChange={this.handleCheckboxChange(coin.name)}
+                            placeholder={"active-coin"}
                         />
                     })}
                 </Form.Group>
