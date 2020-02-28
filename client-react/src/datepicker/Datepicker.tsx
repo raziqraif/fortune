@@ -8,7 +8,7 @@ import {Form} from "react-bootstrap";
 // import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 
 interface DatepickerProps {
-    onChange?: (date: Date) => void,  // Will be called in handleChange()
+    onChange: (date: Date) => void,  // Will be called in handleChange()
 }
 
 interface DatepickerState {
@@ -28,9 +28,7 @@ export default class Datepicker extends React.Component<DatepickerProps, Datepic
         this.setState({
             selectedDate: date
         });
-        if (this.props.onChange != undefined) {
-            this.props.onChange(date)
-        }
+        this.props.onChange(date);
     };
 
     render() {
