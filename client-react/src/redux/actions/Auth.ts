@@ -46,10 +46,12 @@ export const register = (username: string, password: string) => {
   return async (dispatch: Dispatch<Action>) => {
     let res: AuthTokenResponse
     try {
-      res = await axios.post('/api/auth/register', {username, password})
+      res = await axios.post('http://localhost:5000/auth/register', {username, password})
       axios.defaults.headers.common['AUTHORIZATION'] = `Bearer ${res.data.token}`
       localStorage.setItem('token', res.data.token)
       dispatch({type: Type.SET_SIGNIN_STATUS, payload: true})
+      const pushAction: any = push('/')
+      dispatch(pushAction)
     } catch (e) {
       // TODO failed, dispatch error
     }

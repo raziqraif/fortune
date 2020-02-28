@@ -18,7 +18,7 @@ interface RegisterState {
   confirmPassword: string,
 }
 
-export default class Register extends React.Component<RegisterProps, RegisterState> {
+class Register extends React.Component<RegisterProps, RegisterState> {
 
   constructor(props: RegisterProps){
     super(props);
@@ -49,11 +49,11 @@ export default class Register extends React.Component<RegisterProps, RegisterSta
             </Form.Group>
             <Form.Group controlId="password">
               <Form.Label>Password</Form.Label>
-              <Form.Control name="password" type="password" placeholder="Password" />
+              <Form.Control name="password" type="password" placeholder="Password" onChange={this.onChange}/>
             </Form.Group>
             <Form.Group controlId="confirmPassword">
               <Form.Label>Confirm Password</Form.Label>
-              <Form.Control name="confirmPassword" type="password" placeholder="Confirm Password" />
+              <Form.Control name="confirmPassword" type="password" placeholder="Confirm Password"/>
             </Form.Group>
             <Button variant="primary" type="submit">
               Submit
@@ -62,13 +62,11 @@ export default class Register extends React.Component<RegisterProps, RegisterSta
         )
     }
 }
-/*
+
 const mapStateToProps = (state: RootState) => ({
-  state
 })
 
 const mapDispatchToProps = {
-    register:
+  register: Actions.auth.register,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Register);
-*/
