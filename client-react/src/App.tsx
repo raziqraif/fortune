@@ -20,7 +20,6 @@ interface MatchParams {
 function App() {
   return (
     <div className="App">
-      <Router>
         <MenuBar />
         <div className="container">
           <Switch>
@@ -39,7 +38,6 @@ function App() {
             <Route path="/create" component={CreateGame} />
           </Switch>
         </div>
-      </Router>
     </div>
   );
 }
