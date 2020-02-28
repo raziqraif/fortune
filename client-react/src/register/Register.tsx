@@ -68,6 +68,6 @@ const mapStateToProps = (state: RootState) => ({
 })
 
 const mapDispatchToProps = {
-    register: Actions.register.register
+    register: Actions.auth.register
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Register);

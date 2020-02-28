@@ -19,3 +19,12 @@ export const logout = () => {
     dispatch({type: Type.SET_SIGNIN_STATUS, payload: false})
   }
 }
+
+export const register = (username: string, password: string) => {
+  return async (dispatch: Dispatch<Action>) => {
+    // replace this with an api module assumedly
+    // const res = await axios.post('/api/login', {email, password})
+    // just an example
+    dispatch({type: Type.SET_REGISTER_STATUS, payload: true})
+  }
+}
