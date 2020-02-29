@@ -25,3 +25,10 @@ class GameCreateRequest(BaseSerializer):
     startingCash = fields.Decimal(required=True, as_string=True)
     title = fields.Str(required=True, validate=title_length_validator)
 
+
+class CreateGameResponse(BaseSerializer):
+    name = fields.Str(required=True)
+    starting_cash = fields.Decimal(required=True)
+    shareable_link = fields.Str(required=True)
+    shareable_code = fields.Str(required=True)
+    ends_at = fields.DateTime(required=True)

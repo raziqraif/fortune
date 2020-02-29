@@ -1,51 +1,44 @@
 from flask import Blueprint, request, jsonify
+import os
+import secrets
+from uuid import uuid4
 
 import string
 import random
 
 from db import Game, GameProfile, Coin, GameCoin, db
-from .serializers import GameCreateRequest
+from .serializers import GameCreateRequest, CreateGameResponse
+from .services import create_game
 
 game_bp = Blueprint('game', __name__, url_prefix='/game')
 
 
 #TODO
 # We probably need a better way to generate shareable link, code, and ID.
-@game_bp.route('/new_game', methods=['POST'])
+@game_bp.route('/', methods=['POST'])
 def create():
     validated_data: dict = GameCreateRequest.deserialize(request.json)
     ends_at = validated_data['endsOn']
     starting_cash = validated_data['startingCash']
     name = validated_data['title']
-    id = random.randrange(10000)
-    shareable_link = randomString(16)
+    shareable_link = f'{os.environ["HTTP_HOST"]}/game/{str(uuid4())}'
     shareable_code = randomString(4)
-    try:
-        game = Game.create(
-            id = id,
-            name = name,
-            starting_cash = starting_cash,
-            shareable_link = shareable_link,
-            shareable_code = shareable_code,
-            ends_at = ends_at
-        )
-        for coin in validated_data['activeCoins']:
-            GameCoin.create(
-                game = game,
-                coin = Coin.get(Coin.id == coin['id'])
-            )
+    active_coins = validated_data['activeCoins']
+    game = create_game(
+        name,
+        starting_cash,
+        shareable_link,
+        shareable_code,
+        ends_at,
+        active_coins
+    )
+    return jsonify(CreateGameResponse.serialize(game))
 
-    except Exception as e:
-        return "Failure to create Game: {}".format(str(e))
-
-    game.save()
-    return "Game created. Game id={}".format(game.id)
-
-@game_bp.route('/get', methods=['GET'])
+@game_bp.route('/', methods=['GET'])
 def get():
-    return str(Game.select().where(Game.id == request.args.get('id')))
+    return jsonify(CreateGameResponse.serialize(Game.select(), many=True))
 
-@game_bp.route('/edit', methods=['POST'])
+@game_bp.route('/', methods=['PUT'])
 def edit():
     # edit game
     validated_data: dict = GameCreateRequest.deserialize(request.json)
