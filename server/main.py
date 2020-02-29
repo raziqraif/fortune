@@ -11,6 +11,7 @@ from db import * # FIXME get rid of * when you have db migrations
 
 def create_app():
     app = Flask(__name__)
+    app.url_map.strict_slashes = False
     CORS(app)
 
     @app.before_request
@@ -31,7 +32,5 @@ def create_app():
     @app.route('/')
     def hello():
         return 'hello world'
-    
-    app.url_map.strict_slashes = False
 
     return app
