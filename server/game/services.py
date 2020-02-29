@@ -34,8 +34,8 @@ def create_game(
     # bounds check, validate
     if ends_at < datetime.utcnow().replace(tzinfo=pytz.utc):
         raise BadRequest('Invalid game ending date')
-    if starting_cash < Decimal(0):
-        raise BadRequest('Starting cash must be non-negative')
+    if starting_cash <= Decimal(0):
+        raise BadRequest('Starting cash must be positive')
     game = Game.create(
         name=name,
         starting_cash=starting_cash,

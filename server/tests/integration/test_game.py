@@ -70,7 +70,7 @@ class GameTest(AuthDbTest):
             content_type='application/json',
         )
         self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
-        self.assertTrue('non-negative' in json.dumps(res.json))
+        self.assertTrue('positive' in json.dumps(res.json))
 
     def test_get_game_with_invalid_active_coin_fails(self):
         res = self.client.post('/game/',

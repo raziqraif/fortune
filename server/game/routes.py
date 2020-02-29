@@ -8,7 +8,7 @@ from werkzeug.exceptions import BadRequest
 import pytz
 
 from db import Game, GameProfile, Coin, GameCoin, db
-from .serializers import GameCreateRequest, CreateGameResponse
+from .serializers import GameCreateRequest, CreateGameResponse, CoinsResponse
 from .services import create_game, update_game, get_game_by_id
 
 game_bp = Blueprint('game', __name__, url_prefix='/game')
@@ -50,7 +50,7 @@ def get(game_id):
 
 @game_bp.route('/coins', methods=['GET'])
 def get_coins():
-    return jsonify(CreateGameResponse.serialize(Coin.select(), many=True))
+    return jsonify(CoinsResponse.serialize(Coin.select(), many=True))
 
 
 @game_bp.route('/<game_id>', methods=['PUT'])
