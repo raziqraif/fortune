@@ -1,6 +1,7 @@
 import werkzeug
 import traceback
 from flask import Blueprint, json, jsonify
+from marshmallow.exceptions import ValidationError
 
 errors_bp = Blueprint('errors', __name__)
 
@@ -10,6 +11,15 @@ def handle_http_exception(e):
     """ Handle generic HTTP Exception """
 
     return _http_exception_resp(e)
+
+@errors_bp.app_errorhandler(ValidationError)
+def handle_marshmallow_exception(e: ValidationError):
+    """ Handle marshmallow HTTP Exception """
+    print(e.errors)
+    return jsonify({
+        'success': False,
+        'errors': e.errors,
+    }), 400
 
 
 @errors_bp.app_errorhandler(werkzeug.exceptions.InternalServerError)

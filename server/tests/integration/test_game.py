@@ -1,26 +1,26 @@
+from datetime import datetime, timedelta
 from http import HTTPStatus
+import json
 
 from db import db, Profile
-from tests.utils import DbTest
+from tests.utils import DbTest, AuthDbTest
 
 
-class GameTest(DbTest):
+class GameTest(AuthDbTest):
 
-    def setUp(self):
-        super().setUp()
-
-    def test_create_game_with_invalid_starting_cash(self):
-        res = self.client.post('/game', headers={
-            'Authorization': 'Bearer'
-        })
-        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
-
-        res = self.client.get('/testauth', headers={
-            'Authorization': 'Bearer '
-        })
-        self.assertEqual(int(HTTPStatus.UNAUTHORIZED), res._status_code)
-
-        res = self.client.get('/testauth', headers={
-            'Authorization': 'Bearer incorrect-token'
-        })
-        self.assertEqual(int(HTTPStatus.UNAUTHORIZED), res._status_code)
+    def test_create_game_with_valid_info(self):
+        res = self.client.post('/game/',
+            data=json.dumps({
+                'title': 'jfkldsajklfd',
+                'startingCash': 42,
+                'endsOn': (datetime.utcnow() + timedelta(days=7)).isoformat(),
+                'activeCoins': [
+                    {
+                        'id': 1,
+                        'name': 'Bitcoin'
+                    }
+                ]
+            }),
+            content_type='application/json',
+        )
+        self.assertEqual(int(HTTPStatus.OK), res._status_code)

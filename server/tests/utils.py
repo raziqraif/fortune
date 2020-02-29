@@ -33,7 +33,8 @@ class AuthTest(TestCase):
 class DbTest(IntegrationTest):
     @classmethod
     def setUpClass(cls):
-        super().setUpClass()
+        super(IntegrationTest, cls).setUpClass()
+        #IntegrationTest.setUpClass()
         for i in range(1, 2):
             migrate('up', f'migrations.v{i}')
     

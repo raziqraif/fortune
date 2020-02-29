@@ -8,7 +8,7 @@ class BaseSerializer(Schema):
         Shortcut method for using a serializer to serialize a Python object
         to a Python dictionary
         """
-        return cls().dump(obj, many=many).data
+        return cls().dump(obj, many=many)
 
     @classmethod
     def deserialize(cls, obj, many=False):
