@@ -27,8 +27,9 @@ class GameCreateRequest(BaseSerializer):
 
 
 class CreateGameResponse(BaseSerializer):
+    id = fields.Int(required=True)
     name = fields.Str(required=True)
-    starting_cash = fields.Decimal(required=True)
+    starting_cash = fields.Decimal(required=True, as_string=True)
     shareable_link = fields.Str(required=True)
     shareable_code = fields.Str(required=True)
     ends_at = fields.DateTime(required=True)

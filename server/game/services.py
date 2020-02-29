@@ -8,14 +8,17 @@ from db import db, Game, GameCoin, Coin
 
 @db.atomic()
 def create_gamecoins_for_game(game, active_coins):
+    res = []
     for coin in active_coins:
         coin = Coin.get_or_none(Coin.id == coin['id'])
         if coin is None:
+            breakpoint()
             raise BadRequest('Invalid coin')
-        yield GameCoin.create(
+        res.append(GameCoin.create(
             game=game,
             coin=coin,
-        )
+        ))
+    return res
 
 
 @db.atomic()
@@ -38,7 +41,7 @@ def create_game(
         shareable_code=shareable_code,
         ends_at=ends_at,
     )
-    game = create_gamecoins_for_game(game, active_coins)
+    create_gamecoins_for_game(game, active_coins)
     return game
 
 @db.atomic()
@@ -57,11 +60,5 @@ def update_game(
     game.ends_at = ends_at
     # delete all GameCoins for this game and just re-create
     GameCoin.delete().where(Game.id == game_id)
-    for coin in active_coins:
-        coin 
-        GameCoin.create(
-            game=game,
-            coin=coin
-        )
-    game = create_gamecoins_for_game(game, active_coins)
+    create_gamecoins_for_game(game, active_coins)
     return game

@@ -31,5 +31,7 @@ def create_app():
     @app.route('/')
     def hello():
         return 'hello world'
+    
+    app.url_map.strict_slashes = False
 
     return app

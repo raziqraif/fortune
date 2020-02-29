@@ -36,7 +36,8 @@ def create():
 
 @game_bp.route('/<game_id>', methods=['GET'])
 def get(game_id):
-    if game_id is None:
+    print(game_id)
+    if not game_id:
         return jsonify(CreateGameResponse.serialize(Game.select(), many=True))
     return jsonify(CreateGameResponse.serialize(Game.get_or_none(Game.id == game_id)))
 
