@@ -3,6 +3,10 @@ import { Type } from '../actions/Types'
 export type State = typeof initialState;
 const initialState = {
   loggedIn: false,
+  registrationErrorMessage: '',
+  registrationLoading: false,
+  loginErrorMessage: '',
+  loginLoading: false,
 }
 
 export type Action = {

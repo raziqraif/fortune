@@ -5,6 +5,7 @@ from uuid import uuid4
 import string
 import random
 from werkzeug.exceptions import BadRequest
+import pytz
 
 from db import Game, GameProfile, Coin, GameCoin, db
 from .serializers import GameCreateRequest, CreateGameResponse
@@ -13,11 +14,14 @@ from .services import create_game, update_game, get_game_by_id
 game_bp = Blueprint('game', __name__, url_prefix='/game')
 
 
+UTC = pytz.UTC
+
 #TODO
 # We probably need a better way to generate shareable link, code, and ID.
 @game_bp.route('/', methods=['POST'])
 def create():
     validated_data: dict = GameCreateRequest.deserialize(request.json)
+    local = pytz.timezone("UTC")
     ends_at = validated_data['endsOn']
     starting_cash = validated_data['startingCash']
     name = validated_data['title']

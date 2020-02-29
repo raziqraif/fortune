@@ -1,6 +1,7 @@
 from datetime import datetime
 from decimal import Decimal
 
+import pytz
 from werkzeug.exceptions import BadRequest
 
 from db import db, Game, GameCoin, Coin
@@ -8,6 +9,8 @@ from db import db, Game, GameCoin, Coin
 
 @db.atomic()
 def create_gamecoins_for_game(game, active_coins):
+    if len(active_coins) == 0:
+        raise BadRequest('At least one coin must be allowed in a game')
     res = []
     for coin in active_coins:
         coin = Coin.get_or_none(Coin.id == coin['id'])
@@ -29,7 +32,7 @@ def create_game(
     ends_at,
     active_coins):
     # bounds check, validate
-    if ends_at < datetime.utcnow():
+    if ends_at < datetime.utcnow().replace(tzinfo=pytz.utc):
         raise BadRequest('Invalid game ending date')
     if starting_cash < Decimal(0):
         raise BadRequest('Starting cash must be non-negative')
