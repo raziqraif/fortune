@@ -8,37 +8,61 @@ const initialState = {
 export type Action = {
   type: Type;
   payload?: any;
-  error?: string;
 }
 
 export type Auth = {
   loggedIn: boolean;
   registrationErrorMessage: string;
+  registrationLoading: boolean;
   loginErrorMessage: string;
+  loginLoading: boolean;
 }
 
 export default (state = initialState, action: Action) => {
   switch (action.type) {
-    case Type.SET_SIGNIN_STATUS:
+    case Type.LOGIN:
       return {
         ...state,
-        loginErrorMessage: action.error,
-        loggedIn: action.payload,
+        loginErrorMessage: '',
+        loginLoading: true,
       }
-    case Type.SET_REGISTRATION_STATUS: {
-      console.log(action)
-      if (!action.hasOwnProperty('payload')) {
-        return {
-          ...state,
-          registrationErrorMessage: action.error,
-        }
-      }
+    case Type.LOGIN_FAILED:
       return {
         ...state,
-        registrationErrorMessage: action.error,
-        loggedIn: action.payload,
+        loginErrorMessage: action.payload,
+        loginLoading: false,
       }
-    }
+    case Type.LOGIN_SUCCEEDED:
+      return {
+        ...state,
+        loginErrorMessage: '',
+        loginLoading: false,
+        loggedIn: true,
+      }
+    case Type.LOGOUT:
+      return {
+        ...state,
+        loggedIn: false,
+      }
+    case Type.REGISTER:
+      return {
+        ...state,
+        registrationErrorMessage: '',
+        registrationLoading: true,
+      }
+    case Type.REGISTER_FAILED:
+      return {
+        ...state,
+        registrationErrorMessage: action.payload,
+        registrationLoading: false,
+      }
+    case Type.REGISTER_SUCCEEDED:
+      return {
+        ...state,
+        registrationErrorMessage: '',
+        registrationLoading: false,
+        loggedIn: true,
+      }
     default:
       return state
   }

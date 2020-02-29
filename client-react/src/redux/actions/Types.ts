@@ -1,6 +1,13 @@
 export enum Type {
-    SET_SIGNIN_STATUS,
+    // auth types
+    LOGIN,
+    LOGIN_FAILED,
+    LOGIN_SUCCEEDED,
+    REGISTER,
+    REGISTER_FAILED,
+    REGISTER_SUCCEEDED,
+    LOGOUT,
+
+    // coin types
     SET_COINS,
-    SET_REGISTRATION_STATUS,
-    SET_LOGIN_ERROR,
 }

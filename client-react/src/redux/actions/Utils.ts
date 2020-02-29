@@ -14,15 +14,15 @@ type ApiError = {
 
 export const handleAxiosError = (error: ApiError, dispatch: Function, type: Type) => {
   if (!error.response) {
-    dispatch({type, error: 'Cannot connect to the server'})
+    dispatch({type, payload: 'Cannot connect to the server'})
     return
   }
   if (error.response.status === 401) {
-    dispatch({type, error: error.response.data.error})
+    dispatch({type, payload: error.response.data.error})
     // this token is invalid, remove it from localStorage
     // and redirect to the login page
     dispatch(push('/login'))
     return
   }
-  dispatch({type, error: error.response.data.error})
+  dispatch({type, payload: error.response.data.error})
 }
