@@ -47,6 +47,12 @@ def get(game_id):
         raise BadRequest('Invalid game id')
     return jsonify(CreateGameResponse.serialize(get_game_by_id(game_id)))
 
+
+@game_bp.route('/coins', methods=['GET'])
+def get_coins():
+    return jsonify(CreateGameResponse.serialize(Coin.select(), many=True))
+
+
 @game_bp.route('/<game_id>', methods=['PUT'])
 def edit(game_id):
     # edit game

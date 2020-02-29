@@ -33,3 +33,9 @@ class CreateGameResponse(BaseSerializer):
     shareable_link = fields.Str(required=True)
     shareable_code = fields.Str(required=True)
     ends_at = fields.DateTime(required=True)
+
+
+class CoinsResponse(BaseSerializer):
+    id = fields.Int(required=True)
+    name = fields.Str(required=True)
+    symbol = fields.Str(required=True)
