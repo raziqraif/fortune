@@ -10,6 +10,7 @@ interface LoginProps {
         username: string,
         password: string,
     ) => void;
+    error: string;
 }
 
 interface LoginState {
@@ -74,6 +75,9 @@ class Login extends React.Component<LoginProps, LoginState> {
                         </Button>
                     </Col>
                 </Form.Row>
+                <Form.Control.Feedback type='invalid'>
+                    {this.props.error}
+                </Form.Control.Feedback>
             </Form>
         )
     }
@@ -81,6 +85,7 @@ class Login extends React.Component<LoginProps, LoginState> {
 
 const mapStateToProps = (state: RootState) => ({
     allCoins: state.coins.coins,
+    error: state.auth.loginErrorMessage,
 })
 const mapDispatchToProps = {
     login: Actions.auth.login,

@@ -4,6 +4,8 @@ import { Dispatch } from 'redux'
 import { Action } from '../reducers/AuthReducer'
 import {push} from 'connected-react-router'
 
+import {handleAxiosError} from './Utils'
+
 
 type AuthTokenResponse = {
   data: {
@@ -12,6 +14,10 @@ type AuthTokenResponse = {
   }
 }
 
+function persistToken(token: string) {
+  axios.defaults.headers.common['AUTHORIZATION'] = `Bearer ${token}`
+  localStorage.setItem('token', token)
+}
 
 export const login = (username: string, password: string) => {
   return async (dispatch: Dispatch<Action>) => {
@@ -23,13 +29,13 @@ export const login = (username: string, password: string) => {
       // TODO please don't hard-code this, we're working on getting nginx with
       // docker
       res = await axios.post('http://localhost:5000/auth/login', {username, password})
-      axios.defaults.headers.common['AUTHORIZATION'] = `Bearer ${res.data.token}`
-      localStorage.setItem('token', res.data.token)
-      dispatch({type: Type.SET_SIGNIN_STATUS, payload: true})
+      persistToken(res.data.token)
+      dispatch({type: Type.SET_SIGNIN_STATUS, payload: true, error: ''})
       const pushAction: any = push('/')
       dispatch(pushAction)
     } catch (e) {
       // TODO failed, dispatch error
+      handleAxiosError(e, dispatch, Type.SET_SIGNIN_STATUS)
     }
   }
 }
@@ -47,13 +53,13 @@ export const register = (username: string, password: string) => {
     let res: AuthTokenResponse
     try {
       res = await axios.post('http://localhost:5000/auth/register', {username, password})
-      axios.defaults.headers.common['AUTHORIZATION'] = `Bearer ${res.data.token}`
-      localStorage.setItem('token', res.data.token)
+      persistToken(res.data.token)
       dispatch({type: Type.SET_SIGNIN_STATUS, payload: true})
       const pushAction: any = push('/')
       dispatch(pushAction)
     } catch (e) {
       // TODO failed, dispatch error
+      handleAxiosError(e, dispatch, Type.SET_SIGNIN_STATUS)
     }
   }
 }

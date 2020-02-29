@@ -2,9 +2,9 @@ from flask import Blueprint, request, jsonify
 import os
 import secrets
 from uuid import uuid4
-
 import string
 import random
+from werkzeug.exceptions import BadRequest
 
 from db import Game, GameProfile, Coin, GameCoin, db
 from .serializers import GameCreateRequest, CreateGameResponse
@@ -37,6 +37,10 @@ def create():
 
 @game_bp.route('/<game_id>', methods=['GET'])
 def get(game_id):
+    try:
+        int(game_id)
+    except:
+        raise BadRequest('Invalid game id')
     return jsonify(CreateGameResponse.serialize(get_game_by_id(game_id)))
 
 @game_bp.route('/<game_id>', methods=['PUT'])

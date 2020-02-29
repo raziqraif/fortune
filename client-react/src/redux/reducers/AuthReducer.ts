@@ -8,6 +8,7 @@ const initialState = {
 export type Action = {
   type: Type;
   payload?: any;
+  error?: string;
 }
 
 export type Auth = {
@@ -21,18 +22,22 @@ export default (state = initialState, action: Action) => {
     case Type.SET_SIGNIN_STATUS:
       return {
         ...state,
+        loginErrorMessage: action.error,
         loggedIn: action.payload,
       }
-    case Type.SET_REGISTRATION_ERROR:
+    case Type.SET_REGISTRATION_STATUS: {
+      if (!action.hasOwnProperty('payload')) {
+        return {
+          ...state,
+          registrationErrorMessage: action.error,
+        }
+      }
       return {
         ...state,
-        registrationErrorMessage: action.payload
+        registrationErrorMessage: action.error,
+        loggedIn: action.payload,
       }
-    case Type.SET_LOGIN_ERROR:
-      return {
-        ...state,
-        loginErrorMessage: action.payload
-      }
+    }
     default:
       return state
   }

@@ -17,13 +17,11 @@ def handle_marshmallow_exception(e: ValidationError):
     """ Handle marshmallow HTTP Exception """
     if hasattr(e, 'errors'):
         return jsonify({
-            'success': False,
-            'errors': e.errors,
+            'error': e.errors,
         }), 400
     if hasattr(e, 'messages'):
         return jsonify({
-            'success': False,
-            'errors': e.messages[next(iter(e.messages.keys()))][0],
+            'error': e.messages[next(iter(e.messages.keys()))][0],
         }), 400
 
 @errors_bp.app_errorhandler(werkzeug.exceptions.InternalServerError)
@@ -59,7 +57,7 @@ def _http_exception_resp(e: werkzeug.exceptions.HTTPException):
     response.data = json.dumps({
         "code": e.code,
         "name": e.name,
-        "description": e.description
+        "error": e.description
     })
     response.content_type = "application/json"
     return response
@@ -72,10 +70,6 @@ def _unexpected_exception_resp():
     status_code = 500
     success = False
     response = {
-        'success': success,
-        'error': {
-            'type': 'UnexpectedException',
-            'message': 'An unexpected error has occurred.'
-        }
+        'error': 'An unexpected error has occurred.',
     }
     return jsonify(response), status_code
