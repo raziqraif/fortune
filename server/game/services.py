@@ -66,10 +66,7 @@ def update_game(
 
 @db.atomic()
 def get_game_by_id(game_id):
-    # game = Game.select().where(Game.id == int(game_id))
-    breakpoint()
-    game = Game.get_by_id(int(game_id))
-    # game = Game.get_or_none(Game.id == int(game_id))
+    game = Game.get_or_none(Game.id == game_id)
     if not game:
         raise BadRequest('Invalid game id')
     return game
