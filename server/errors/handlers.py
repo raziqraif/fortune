@@ -15,12 +15,16 @@ def handle_http_exception(e):
 @errors_bp.app_errorhandler(ValidationError)
 def handle_marshmallow_exception(e: ValidationError):
     """ Handle marshmallow HTTP Exception """
-    print(e.errors)
-    return jsonify({
-        'success': False,
-        'errors': e.errors,
-    }), 400
-
+    if hasattr(e, 'errors'):
+        return jsonify({
+            'success': False,
+            'errors': e.errors,
+        }), 400
+    if hasattr(e, 'messages'):
+        return jsonify({
+            'success': False,
+            'errors': e.messages[next(iter(e.messages.keys()))][0],
+        }), 400
 
 @errors_bp.app_errorhandler(werkzeug.exceptions.InternalServerError)
 def handle_500(e):

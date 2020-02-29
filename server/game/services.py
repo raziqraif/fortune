@@ -12,7 +12,6 @@ def create_gamecoins_for_game(game, active_coins):
     for coin in active_coins:
         coin = Coin.get_or_none(Coin.id == coin['id'])
         if coin is None:
-            breakpoint()
             raise BadRequest('Invalid coin')
         res.append(GameCoin.create(
             game=game,

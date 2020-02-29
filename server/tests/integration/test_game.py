@@ -33,3 +33,75 @@ class GameTest(AuthDbTest):
         self.assertEqual(int(HTTPStatus.OK), res._status_code)
         res = self.client.get(f'/game/{res.json["id"]}/')
         self.assertEqual(int(HTTPStatus.OK), res._status_code)
+
+    def test_get_game_with_invalid_pk_fails(self):
+        res = self.client.get('/game/42')
+        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+
+    def test_get_game_with_invalid_starting_cash_fails(self):
+        res = self.client.post('/game/',
+            data=json.dumps({
+                'title': 'jfkldsajklfd',
+                'startingCash': 'hi',
+                'endsOn': (datetime.utcnow() + timedelta(days=7)).isoformat(),
+                'activeCoins': [
+                    {
+                        'id': 1,
+                        'name': 'Bitcoin'
+                    }
+                ]
+            }),
+            content_type='application/json',
+        )
+        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+        res = self.client.post('/game/',
+            data=json.dumps({
+                'title': 'jfkldsajklfd',
+                'startingCash': -1000,
+                'endsOn': (datetime.utcnow() + timedelta(days=7)).isoformat(),
+                'activeCoins': [
+                    {
+                        'id': 1,
+                        'name': 'Bitcoin'
+                    }
+                ]
+            }),
+            content_type='application/json',
+        )
+        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+        self.assertTrue('non-negative' in json.dumps(res.json))
+
+    def test_get_game_with_invalid_active_coin_fails(self):
+        res = self.client.post('/game/',
+            data=json.dumps({
+                'title': 'jfkldsajklfd',
+                'startingCash': 42,
+                'endsOn': (datetime.utcnow() + timedelta(days=7)).isoformat(),
+                'activeCoins': [
+                    {
+                        'id': 42,
+                        'name': 'InvalidCoin'
+                    }
+                ]
+            }),
+            content_type='application/json',
+        )
+        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+
+    def test_get_game_with_invalid_ends_on_date_fails(self):
+        res = self.client.post('/game/',
+            data=json.dumps({
+                'title': 'jfkldsajklfd',
+                'startingCash': 42,
+                'endsOn': (datetime.utcnow() - timedelta(minutes=1)).isoformat(),
+                'activeCoins': [
+                    {
+                        'id': 1,
+                        'name': 'Bitcoin'
+                    }
+                ]
+            }),
+            content_type='application/json',
+        )
+        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+

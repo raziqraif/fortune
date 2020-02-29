@@ -36,5 +36,5 @@ services:
       - DB_NAME=postgres
       - DB_PASSWORD=
       # NOTE do this
-      - PYTHONPATH=
+      - PYTHONPATH=/app
       - HTTP_HOST=http://localhost:5000
