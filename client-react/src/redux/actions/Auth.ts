@@ -35,6 +35,7 @@ export const login = (username: string, password: string) => {
       dispatch(pushAction)
     } catch (e) {
       // TODO failed, dispatch error
+      console.log(e)
       handleAxiosError(e, dispatch, Type.SET_SIGNIN_STATUS)
     }
   }
@@ -54,12 +55,13 @@ export const register = (username: string, password: string) => {
     try {
       res = await axios.post('http://localhost:5000/auth/register', {username, password})
       persistToken(res.data.token)
-      dispatch({type: Type.SET_SIGNIN_STATUS, payload: true})
+      dispatch({type: Type.SET_REGISTRATION_STATUS, payload: true})
       const pushAction: any = push('/')
       dispatch(pushAction)
     } catch (e) {
       // TODO failed, dispatch error
-      handleAxiosError(e, dispatch, Type.SET_SIGNIN_STATUS)
+      console.log('registration error', e)
+      handleAxiosError(e, dispatch, Type.SET_REGISTRATION_STATUS)
     }
   }
 }

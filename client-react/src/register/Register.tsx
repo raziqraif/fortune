@@ -9,6 +9,7 @@ interface RegisterProps {
     username: string,
     password: string,
   ) => void;
+  error: string;
 }
 
 interface RegisterState {
@@ -61,6 +62,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
               <Form.Label>Confirm Password</Form.Label>
               <Form.Control name="confirmPassword" type="password" value={this.state.confirmPassword} placeholder="Confirm Password" onChange={this.onChange}/>
             </Form.Group>
+            <p style={{color: 'red'}}>{this.props.error}</p>
             <Button variant="primary" type="submit">
               Submit
             </Button>
@@ -70,6 +72,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 }
 
 const mapStateToProps = (state: RootState) => ({
+  error: state.auth.registrationErrorMessage,
 })
 
 const mapDispatchToProps = {

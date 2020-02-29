@@ -62,7 +62,9 @@ class Login extends React.Component<LoginProps, LoginState> {
                         <Form.Control type="password" placeholder="Enter password" name="password" value={this.state.password} onChange={this.handleChange}/>
                     </Form.Group>
                 </Form.Row>
-                
+                <Form.Control.Feedback type='invalid'>
+                </Form.Control.Feedback>
+                <p style={{color: 'red'}}>{this.props.error}</p>
                 <Form.Row>
                     <Col>
                         <Button variant="primary" type="submit">
@@ -75,9 +77,6 @@ class Login extends React.Component<LoginProps, LoginState> {
                         </Button>
                     </Col>
                 </Form.Row>
-                <Form.Control.Feedback type='invalid'>
-                    {this.props.error}
-                </Form.Control.Feedback>
             </Form>
         )
     }

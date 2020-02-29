@@ -26,6 +26,7 @@ export default (state = initialState, action: Action) => {
         loggedIn: action.payload,
       }
     case Type.SET_REGISTRATION_STATUS: {
+      console.log(action)
       if (!action.hasOwnProperty('payload')) {
         return {
           ...state,
