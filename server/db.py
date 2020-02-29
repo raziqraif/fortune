@@ -96,3 +96,6 @@ class GameProfileCoin(BaseModel):
     coin = peewee.ForeignKeyField(Coin)
     coin_amount = DECIMAL_FIELD
 
+
+MODELS = [Profile, AuthToken, Game, GameProfile, Coin,
+    GameCoin, Ticker, Trade, GameProfileCoin]

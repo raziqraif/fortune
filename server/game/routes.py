@@ -8,7 +8,7 @@ import random
 
 from db import Game, GameProfile, Coin, GameCoin, db
 from .serializers import GameCreateRequest, CreateGameResponse
-from .services import create_game
+from .services import create_game, update_game
 
 game_bp = Blueprint('game', __name__, url_prefix='/game')
 
@@ -34,14 +34,23 @@ def create():
     )
     return jsonify(CreateGameResponse.serialize(game))
 
-@game_bp.route('/', methods=['GET'])
-def get():
-    return jsonify(CreateGameResponse.serialize(Game.select(), many=True))
+@game_bp.route('/<game_id>', methods=['GET'])
+def get(game_id):
+    if game_id is None:
+        return jsonify(CreateGameResponse.serialize(Game.select(), many=True))
+    return jsonify(CreateGameResponse.serialize(Game.get_or_none(Game.id == game_id)))
 
-@game_bp.route('/', methods=['PUT'])
-def edit():
+@game_bp.route('/<game_id>', methods=['PUT'])
+def edit(game_id):
     # edit game
     validated_data: dict = GameCreateRequest.deserialize(request.json)
+    update_game(
+        game_id,
+        validated_data['name'],
+        validated_data['startingCash'],
+        validated_data['endsOn'],
+        active_coins=validated_data['activeCoins'],
+    )
     
     try:
         q = Game.update({
