@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from http import HTTPStatus
 import json
+import pytz
 
 from db import db, Profile, Coin
 from tests.utils import DbTest, AuthDbTest
@@ -20,7 +21,7 @@ class GameTest(AuthDbTest):
             data=json.dumps({
                 'title': 'jfkldsajklfd',
                 'startingCash': 42,
-                'endsOn': (datetime.utcnow() + timedelta(days=7)).isoformat(),
+                'endsOn': (datetime.utcnow().replace(tzinfo=pytz.utc) + timedelta(days=7)).isoformat(),
                 'activeCoins': [
                     {
                         'id': 1,
@@ -43,7 +44,7 @@ class GameTest(AuthDbTest):
             data=json.dumps({
                 'title': 'jfkldsajklfd',
                 'startingCash': 'hi',
-                'endsOn': (datetime.utcnow() + timedelta(days=7)).isoformat(),
+                'endsOn': (datetime.utcnow().replace(tzinfo=pytz.utc) + timedelta(days=7)).isoformat(),
                 'activeCoins': [
                     {
                         'id': 1,
@@ -58,7 +59,7 @@ class GameTest(AuthDbTest):
             data=json.dumps({
                 'title': 'jfkldsajklfd',
                 'startingCash': -1000,
-                'endsOn': (datetime.utcnow() + timedelta(days=7)).isoformat(),
+                'endsOn': (datetime.utcnow().replace(tzinfo=pytz.utc) + timedelta(days=7)).isoformat(),
                 'activeCoins': [
                     {
                         'id': 1,
@@ -76,7 +77,7 @@ class GameTest(AuthDbTest):
             data=json.dumps({
                 'title': 'jfkldsajklfd',
                 'startingCash': 42,
-                'endsOn': (datetime.utcnow() + timedelta(days=7)).isoformat(),
+                'endsOn': (datetime.utcnow().replace(tzinfo=pytz.utc) + timedelta(days=7)).isoformat(),
                 'activeCoins': [
                     {
                         'id': 42,
@@ -93,7 +94,7 @@ class GameTest(AuthDbTest):
             data=json.dumps({
                 'title': 'jfkldsajklfd',
                 'startingCash': 42,
-                'endsOn': (datetime.utcnow() - timedelta(minutes=1)).isoformat(),
+                'endsOn': (datetime.utcnow().replace(tzinfo=pytz.utc) - timedelta(minutes=1)).isoformat(),
                 'activeCoins': [
                     {
                         'id': 1,
