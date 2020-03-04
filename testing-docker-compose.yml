@@ -16,7 +16,7 @@ services:
     depends_on:
       - postgres
     # TODO add migrations after 'done;' below:
-    command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 1; done; green tests -s 1'
+    command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 1; done; python -m unittest discover tests'
 
     build:
       dockerfile: Dockerfile.dev
