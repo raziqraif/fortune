@@ -7,6 +7,7 @@ import random
 from werkzeug.exceptions import BadRequest
 import pytz
 
+from auth.decorators import require_authentication
 from db import Game, GameProfile, Coin, GameCoin, db
 from .serializers import GameCreateRequest, CreateGameResponse, CoinsResponse
 from .services import create_game, update_game, get_game_by_id
@@ -19,7 +20,8 @@ UTC = pytz.UTC
 #TODO
 # We probably need a better way to generate shareable link, code, and ID.
 @game_bp.route('/', methods=['POST'])
-def create():
+@require_authentication
+def create(profile):
     validated_data: dict = GameCreateRequest.deserialize(request.json)
     local = pytz.timezone("UTC")
     ends_at = validated_data['endsOn']
@@ -40,12 +42,15 @@ def create():
 
 
 @game_bp.route('/<game_id>', methods=['GET'])
-def get(game_id):
+@require_authentication
+def get(profile, game_id):
     try:
         int(game_id)
     except:
         raise BadRequest('Invalid game id')
-    return jsonify(CreateGameResponse.serialize(get_game_by_id(game_id)))
+    # check if the user belongs to the game!
+    game = get_game_by_id(game_id)
+    return jsonify(CreateGameResponse.serialize(game))
 
 
 @game_bp.route('/coins', methods=['GET'])
@@ -54,7 +59,8 @@ def get_coins():
 
 
 @game_bp.route('/<game_id>', methods=['PUT'])
-def edit(game_id):
+@require_authentication
+def edit(profile, game_id):
     # edit game
     validated_data: dict = GameCreateRequest.deserialize(request.json)
     update_game(

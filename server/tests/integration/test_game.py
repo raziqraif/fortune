@@ -1,11 +1,23 @@
 from datetime import datetime, timedelta
 from http import HTTPStatus
+from unittest.mock import Mock, patch, MagicMock
 import json
 import pytz
 
 from db import db, Profile, Coin
 from tests.utils import DbTest, AuthDbTest
 
+
+def mock_require_authentication():
+    print('inside mock')
+    def side_effect(route_func):
+        print('inside side_effect')
+        @wraps(route_func)
+        def wrapper(*args, **kwargs):
+            print('calling mocked')
+            return route_func('todo standin profile', *args, **kwargs)
+        return wrapper
+    return MagicMock(side_effect=side_effect)
 
 class GameTest(AuthDbTest):
 
@@ -16,7 +28,16 @@ class GameTest(AuthDbTest):
             Coin.create(name='Ethereum', symbol='ETH')
             Coin.create(name='Litecoin', symbol='LTC')
 
+    # @patch('game.routes.require_authentication', mock_require_authentication())
     def test_create_game_with_valid_info(self):
+        res = self.client.post('/auth/register/',
+            data=json.dumps({
+                'username': 'theusername',
+                'password': 'thepassword',
+            }),
+            content_type='application/json',
+        )
+        token = res.json['token']
         res = self.client.post('/game/',
             data=json.dumps({
                 'title': 'jfkldsajklfd',
@@ -29,17 +50,31 @@ class GameTest(AuthDbTest):
                     }
                 ]
             }),
+            headers={
+                'Authorization': 'Bearer ' + token,
+            },
             content_type='application/json',
         )
         self.assertEqual(int(HTTPStatus.OK), res._status_code)
-        res = self.client.get(f'/game/{res.json["id"]}/')
+        res = self.client.get(f'/game/{res.json["id"]}/', headers={
+            'Authorization': 'Bearer ' + token
+        })
         self.assertEqual(int(HTTPStatus.OK), res._status_code)
 
     def test_get_game_with_invalid_pk_fails(self):
         res = self.client.get('/game/42')
         self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
 
+    @patch('auth.decorators.get_auth_token', MagicMock(return_value=Mock(profile='hi')))
     def test_get_game_with_invalid_starting_cash_fails(self):
+        res = self.client.post('/auth/register/',
+            data=json.dumps({
+                'username': 'theusername',
+                'password': 'thepassword',
+            }),
+            content_type='application/json',
+        )
+        token = res.json['token']
         res = self.client.post('/game/',
             data=json.dumps({
                 'title': 'jfkldsajklfd',
@@ -52,6 +87,9 @@ class GameTest(AuthDbTest):
                     }
                 ]
             }),
+            headers={
+                'Authorization': 'Bearer ' + token,
+            },
             content_type='application/json',
         )
         self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
@@ -67,6 +105,9 @@ class GameTest(AuthDbTest):
                     }
                 ]
             }),
+            headers={
+                'Authorization': 'Bearer ' + token,
+            },
             content_type='application/json',
         )
         self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)

@@ -15,7 +15,6 @@ class IntegrationTest(TestCase):
         cls.app = create_app()
         cls.client = cls.app.test_client()
 
-
 class AuthTest(TestCase):
     @classmethod
     def setUpClass(cls):
