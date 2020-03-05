@@ -87,9 +87,7 @@ export default class CoinSelector extends React.Component<CoinSelectorProps, Coi
                 </Form.Group>
                 <Form.Group className="col-sm-6">
                     <Form.Label className="col-sm-12">Selected Coins</Form.Label>
-                    { !this.state.filter &&      // TODO: Ideally, the button should only be disabled
-                        <Button onClick={this.selectAllCoins} className="btn-success">Select All</Button>
-                    }
+                    <Button onClick={this.selectAllCoins} disabled={!!this.state.filter} className="btn-success">Select All</Button>
                     <Button onClick={this.deselectAllCoins} className="btn-warning">Deselect All</Button>
                     {this.props.activeCoins.map((coin: { name: string }) => {
                         return <Form.Check
