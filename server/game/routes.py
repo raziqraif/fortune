@@ -36,7 +36,8 @@ def create(profile):
         shareable_link,
         shareable_code,
         ends_at,
-        active_coins
+        active_coins,
+        profile=profile,
     )
     return jsonify(CreateGameResponse.serialize(game))
 

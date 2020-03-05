@@ -4,7 +4,7 @@ from decimal import Decimal
 import pytz
 from werkzeug.exceptions import BadRequest
 
-from db import db, Game, GameCoin, Coin
+from db import db, Game, GameCoin, Coin, GameProfile
 
 
 @db.atomic()
@@ -30,7 +30,8 @@ def create_game(
     shareable_link,
     shareable_code,
     ends_at,
-    active_coins):
+    active_coins,
+    profile):
     # bounds check, validate
     if ends_at < datetime.utcnow().replace(tzinfo=pytz.utc):
         raise BadRequest('Invalid game ending date')
@@ -44,6 +45,11 @@ def create_game(
         ends_at=ends_at,
     )
     create_gamecoins_for_game(game, active_coins)
+    GameProfile.create(
+        game=game,
+        profile=profile,
+        cash=0,
+    )
     return game
 
 @db.atomic()
