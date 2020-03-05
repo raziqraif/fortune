@@ -19,6 +19,12 @@ function persistToken(token: string) {
   localStorage.setItem('token', token)
 }
 
+async function fetchToken() {
+  const token = await localStorage.getItem('token')
+  axios.defaults.headers.common['AUTHORIZATION'] = `Bearer ${token}`
+  return token
+}
+
 export const login = (username: string, password: string) => {
   return async (dispatch: Dispatch<Action>) => {
     // replace this with an api module assumedly
@@ -64,6 +70,15 @@ export const register = (username: string, password: string) => {
       // TODO failed, dispatch error
       console.log('registration error', e)
       handleAxiosError(e, dispatch, Type.REGISTER_FAILED)
+    }
+  }
+}
+
+export const fetchAuthToken = () => {
+  return async (dispatch: Dispatch<Action>) => {
+    const token = await fetchToken()
+    if (token) {
+      dispatch({type: Type.LOGIN_SUCCEEDED, payload: true})
     }
   }
 }
