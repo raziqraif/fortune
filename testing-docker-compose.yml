@@ -1,6 +1,6 @@
 version: '3'
 services:
-  postgres:
+  postgres-testing:
     image: 'postgres'
   client:
     command: sh -c "CI=true npm test"
@@ -14,9 +14,9 @@ services:
       - /app/node_modules
   api:
     depends_on:
-      - postgres
+      - postgres-testing
     # TODO add migrations after 'done;' below:
-    command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 1; done; python -m unittest discover tests'
+    command: bash -c 'while !</dev/tcp/postgres-testing/5432; do sleep 1; done; python -m unittest discover tests'
 
     build:
       dockerfile: Dockerfile.dev
@@ -30,10 +30,11 @@ services:
     environment:
       - PORT=5000
       - FLASK_ENV=testing
-      - DB_HOST=postgres
+      - DB_HOST=postgres-testing
       - DB_USER=postgres
       - DB_PORT=5432
       - DB_NAME=postgres
       - DB_PASSWORD=
       # NOTE do this
-      - PYTHONPATH=
+      - PYTHONPATH=/app
+      - HTTP_HOST=http://localhost:5000

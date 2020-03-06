@@ -6,6 +6,8 @@ from playhouse.pool import PooledPostgresqlDatabase
 import os
 
 # FIXME research the specificity of each api's ticker prices
+# WOW, just discovered a HUGE bug. Basically we can't do this, we must
+# for some reason declare each DecimalField separately
 DECIMAL_FIELD = peewee.DecimalField(max_digits=20, decimal_places=8)
 DATABASE = {
     'HOST': os.environ['DB_HOST'],
@@ -42,7 +44,7 @@ class AuthToken(BaseModel):
 
 class Game(BaseModel):
     name = peewee.TextField()
-    starting_cash = DECIMAL_FIELD
+    starting_cash = peewee.DecimalField(max_digits=20, decimal_places=8)
     shareable_link = peewee.TextField(unique=True)
     shareable_code = peewee.TextField(unique=True)
     ends_at = peewee.DateTimeField()
@@ -59,7 +61,7 @@ class Game(BaseModel):
 class GameProfile(BaseModel):
     game = peewee.ForeignKeyField(Game)
     profile = peewee.ForeignKeyField(Profile, backref='game_profiles')
-    cash = DECIMAL_FIELD
+    cash = peewee.DecimalField(max_digits=20, decimal_places=8)
 
 
 class Coin(BaseModel):
@@ -78,7 +80,7 @@ class GameCoin(BaseModel):
 
 class Ticker(BaseModel):
     coin = peewee.ForeignKeyField(Coin, backref='tickers')
-    price = DECIMAL_FIELD
+    price = peewee.DecimalField(max_digits=20, decimal_places=8)
     captured_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
 
 
@@ -88,11 +90,14 @@ class Trade(BaseModel):
     filled_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
     # FIXME is this correct?
     type = peewee.TextField(choices=['buy', 'sell'])
-    quantity = DECIMAL_FIELD
+    quantity = peewee.DecimalField(max_digits=20, decimal_places=8)
 
 
 class GameProfileCoin(BaseModel):
     game_profile = peewee.ForeignKeyField(GameProfile)
     coin = peewee.ForeignKeyField(Coin)
-    coin_amount = DECIMAL_FIELD
+    coin_amount = peewee.DecimalField(max_digits=20, decimal_places=8)
 
+
+MODELS = [Profile, AuthToken, Game, GameProfile, Coin,
+    GameCoin, Ticker, Trade, GameProfileCoin]

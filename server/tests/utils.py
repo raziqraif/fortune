@@ -6,6 +6,7 @@ from unittest import TestCase
 from auth.decorators import require_authentication
 from db import *
 from main import create_app
+from migrations.migrate import migrate
 
 
 class IntegrationTest(TestCase):
@@ -13,7 +14,6 @@ class IntegrationTest(TestCase):
     def setUpClass(cls):
         cls.app = create_app()
         cls.client = cls.app.test_client()
-
 
 class AuthTest(TestCase):
     @classmethod
@@ -32,25 +32,25 @@ class AuthTest(TestCase):
 class DbTest(IntegrationTest):
     @classmethod
     def setUpClass(cls):
-        super().setUpClass()
-        # TODO connect to to test database,
-        # migrate tables
-        # db.create_tables() <<-- we already do this in main.py
+        super(IntegrationTest, cls).setUpClass()
+        #IntegrationTest.setUpClass()
+        for i in range(1, 2):
+            migrate('up', f'migrations.v{i}')
     
     @classmethod
     def tearDownClass(cls):
         # TODO migrate down/delete tables
-        db.drop_tables([Profile, AuthToken, Game, GameProfile, Coin, GameCoin,
-            Ticker, Trade, GameProfileCoin])
+        for i in reversed(range(1, 2)):
+            migrate('down', f'migrations.v{i}')
 
     def setUp(self):
         # TODO insert test data into DB for each test, not strictly necessary
         # though
-        pass
+        db.create_tables(MODELS)
 
     def tearDown(self):
         # TODO drop test data from DB after each test
-        pass
+        db.drop_tables(MODELS)
 
     # TODO maybe have other helpers used across DB test cases
 
