@@ -3,6 +3,10 @@ import { Type } from '../actions/Types'
 export type State = typeof initialState;
 const initialState = {
   loggedIn: false,
+  registrationErrorMessage: '',
+  registrationLoading: false,
+  loginErrorMessage: '',
+  loginLoading: false,
 }
 
 export type Action = {
@@ -13,25 +17,55 @@ export type Action = {
 export type Auth = {
   loggedIn: boolean;
   registrationErrorMessage: string;
+  registrationLoading: boolean;
   loginErrorMessage: string;
+  loginLoading: boolean;
 }
 
 export default (state = initialState, action: Action) => {
   switch (action.type) {
-    case Type.SET_SIGNIN_STATUS:
+    case Type.LOGIN:
       return {
         ...state,
-        loggedIn: action.payload,
+        loginErrorMessage: '',
+        loginLoading: true,
       }
-    case Type.SET_REGISTRATION_ERROR:
+    case Type.LOGIN_FAILED:
       return {
         ...state,
-        registrationErrorMessage: action.payload
+        loginErrorMessage: action.payload,
+        loginLoading: false,
       }
-    case Type.SET_LOGIN_ERROR:
+    case Type.LOGIN_SUCCEEDED:
       return {
         ...state,
-        loginErrorMessage: action.payload
+        loginErrorMessage: '',
+        loginLoading: false,
+        loggedIn: true,
+      }
+    case Type.LOGOUT:
+      return {
+        ...state,
+        loggedIn: false,
+      }
+    case Type.REGISTER:
+      return {
+        ...state,
+        registrationErrorMessage: '',
+        registrationLoading: true,
+      }
+    case Type.REGISTER_FAILED:
+      return {
+        ...state,
+        registrationErrorMessage: action.payload,
+        registrationLoading: false,
+      }
+    case Type.REGISTER_SUCCEEDED:
+      return {
+        ...state,
+        registrationErrorMessage: '',
+        registrationLoading: false,
+        loggedIn: true,
       }
     default:
       return state
