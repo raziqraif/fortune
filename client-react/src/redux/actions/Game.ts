@@ -16,6 +16,16 @@ type CreateGameResponse = {
   }
 }
 
+export type GameType = {
+  data: {
+    name: string;
+    startingCash: string;
+    shareableLink: string;
+    shareableCode: string;
+    endsAt: Date;
+  }
+}
+
 export const createGame = (
     activeCoins: Array<{ id: string, name: string }>,
     endsOn: Date,
@@ -41,16 +51,16 @@ export const getGame = (
     try {
       // FIXME - dispatching dummy data until backend endpoint is up
       // const res = await axios.get(`http://localhost:5000/game/get_game/${id}`);
-      const res = {
+      const res: GameType = {
         data: {
-          title: 'Sam\'s game 1',
-          starting_cash: 10000.00,
+          name: 'Sam\'s game 1',
+          startingCash: '10000.00',
           shareableLink: 'http://localhost:5000/game/78da4a0b-0381-4d6f-a487-89ce3866e365',
           shareableCode: 'OWCO',
           endsAt: new Date(),
         }
       }
-      dispatch({type: Type.SET_GAME, payload: res.data});
+      dispatch({type: Type.SET_GAME, payload: res});
     } catch (e) {
       handleAxiosError(e, dispatch, Type.SET_GAME_FAILED);
     }

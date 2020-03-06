@@ -1,10 +1,19 @@
 import { Type } from '../actions/Types'
+import {GameType} from '../actions/Game'
 
 export type State = typeof initialState;
 const initialState = {
   createGameErrorMessage: '',
   createGameLoading: false,
-  game: {},
+  game: {
+    data: {
+      name: '',
+      startingCash: '',
+      shareableLink: '',
+      shareableCode: '',
+      endsAt: new Date()
+    }
+  },
   setGameErrorMessage: ''
 }
 
@@ -16,7 +25,7 @@ export type Action = {
 export type GameState = {
   createGameErrorMessage: string;
   createGameLoading: boolean;
-  game: object;
+  game: GameType;
   setGameErrorMessage: string;
 }
 
