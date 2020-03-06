@@ -9,7 +9,7 @@ import pytz
 
 from auth.decorators import require_authentication
 from db import Game, GameProfile, Coin, GameCoin, db
-from .serializers import GameCreateRequest, CreateGameResponse, CoinsResponse
+from .serializers import GameCreateRequest, GameResponse, CoinsResponse
 from .services import create_game, update_game, get_game_by_id
 
 game_bp = Blueprint('game', __name__, url_prefix='/game')
