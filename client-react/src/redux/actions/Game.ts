@@ -24,11 +24,11 @@ export const createGame = (
 ) => {
   return async (dispatch: Dispatch<Action>) => {
     try {
-      const res = await axios.post('http://localhost:5000/game/', {activeCoins, endsOn, startingCash, title})
-      const action: any = push(`/game/${res.data.id}`)
-      dispatch(action)
+      const res = await axios.post('http://localhost:5000/game/', {activeCoins, endsOn, startingCash, title});
+      const action: any = push(`/game/${res.data.id}`);
+      dispatch(action);
     } catch (e) {
-      handleAxiosError(e, dispatch, Type.CREATE_GAME_FAILED)
+      handleAxiosError(e, dispatch, Type.CREATE_GAME_FAILED);
     }
   }
 }
@@ -39,10 +39,10 @@ export const getGame = (
 ) => {
   return async (dispatch: Dispatch<Action>) => {
     try {
-      const res = await axios.get(`http://localhost:5000/game/get_game/${id}`)
-      dispatch({type: Type.SET_GAME, payload: res.data})
+      const res = await axios.get(`http://localhost:5000/game/get_game/${id}`);
+      dispatch({type: Type.SET_GAME, payload: res.data});
     } catch (e) {
-      handleAxiosError(e, dispatch, Type.SET_GAME_FAILED)
+      handleAxiosError(e, dispatch, Type.SET_GAME_FAILED);
     }
   }
 }
