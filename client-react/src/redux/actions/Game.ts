@@ -16,7 +16,6 @@ type CreateGameResponse = {
   }
 }
 
-
 export const createGame = (
     activeCoins: Array<{ id: string, name: string }>,
     endsOn: Date,
@@ -36,7 +35,7 @@ export const createGame = (
 
 // get game by game ID
 export const getGame = (
-  id: string
+  id: number
 ) => {
   return async (dispatch: Dispatch<Action>) => {
     try {
