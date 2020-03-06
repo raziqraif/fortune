@@ -2,6 +2,21 @@ import * as React from 'react';
 import { Table } from 'react-bootstrap';
 
 export default class CoinInfo extends React.Component {
+
+private dynamicRowRender(num:number) {
+  let rows = [];
+  for (let index = 0; index < num; index++) {
+    rows.push(      <tr>
+                      <td>hardcoding is bad</td>
+                      <td>stonks</td>
+                      <td> m0duLaR pRoGrAmMiNg </td>
+                    </tr>)
+
+  }
+
+  return rows
+}
+
     render() {
         return (
             <Table bordered>
@@ -12,16 +27,7 @@ export default class CoinInfo extends React.Component {
               </thead>
 
               <tbody>
-                <tr>
-                  <td>Bitcoin</td>
-                  <td>2billion dolars</td>
-                  <td>thingy</td>
-                </tr>
-                <tr>
-                  <td>hardcoding is bad</td>
-                  <td>stonks</td>
-                  <td> m0duLaR pRoGrAmMiNg </td>
-                </tr>
+              {this.dynamicRowRender(5)}
               </tbody>
             </Table>
         )
