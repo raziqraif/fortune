@@ -39,7 +39,7 @@ def create(profile):
         active_coins,
         profile=profile,
     )
-    return jsonify(CreateGameResponse.serialize(game))
+    return jsonify(GameResponse.serialize(game))
 
 
 @game_bp.route('/<game_id>', methods=['GET'])
@@ -51,7 +51,7 @@ def get(profile, game_id):
         raise BadRequest('Invalid game id')
     # check if the user belongs to the game!
     game = get_game_by_id(game_id)
-    return jsonify(CreateGameResponse.serialize(game))
+    return jsonify(GameResponse.serialize(game))
 
 
 @game_bp.route('/coins', methods=['GET'])
