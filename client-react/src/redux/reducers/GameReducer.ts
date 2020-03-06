@@ -4,6 +4,8 @@ export type State = typeof initialState;
 const initialState = {
   createGameErrorMessage: '',
   createGameLoading: false,
+  game: {},
+  setGameErrorMessage: ''
 }
 
 export type Action = {
@@ -14,9 +16,6 @@ export type Action = {
 export type GameState = {
   createGameErrorMessage: string;
   createGameLoading: boolean;
-  registrationLoading: boolean;
-  loginErrorMessage: string;
-  loginLoading: boolean;
   game: object;
   setGameErrorMessage: string;
 }

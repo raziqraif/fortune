@@ -39,7 +39,17 @@ export const getGame = (
 ) => {
   return async (dispatch: Dispatch<Action>) => {
     try {
-      const res = await axios.get(`http://localhost:5000/game/get_game/${id}`);
+      // FIXME - dispatching dummy data until backend endpoint is up
+      // const res = await axios.get(`http://localhost:5000/game/get_game/${id}`);
+      const res = {
+        data: {
+          title: 'Sam\'s game 1',
+          starting_cash: 10000.00,
+          shareableLink: 'http://localhost:5000/game/78da4a0b-0381-4d6f-a487-89ce3866e365',
+          shareableCode: 'OWCO',
+          endsAt: new Date(),
+        }
+      }
       dispatch({type: Type.SET_GAME, payload: res.data});
     } catch (e) {
       handleAxiosError(e, dispatch, Type.SET_GAME_FAILED);
