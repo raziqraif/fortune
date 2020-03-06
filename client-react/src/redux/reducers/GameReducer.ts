@@ -17,6 +17,8 @@ export type GameState = {
   registrationLoading: boolean;
   loginErrorMessage: string;
   loginLoading: boolean;
+  game: object;
+  setGameErrorMessage: string;
 }
 
 export default (state = initialState, action: Action) => {
@@ -32,6 +34,17 @@ export default (state = initialState, action: Action) => {
         ...state,
         createGameErrorMessage: action.payload,
         createGameLoading: false,
+      }
+    case Type.SET_GAME:
+      return {
+        ...state,
+        game: action.payload,
+        setGameErrorMessage: '',
+      }
+    case Type.SET_GAME_FAILED:
+      return {
+        ...state,
+        setGameErrorMessage: action.payload,
       }
     default:
       return state
