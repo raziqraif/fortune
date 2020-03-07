@@ -46,7 +46,7 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 
 	// calculates how much time is left in the game
 	private countdown = () => {
-		const endsAt = moment(this.props.game.data.endsAt);
+		const endsAt = moment(this.props.game.endsAt);
 		const now = moment();
 		const diff = moment(endsAt.diff(now));
 		const days = diff.format('D');
@@ -66,7 +66,7 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 				</Row>
 				<Row>
 					<div style={styles.heading}>
-						<h3>{global ? `Global Game` : `Private Game: ${game.data.name}`}</h3>
+						<h3>{global ? `Global Game` : `Private Game: ${game.name}`}</h3>
 						<div>Ends in: {days} {hours} {minutes} {seconds} </div>
 					</div>
 				</Row>

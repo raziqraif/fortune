@@ -76,20 +76,19 @@ def update_game(
 def get_game_by_id(game_id):
     game = Game.get_or_none(Game.id == game_id)
     if not game:
-        raise BadRequest('Invalid game id')
+        raise BadRequest('Game not found')
     return game
 
 @db.atomic()
 def get_coins_by_game_id(game_id):
-    gameCoins = GameCoin.select().where(GameCoin.id == game_id)
-    coins = Coin.select().where(gameCoin.coin == Coin.id for gameCoin in gameCoins)
+    coins = Coin.select().join(GameCoin).where(GameCoin.game == game_id)
     if not coins:
         raise BadRequest('Coins not found')
     return coins
 
 @db.atomic()
 def get_game_profile_by_profile_id_and_game_id(profile_id, game_id):
-    gameProfile = GameProfile.get_or_none(GameProfile.game == game_id & GameProfile.profile == profile_id)
+    gameProfile = GameProfile.get_or_none(GameProfile.game == game_id and GameProfile.profile == profile_id)
     if not gameProfile:
         raise BadRequest('User not in game')
     return gameProfile

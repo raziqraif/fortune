@@ -38,7 +38,7 @@ class Game extends React.Component<GameProps> {
 
 		// TODO global game - get global game 
 		else {
-
+			this.props.getGame(1);
 		}
 	}
 

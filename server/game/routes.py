@@ -49,9 +49,9 @@ def get(profile, game_id):
         int(game_id)
     except:
         raise BadRequest('Invalid game id')
+    game = get_game_by_id(game_id)
     gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
     gameProfileCoins = get_game_profile_coins_by_game_profile_id(gameProfile.id)
-    game = get_game_by_id(game_id)
     coins = get_coins_by_game_id(game_id)
     for coin in coins:
         coinNumber = 0
