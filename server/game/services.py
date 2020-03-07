@@ -48,7 +48,7 @@ def create_game(
     GameProfile.create(
         game=game,
         profile=profile,
-        cash=0,
+        cash=game.starting_cash,
     )
     return game
 
