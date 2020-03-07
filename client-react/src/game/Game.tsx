@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RootState } from '../redux/reducers';
-import { Row } from 'react-bootstrap';
+import { Row, Container } from 'react-bootstrap';
 import Actions from '../redux/actions';
 import { connect } from 'react-redux';
 import { GameType } from '../redux/actions/Game'
@@ -89,20 +89,22 @@ class Game extends React.Component<GameProps, GameState> {
 
         return (
             <div className="Game">
-                <Row>
-                    <h1 style={styles.heading}>Fortune</h1>
-                </Row>
-                <Row>
-                    <h3 style={styles.heading}>{gameId ? `Private Game: ${game.data.name}` : `Global Game`}</h3>
-                    <span>Ends in: {days} {hours} {minutes} {seconds} </span>
-                     
-                </Row>
-                <Row>
-                    Game info will go here
-                </Row>
-                <Row>
-                    Table will go here
-                </Row>
+                <Container>
+                    <Row>
+                        <h1 style={styles.heading}>Fortune</h1>
+                    </Row>
+                    <Row>
+                        <h3 style={styles.heading}>{gameId ? `Private Game: ${game.data.name}` : `Global Game`}</h3>
+                        <span>Ends in: {days} {hours} {minutes} {seconds} </span>
+                        
+                    </Row>
+                    <Row>
+                        Game info will go here
+                    </Row>
+                    <Row>
+                        Table will go here
+                    </Row>
+                </Container>
             </div>
         )
     }
