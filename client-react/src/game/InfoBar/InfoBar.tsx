@@ -30,8 +30,8 @@ class InfoBar extends React.Component {
 					</Col>
 
 					<Col>
+						<div style={{ alignSelf: 'center' }}>Time span:  </div>
 						<ButtonGroup aria-label="Time Span">
-							<div style={{ alignSelf: 'center' }}>Time span:  </div>
 							<Button variant="secondary">Hour</Button>
 							<Button variant="secondary">Day</Button>
 							<Button variant="secondary">Week</Button>
@@ -41,8 +41,8 @@ class InfoBar extends React.Component {
 					</Col>
 
 					<Col>
+						<div style={{ alignSelf: 'center' }}>Price:  </div>
 						<ButtonGroup aria-label="Price">
-							<div style={{ alignSelf: 'center' }}>Price:  </div>
 							<Button variant="secondary">Minimum</Button>
 							<Button variant="secondary">Maximum</Button>
 						</ButtonGroup>
