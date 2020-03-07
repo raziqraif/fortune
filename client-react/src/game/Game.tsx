@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { RootState } from '../redux/reducers';
-import { Row } from 'react-bootstrap';
+import { Container, Row, Col, Button, ButtonGroup } from 'react-bootstrap';
 import Actions from '../redux/actions';
 import { connect } from 'react-redux';
 import { GameType } from '../redux/actions/Game'
 import CSS from 'csstype';
 import moment from 'moment';
+import InfoBar from './infoBar/InfoBar';
 
 export interface GameProps {
     getGame: (
@@ -26,7 +27,7 @@ interface GameState {
 const styles: { [name: string]: CSS.Properties } = {
     heading: {
         width: '100%',
-        borderBottom: 'medium solid'
+        borderBottom: 'medium solid',
     },
 };
 
@@ -89,20 +90,21 @@ class Game extends React.Component<GameProps, GameState> {
 
         return (
             <div className="Game">
+							<Container>
                 <Row>
                     <h1 style={styles.heading}>Fortune</h1>
                 </Row>
                 <Row>
-                    <h3 style={styles.heading}>{gameId ? `Private Game: ${game.data.name}` : `Global Game`}</h3>
-                    <span>Ends in: {days} {hours} {minutes} {seconds} </span>
-                     
+									<div style={styles.heading}>
+										<h3>{gameId ? `Private Game: ${game.data.name}` : `Global Game`}</h3>
+										<div>Ends in: {days} {hours} {minutes} {seconds} </div>
+									</div>  
                 </Row>
-                <Row>
-                    Game info will go here
-                </Row>
+								<InfoBar />
                 <Row>
                     Table will go here
                 </Row>
+							</Container>
             </div>
         )
     }
