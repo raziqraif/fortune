@@ -25,11 +25,6 @@ class GameCreateRequest(BaseSerializer):
     startingCash = fields.Decimal(required=True, as_string=True)
     title = fields.Str(required=True, validate=title_length_validator)
 
-class GetGameResponse(BaseSerializer):
-    game = fields.Nested(GameResponse)
-    gameProfile = fields.Nested(GameProfileResponse)
-    coins = fields.List(fields.Nested(CoinsResponse), required=True)
-
 class GameResponse(BaseSerializer):
     id = fields.Int(required=True)
     name = fields.Str(required=True)
@@ -40,13 +35,16 @@ class GameResponse(BaseSerializer):
 
 class GameProfileResponse(BaseSerializer):
     cash = fields.Decimal(required=True, as_string=True)
-    coins = fields.List(fields.Nested(GameCoinsResponse), required=True)
-
-class GameCoinsResponse(BaseSerializer):
-    number = fields.Decimal(required=True, as_string=True)
-    coin = fields.Nested(CoinsResponse)
 
 class CoinsResponse(BaseSerializer):
     id = fields.Int(required=True)
     name = fields.Str(required=True)
     symbol = fields.Str(required=True)
+
+class GameCoinsResponse(CoinsResponse):
+    number = fields.Decimal(required=True, as_string=True)
+
+class GetGameResponse(BaseSerializer):
+    game = fields.Nested(GameResponse)
+    gameProfile = fields.Nested(GameProfileResponse)
+    coins = fields.List(fields.Nested(GameCoinsResponse), required=True)

@@ -4,7 +4,7 @@ from decimal import Decimal
 import pytz
 from werkzeug.exceptions import BadRequest
 
-from db import db, Game, GameCoin, Coin, GameProfile
+from db import db, Game, GameCoin, Coin, GameProfile, GameProfileCoin
 
 
 @db.atomic()
@@ -78,3 +78,25 @@ def get_game_by_id(game_id):
     if not game:
         raise BadRequest('Invalid game id')
     return game
+
+@db.atomic()
+def get_coins_by_game_id(game_id):
+    gameCoins = GameCoin.select().where(GameCoin.id == game_id)
+    coins = Coin.select().where(gameCoin.coin == Coin.id for gameCoin in gameCoins)
+    if not coins:
+        raise BadRequest('Coins not found')
+    return coins
+
+@db.atomic()
+def get_game_profile_by_profile_id_and_game_id(profile_id, game_id):
+    gameProfile = GameProfile.get_or_none(GameProfile.game == game_id & GameProfile.profile == profile_id)
+    if not gameProfile:
+        raise BadRequest('User not in game')
+    return gameProfile
+
+@db.atomic()
+def get_game_profile_coins_by_game_profile_id(game_profile_id):
+    gameProfileCoins = GameProfileCoin.select().where(GameProfileCoin.game_profile == game_profile_id)
+    if not gameProfileCoins:
+        return []
+    return gameProfileCoins
