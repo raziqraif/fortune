@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Container, Row, Col, Button, ButtonGroup } from 'react-bootstrap';
+import { Row, Col, Button, ButtonGroup } from 'react-bootstrap';
 import CSS from 'csstype';
-import moment from 'moment';
 
 const styles: { [name: string]: CSS.Properties } = {
 	main: {
@@ -10,6 +9,7 @@ const styles: { [name: string]: CSS.Properties } = {
 };
 
 class InfoBar extends React.Component {
+
 
 	render() {
 		return (
