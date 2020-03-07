@@ -5,6 +5,7 @@ import Actions from '../redux/actions';
 import { connect } from 'react-redux';
 import { GameType } from '../redux/actions/Game'
 import CSS from 'csstype';
+import moment from 'moment';
 
 export interface GameProps {
     getGame: (
@@ -16,24 +17,30 @@ export interface GameProps {
 }
 
 interface GameState {
-    // game: object;
-    // setGameErrorMessage: string;
+    days: string;
+    hours: string;
+    minutes: string;
+    seconds: string;
 }
 
 const styles: { [name: string]: CSS.Properties } = {
     heading: {
-        //padding: '0',
         width: '100%',
         borderBottom: 'medium solid'
     },
 };
 
 class Game extends React.Component<GameProps, GameState> {
+    private interval!: NodeJS.Timeout;
+
     constructor(props: GameProps) {
         super(props);
 
         this.state = {
-            
+            days: '',
+            hours: '',
+            minutes: '',
+            seconds: '',
         }
     }
 
@@ -47,14 +54,35 @@ class Game extends React.Component<GameProps, GameState> {
             this.props.getGame(parseInt(gameId));
         }
         
-        // global game - get global game (TODO)
+        // TODO global game - get global game 
         else {
 
         }
+
+        // moment countdown interval
+        this.interval = setInterval(this.countdown, 1000);
+
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
+    // calculates how much time is left in the game
+    private countdown = () => {
+        const endsAt = moment(this.props.game.data.endsAt);
+        const now = moment();
+        const diff = moment(endsAt.diff(now));
+        const days = diff.format('D');
+        const hours = diff.format('HH');
+        const minutes = diff.format('mm');
+        const seconds = diff.format('ss');
+        this.setState({ days, hours, minutes, seconds });
     }
 
     render() {
         const { gameId, error, game } = this.props;
+        const { days, hours, minutes, seconds } = this.state;
         if (error) {
             return <p style={{color: 'red'}}>{error}</p>
         }
@@ -66,6 +94,14 @@ class Game extends React.Component<GameProps, GameState> {
                 </Row>
                 <Row>
                     <h3 style={styles.heading}>{gameId ? `Private Game: ${game.data.name}` : `Global Game`}</h3>
+                    <span>Ends in: {days} {hours} {minutes} {seconds} </span>
+                     
+                </Row>
+                <Row>
+                    Game info will go here
+                </Row>
+                <Row>
+                    Table will go here
                 </Row>
             </div>
         )

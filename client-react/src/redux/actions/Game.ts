@@ -49,15 +49,19 @@ export const getGame = (
 ) => {
   return async (dispatch: Dispatch<Action>) => {
     try {
-      // FIXME - dispatching dummy data until backend endpoint is up
-      // const res = await axios.get(`http://localhost:5000/game/get_game/${id}`);
+      // FIXME - dispatching dummy data until I can figure out how to send authorization token lol
+      // const res = await axios.get(`http://localhost:5000/game/${id}`, {
+      //   headers: {
+      //     Authorization: axios.defaults.headers.common['AUTHORIZATION']
+      //   }
+      // });
       const res: GameType = {
         data: {
           name: 'Sam\'s game 1',
           startingCash: '10000.00',
           shareableLink: 'http://localhost:5000/game/78da4a0b-0381-4d6f-a487-89ce3866e365',
           shareableCode: 'OWCO',
-          endsAt: new Date(),
+          endsAt: new Date("March 15, 2020"),
         }
       }
       dispatch({type: Type.SET_GAME, payload: res});
