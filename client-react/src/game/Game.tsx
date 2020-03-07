@@ -96,12 +96,13 @@ class Game extends React.Component<GameProps, GameState> {
 					</Row>
 					<Row>
 						<h3 style={styles.heading}>{gameId ? `Private Game: ${game.data.name}` : `Global Game`}</h3>
-						<span>Ends in: {days} {hours} {minutes} {seconds} </span>
-
 					</Row>
 					<Row>
 						Game info will go here
           </Row>
+					<Row>
+					<span>Ends in: {days} {hours} {minutes} {seconds} </span>
+					</Row>
 					<Row>
 						<Cointable />
 					</Row>

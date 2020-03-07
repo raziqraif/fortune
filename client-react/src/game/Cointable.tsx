@@ -8,7 +8,7 @@ class Cointable extends React.Component {
 	render() {
 		return (
 			<div className="Cointable">
-				<Container style={{ width: '100%' }}>
+				<Container>
 					<Row>
 						<Col>
 							<span>Coin</span>
