@@ -3,11 +3,17 @@ import { Container, Row, Col, Button, ButtonGroup } from 'react-bootstrap';
 import CSS from 'csstype';
 import moment from 'moment';
 
+const styles: { [name: string]: CSS.Properties } = {
+	main: {
+		paddingTop: '1em',
+	},
+};
+
 class InfoBar extends React.Component {
 
 	render() {
 		return (
-			<div className="InfoBar">
+			<div className="InfoBar" style={styles.main}>
 				{/* Game info row */}
 				<Row>
 					<Col>
@@ -25,7 +31,7 @@ class InfoBar extends React.Component {
 
 					<Col>
 						<ButtonGroup aria-label="Time Span">
-							<div>Time span:  </div>
+							<div style={{ alignSelf: 'center' }}>Time span:  </div>
 							<Button variant="secondary">Hour</Button>
 							<Button variant="secondary">Day</Button>
 							<Button variant="secondary">Week</Button>
@@ -36,7 +42,7 @@ class InfoBar extends React.Component {
 
 					<Col>
 						<ButtonGroup aria-label="Price">
-							<div>Price:  </div>
+							<div style={{ alignSelf: 'center' }}>Price:  </div>
 							<Button variant="secondary">Minimum</Button>
 							<Button variant="secondary">Maximum</Button>
 						</ButtonGroup>
