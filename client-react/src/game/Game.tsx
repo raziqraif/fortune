@@ -1,14 +1,78 @@
 import * as React from 'react';
+import { RootState } from '../redux/reducers';
+import { Container, Row } from 'react-bootstrap';
+import Actions from '../redux/actions';
+import { connect } from 'react-redux';
+import { GameType } from '../redux/actions/Game'
+import HeaderBar from './HeaderBar/HeaderBar';
+import InfoBar from './InfoBar/InfoBar';
 
 export interface GameProps {
-    gameId?: string;
+	getGame: (
+		id: number
+	) => void;
+	gameId?: string;
+	error: string;
+	game: GameType;
 }
 
-export default class Game extends React.Component<GameProps> {
-    render() {
-        const gameId = this.props.gameId;
-        return (
-            <div>{gameId ? `Private: ${gameId}` : `Global`}</div>
-        )
-    }
+class Game extends React.Component<GameProps> {
+
+	constructor(props: GameProps) {
+		super(props);
+
+		this.state = {
+			
+		}
+	}
+
+	componentDidMount() {
+		const { gameId } = this.props;
+		// private game - get game
+		// LOOKATME - getGame and the backend expect gameId to be a number,
+		// but since gameId comes from match.params, it is a string.
+		// not sure how we should unify this discrepency
+		if (gameId) {
+			this.props.getGame(parseInt(gameId));
+		}
+
+		// TODO global game - get global game 
+		else {
+
+		}
+	}
+
+	render() {
+		const { gameId, error, game } = this.props;
+		const global = gameId ? false : true;
+		if (error) {
+			return <p style={{ color: 'red' }}>{error}</p>
+		}
+
+		return (
+			<div className="Game">
+				<Container>
+					<HeaderBar
+						game={game}
+						global={global}
+					/>
+					<InfoBar/>
+					<Row>
+						Table will go here
+                </Row>
+				</Container>
+			</div>
+		)
+	}
 }
+
+const mapStateToProps = (state: RootState) => ({
+	game: state.game.game,
+	error: state.game.setGameErrorMessage,
+})
+
+const mapDispatchToProps = {
+	getGame: Actions.game.getGame,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Game);

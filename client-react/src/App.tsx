@@ -2,7 +2,8 @@ import React from 'react';
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  Redirect
 } from "react-router-dom";
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -36,6 +37,9 @@ function App() {
             <Route path="/register" component={Register} />
             <Route path="/play" component={Play} />
             <Route path="/create" component={CreateGame} />
+            <Route render={({match}) => {
+              return <Redirect to="/"/>
+            }} />
           </Switch>
         </div>
     </div>
