@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import { GameType } from '../redux/actions/Game'
 import HeaderBar from './HeaderBar/HeaderBar';
 import InfoBar from './InfoBar/InfoBar';
+import CoinTable from './CoinTable/Cointable'
+import Cointable from './CoinTable/Cointable';
 
 export interface GameProps {
 	getGame: (
@@ -57,9 +59,7 @@ class Game extends React.Component<GameProps> {
 						global={global}
 					/>
 					<InfoBar/>
-					<Row>
-						Table will go here
-                </Row>
+					<Cointable/>
 				</Container>
 			</div>
 		)
