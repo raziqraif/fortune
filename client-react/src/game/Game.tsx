@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { GameType } from '../redux/actions/Game'
 import HeaderBar from './HeaderBar/HeaderBar';
 import InfoBar from './InfoBar/InfoBar';
-import CoinTable from './CoinTable/Cointable'
 import Cointable from './CoinTable/Cointable';
 
 export interface GameProps {
@@ -18,13 +17,43 @@ export interface GameProps {
 	game: GameType;
 }
 
-class Game extends React.Component<GameProps> {
+interface GameState {
+	coins: Array<{ id: string, name: string }>;
+}
+
+class Game extends React.Component<GameProps, GameState> {
 
 	constructor(props: GameProps) {
 		super(props);
 
 		this.state = {
-			
+			// TODO - dummy data - fix when get_game_coins endpoint has been made
+			coins: [
+				{
+					id: "1",
+					name: "Bitcoin"
+				},
+				{
+					id: "2",
+					name: "Ethereum"
+				},
+				{
+					id: "3",
+					name: "Litecoin"
+				},
+				{
+					id: "4",
+					name: "Coin 3"
+				},
+				{
+					id: "5",
+					name: "Coin 4"
+				},
+				{
+					id: "6",
+					name: "Coin 5"
+				},
+			]
 		}
 	}
 
@@ -59,7 +88,9 @@ class Game extends React.Component<GameProps> {
 						global={global}
 					/>
 					<InfoBar/>
-					<Cointable/>
+					<Cointable
+						coins={this.state.coins}
+					/>
 				</Container>
 			</div>
 		)
