@@ -1,102 +1,81 @@
 import {ReactComponent} from "*.svg";
-import React from "react";
+import React, {CSSProperties} from "react";
 import {Form, Card, Container, Row, Button, Col} from "react-bootstrap";
 
+const buttonStyle: CSSProperties = {
+    width: 120,
+    color: "white",
+    background: "#156beb"
+};
+
+const gameCardStyle: CSSProperties = {
+    width: '18rem',
+};
+
+type GameType = { name: string, link: string, endTime: Date }
+
 export default class ActiveGames extends React.Component {
-    activeGames = [
-        {name: "Global Game", link: "/my_game1"},
-        {name: "Global Timed Game", link: "/my_game2"},
-        {name: "Boilermaker", link: "my_game3"}
-    ]
+    activeGames: GameType[] = [
+        {name: "Global Game", link: "/global", endTime: new Date()},
+        {name: "Global Timed Game", link: "/global_timed", endTime: new Date()},
+        {name: "Boilermaker", link: "my_game3", endTime: new Date()}
+    ];
 
     // TODO: Remove this after real data has been pulled
     componentWillMount(): void {
-        for (let i = 4; i < 20; i++) {
-            this.activeGames.push({name: "Game " + i, link: "/my_game" + i})
+        for (let i = 4; i <= 9; i++) {
+            this.activeGames.push({name: "Game " + i, link: "/my_game" + i, endTime: new Date()})
         }
+    }
+
+    endTimeToString = (game: GameType) => {
+        return game.endTime.toLocaleString();
     }
 
     filteredGames = () => {
+        // TODO: Implement this
         return this.activeGames;
-    }
+    };
 
-    populateGames = () => {
+    // TODO: Prevent cards from being shifted when the window is resized
+    // TODO: Truncate long game titles
+    // TODO: Implement tooltip to display game title
+    populateGameCards = () => {
         let games = this.filteredGames();
         let gameCards = [];
-        for (let i = 0; i < games.length / 3; i += 3) {
-            let gameCardsInARow = []
+        for (let i = 0; i < games.length; i += 3) {
+            let gameCardsInARow = [];
             for (let j = i; (j < i + 3) && (j < games.length); j++) {
-                let gameCard = <Col style={{width: "auto"}}>
-                    <Card bg={"primary"} text={"white"} style={{width: '18rem'}}>
-                        <Card.Header>{games[j].name}</Card.Header>
+                let gameCard = <Col>
+                    <Card bg={"primary"} text={"white"} style={gameCardStyle}>
+                        <Card.Header><h6>{games[j].name}</h6></Card.Header>
                         <Card.Body>
-                            <Card.Text>Ends at 4/9/2020</Card.Text>
+                            <Card.Text>Ends at: {this.endTimeToString(games[j])}</Card.Text>
+                            <Container>
+                                <Button variant={"primary"}
+                                        size={"sm"}
+                                        href={games[j].link}
+                                        style={buttonStyle}
+                                >Play</Button>
+                            </Container>
                         </Card.Body>
                     </Card>
-                </Col>
-                console.log(gameCard)
-                gameCardsInARow.push(gameCard)
+                </Col>;
+                gameCardsInARow.push(gameCard);
             }
-            gameCards.push(<Row>{gameCardsInARow}</Row>)
-            gameCards.push(<br/>)
+            gameCards.push(<Row>{gameCardsInARow}</Row>);
+            gameCards.push(<br/>);
         }
         return gameCards;
-    }
+    };
 
-    createTable = () => {
-        let table = []
-
-        // Outer loop to create parent
-        for (let i = 0; i < 3; i++) {
-            let children = []
-            //Inner loop to create children
-            for (let j = 0; j < 5; j++) {
-                children.push(<td>{`Column ${j + 1}`}</td>)
-            }
-            //Create the parent and add the children
-            table.push(<tr>{children}</tr>)
-        }
-        return table
-    }
     render() {
         return (
             <div>
                 <Container>
-                    {this.populateGames()}
+                    {this.populateGameCards()}
                 </Container>
             </div>
-            // <table>
-            //     {this.createTable()}
-            // </table>
-            // <div>
-            //     <Container>
-            //         {console.log("hello")}
-            //         {this.populateGames()}
-            //         {this.activeGames.map((game: { name: string, link: string}) => {
-            //             let index = this.activeGames.indexOf(game)
-            //             let result = <Col>
-            //                 <Card bg={"primary"} text={"white"} style={{width: '18rem'}}>
-            //                     <Card.Header>{game.name}</Card.Header>
-            //                     <Card.Body>
-            //                         <Card.Text>Ends at 4/9/2020</Card.Text>
-            //                     </Card.Body>
-            //                 </Card>
-            //             </Col>
-            //
-            //             if (index % 4 == 0) {
-            //                 result = <Col>
-            //                     <Card bg={"primary"} text={"white"} style={{width: '18rem'}}>
-            //                         <Card.Header>{game.name}</Card.Header>
-            //                         <Card.Body>
-            //                             <Card.Text>Ends at 4/9/2020</Card.Text>
-            //                         </Card.Body>
-            //                     </Card>
-            //                 </Col>
-            //             }
-            //             return result
-            //         })}
-            //     </Container>
-            // </div>
         )
     }
 }

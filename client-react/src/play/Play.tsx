@@ -20,7 +20,6 @@ export default class Play extends React.Component {
         return (
             <div className={'container'}>
                 <h1>Play a Game</h1>
-                <br/>
                 {/*<Container>*/}
                 {/*    <Row>*/}
                 {/*        <Col>*/}
@@ -73,6 +72,7 @@ export default class Play extends React.Component {
                                 <Button variant={"primary"}>Search</Button>
                             </InputGroup.Append>
                         </InputGroup>
+                        <br/>
                     </div>
                 {/*</Container>*/}
                 <ActiveGames></ActiveGames>
