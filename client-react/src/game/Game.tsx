@@ -28,38 +28,13 @@ export interface GameProps {
 	error: string;
 }
 
-// interface GameState {
-// 	error: string;
-// 	game: GameType;
-// 	gameProfile: {
-// 		cash: string;
-// 	}
-// 	coins: Array<{
-// 		id: string;
-// 		name: string;
-// 		symbol: string;
-// 		number: number;
-// 	}>
-// }
-
 class Game extends React.Component<GameProps> {
 
 	constructor(props: GameProps) {
 		super(props);
 
 		this.state = {
-		// 	game: {
-		// 		name: '',
-		// 		startingCash: '',
-		// 		shareableLink: '',
-		// 		shareableCode: '',
-		// 		endsAt: new Date()
-		// 	},
-		// 	gameProfile: {
-		// 		cash: ''
-		// 	},
-		// 	coins: [],
-		// 	setGameErrorMessage: '',
+
 		}
 	}
 
@@ -80,8 +55,7 @@ class Game extends React.Component<GameProps> {
 	}
 
 	render() {
-		const { gameId } = this.props;
-		const { error, game } = this.props;
+		const { gameId, error, game } = this.props;
 		const global = gameId ? false : true;
 		if (error) {
 			return <p style={{ color: 'red' }}>{error}</p>
