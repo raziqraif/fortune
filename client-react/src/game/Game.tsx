@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { RootState } from '../redux/reducers';
-import { Container, Row } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import Actions from '../redux/actions';
-//import { State } from '../redux/reducers/GameReducer'
 import { connect } from 'react-redux';
 import { GameType } from '../redux/actions/Game';
 import HeaderBar from './HeaderBar/HeaderBar';

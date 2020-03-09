@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Row, Modal, Col, Button, Container } from 'react-bootstrap';
+import { Row, Modal, Col, Button } from 'react-bootstrap';
 import { GameType } from '../../redux/actions/Game'
 import CSS from 'csstype';
 import moment from 'moment';

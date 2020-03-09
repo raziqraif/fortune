@@ -1,6 +1,5 @@
 import { Type } from '../actions/Types'
 import {GameType} from '../actions/Game'
-import Game from '../../game';
 
 export type State = typeof initialState;
 const initialState = {
