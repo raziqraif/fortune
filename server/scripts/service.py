@@ -13,9 +13,13 @@ NOMICS_BASE_URL = 'https://api.nomics.com/v1'
 WAIT = 10
 
 
+def get_api_url(*coins):
+    return f'{NOMICS_BASE_URL}/currencies/ticker?ids={",".join(coins)}&key={NOMICS_API_KEY}'
+
+
 @db.atomic()
 def ping(*coins):
-    res = requests.get(f'{NOMICS_BASE_URL}/currencies/ticker?ids={",".join(coins)}&key={NOMICS_API_KEY}')
+    res = requests.get(get_api_url(*coins))
     for coin_res in res.json():
         symbol = coin_res['symbol']
         coin = Coin.get(Coin.symbol == symbol)
