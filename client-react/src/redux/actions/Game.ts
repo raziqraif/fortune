@@ -68,8 +68,6 @@ export const getGame = (
       await fetchAuthToken();
       const res = await axios.get(`http://localhost:5000/game/${id}`);
 
-      console.log(res.data)
-      
       dispatch({type: Type.SET_GAME, payload: res.data.game});
       dispatch({type: Type.SET_GAME_COINS, payload: res.data.coins});
       dispatch({type: Type.SET_GAME_PROFILE, payload: res.data.gameProfile});

@@ -79,7 +79,6 @@ export default (state = initialState, action: Action) => {
         setGameErrorMessage: action.payload,
       }
     case Type.SET_GAME_PROFILE:
-      console.log(action.payload);
       return {
         ...state,
         game: {
