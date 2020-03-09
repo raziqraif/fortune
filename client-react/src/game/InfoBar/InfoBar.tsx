@@ -11,23 +11,39 @@ const styles: { [name: string]: CSS.Properties } = {
 interface InfoBarProps {
 	gameProfile: {
 		cash: string,
-	}
+	},
+	coins: Array<{
+		id: string;
+		name: string;
+		symbol: string;
+		number: number;
+	}>,
 }
 
 class InfoBar extends React.Component<InfoBarProps> {
 
+	// TODO - get price of coins to calculate current net worth
+	// also will probably have to worry about casting
+	private getNetWorth = () =>  {
+		let { cash } = this.props.gameProfile;
+		this.props.coins.forEach(coin => {
+			cash += coin.number;
+		})
+		return cash;
+	} 
 
 	render() {
+		const { gameProfile } = this.props;
 		return (
 			<div className="InfoBar" style={styles.main}>
 				{/* Game info row */}
 				<Row>
 					<Col>
 						<Row>
-							<span>Cash: $45990</span>
+							<span>Cash: ${gameProfile.cash}</span>
 						</Row>
 						<Row>
-							<span>Net worth: $60592</span>
+							<span>Net worth: ${this.getNetWorth()}</span>
 						</Row>
 					</Col>
 

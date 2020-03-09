@@ -96,6 +96,7 @@ class Game extends React.Component<GameProps> {
 					/>
 					<InfoBar
 						gameProfile={game.gameProfile}
+						coins={game.coins}
 					/>
 				</Container>
 			</div>
