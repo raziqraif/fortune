@@ -66,7 +66,7 @@ class GameTest(AuthDbTest):
         self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
 
     @patch('auth.decorators.get_auth_token', MagicMock(return_value=Mock(profile='hi')))
-    def test_get_game_with_invalid_starting_cash_fails(self):
+    def test_create_game_with_invalid_starting_cash_fails(self):
         res = self.client.post('/auth/register/',
             data=json.dumps({
                 'username': 'theusername',
@@ -113,7 +113,7 @@ class GameTest(AuthDbTest):
         self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
         self.assertTrue('positive' in json.dumps(res.json))
 
-    def test_get_game_with_invalid_active_coin_fails(self):
+    def test_create_game_with_invalid_active_coin_fails(self):
         res = self.client.post('/game/',
             data=json.dumps({
                 'title': 'jfkldsajklfd',
@@ -130,7 +130,7 @@ class GameTest(AuthDbTest):
         )
         self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
 
-    def test_get_game_with_invalid_ends_on_date_fails(self):
+    def test_create_game_with_invalid_ends_on_date_fails(self):
         res = self.client.post('/game/',
             data=json.dumps({
                 'title': 'jfkldsajklfd',
