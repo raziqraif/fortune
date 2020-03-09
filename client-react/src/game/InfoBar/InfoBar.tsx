@@ -8,7 +8,13 @@ const styles: { [name: string]: CSS.Properties } = {
 	},
 };
 
-class InfoBar extends React.Component {
+interface InfoBarProps {
+	gameProfile: {
+		cash: string,
+	}
+}
+
+class InfoBar extends React.Component<InfoBarProps> {
 
 
 	render() {

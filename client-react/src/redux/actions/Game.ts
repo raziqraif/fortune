@@ -17,8 +17,9 @@ type CreateGameResponse = {
   }
 }
 
+// I'm taking ID out of here for now because if I understand right
+// the global game won't have an ID. - SAM
 export type GameType = {
-  id: string;
   name: string;
   startingCash: string;
   shareableLink: string;
@@ -65,10 +66,11 @@ export const getGame = (
   return async (dispatch: Dispatch<Action>) => {
     try {
       await fetchAuthToken();
-      // FIXME - dispatching dummy data until I can figure out how to send authorization token lol
       const res = await axios.get(`http://localhost:5000/game/${id}`);
       
       dispatch({type: Type.SET_GAME, payload: res.data.game});
+      dispatch({type: Type.SET_GAME_COINS, payload: res.data.coins});
+      dispatch({type: Type.SET_GAME_PROFILE, payload: res.data.gameProfile});
     } catch (e) {
       handleAxiosError(e, dispatch, Type.SET_GAME_FAILED);
     }

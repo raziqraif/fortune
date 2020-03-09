@@ -2,8 +2,9 @@ import * as React from 'react';
 import { RootState } from '../redux/reducers';
 import { Container, Row } from 'react-bootstrap';
 import Actions from '../redux/actions';
+//import { State } from '../redux/reducers/GameReducer'
 import { connect } from 'react-redux';
-import { GameType } from '../redux/actions/Game'
+import { GameType } from '../redux/actions/Game';
 import HeaderBar from './HeaderBar/HeaderBar';
 import InfoBar from './InfoBar/InfoBar';
 
@@ -12,9 +13,34 @@ export interface GameProps {
 		id: number
 	) => void;
 	gameId?: string;
+	game: {
+		data: GameType,
+		gameProfile: {
+			cash: string,
+		},
+		coins: Array<{
+			id: string;
+			name: string;
+			symbol: string;
+			number: number;
+		}>
+	}
 	error: string;
-	game: GameType;
 }
+
+// interface GameState {
+// 	error: string;
+// 	game: GameType;
+// 	gameProfile: {
+// 		cash: string;
+// 	}
+// 	coins: Array<{
+// 		id: string;
+// 		name: string;
+// 		symbol: string;
+// 		number: number;
+// 	}>
+// }
 
 class Game extends React.Component<GameProps> {
 
@@ -22,7 +48,18 @@ class Game extends React.Component<GameProps> {
 		super(props);
 
 		this.state = {
-			
+		// 	game: {
+		// 		name: '',
+		// 		startingCash: '',
+		// 		shareableLink: '',
+		// 		shareableCode: '',
+		// 		endsAt: new Date()
+		// 	},
+		// 	gameProfile: {
+		// 		cash: ''
+		// 	},
+		// 	coins: [],
+		// 	setGameErrorMessage: '',
 		}
 	}
 
@@ -43,7 +80,8 @@ class Game extends React.Component<GameProps> {
 	}
 
 	render() {
-		const { gameId, error, game } = this.props;
+		const { gameId } = this.props;
+		const { error, game } = this.props;
 		const global = gameId ? false : true;
 		if (error) {
 			return <p style={{ color: 'red' }}>{error}</p>
@@ -53,10 +91,12 @@ class Game extends React.Component<GameProps> {
 			<div className="Game">
 				<Container>
 					<HeaderBar
-						game={game}
+						game={game.data}
 						global={global}
 					/>
-					<InfoBar/>
+					<InfoBar
+						gameProfile={game.gameProfile}
+					/>
 				</Container>
 			</div>
 		)
