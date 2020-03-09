@@ -1,4 +1,6 @@
+from decimal import Decimal
 import os
+import random
 import time
 
 import requests
@@ -22,10 +24,39 @@ def ping(*coins):
         Ticker.create(coin=coin, price=price)
 
 
+def stubbed(*coins):
+    for coin in coins:
+        last_ticker = (Ticker
+            .select()
+            .where(Ticker.coin == coin)
+            .order_by(Ticker.captured_at.desc())
+            .limit(1))
+        if last_ticker.count() == 0:
+            price = random.uniform(500, 12000)
+            print(f'Creating first ticker for {coin.symbol}: {price}')
+            Ticker.create(coin=coin, price=price)
+        else:
+            new_price = last_ticker.get().price * Decimal(random.uniform(0.98, 1.02))
+            print(f'{coin.symbol}: {new_price}')
+            Ticker.create(coin=coin, price=new_price)
+
+
 def begin():
-    while True:
-        ping('BTC', 'ETH', 'LTC')
-        time.sleep(WAIT)
+    env = os.environ['FLASK_ENV']
+    if env == 'testing':
+        # TODO stubbed implementation
+        return
+    elif env == 'development':
+        if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
+            return
+        coins = Coin.select()
+        while True:
+            stubbed(*coins)
+            time.sleep(WAIT)
+    elif env == 'production':
+        while True:
+            ping('BTC', 'ETH', 'LTC')
+            time.sleep(WAIT)
 
 
 if __name__ == '__main__':
