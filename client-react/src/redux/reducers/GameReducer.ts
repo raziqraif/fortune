@@ -64,7 +64,13 @@ export default (state = initialState, action: Action) => {
         ...state,
         game: {
           ...state.game,
-          data: action.payload,
+          data: {
+            endsAt: action.payload.ends_at,
+            name: action.payload.name,
+            shareableCode: action.payload.shareable_code,
+            shareableLink: action.payload.shareable_link,
+            startingCash:  action.payload.starting_cash,
+          }
         },
         setGameErrorMessage: '',
       }

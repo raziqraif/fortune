@@ -24,13 +24,13 @@ class InfoBar extends React.Component<InfoBarProps> {
 
 	// TODO - get price of coins to calculate current net worth
 	// also will probably have to worry about casting
-	private getNetWorth = () =>  {
+	private getNetWorth = () => {
 		let { cash } = this.props.gameProfile;
 		this.props.coins.forEach(coin => {
 			cash += coin.number;
 		})
 		return cash;
-	} 
+	}
 
 	render() {
 		const { gameProfile } = this.props;

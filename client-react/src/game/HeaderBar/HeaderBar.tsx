@@ -35,7 +35,9 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 			minutes: '',
 			seconds: '',
 		}
+	}
 
+	componentDidMount() {
 		// moment countdown interval
 		this.interval = setInterval(this.countdown, 1000);
 	}
