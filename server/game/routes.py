@@ -61,6 +61,14 @@ def get(profile, game_id):
                 break
         coin.number = coinNumber
     
+    response = GetGameResponse.serialize({
+        'game': game,
+        'gameProfile': {
+            'cash': gameProfile.cash 
+        },
+        'coins': coins
+    })
+    print (response)
     return jsonify(GetGameResponse.serialize({
         'game': game,
         'gameProfile': {
