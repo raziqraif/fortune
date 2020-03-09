@@ -8,20 +8,42 @@ const styles: { [name: string]: CSS.Properties } = {
 	},
 };
 
-class InfoBar extends React.Component {
+interface InfoBarProps {
+	gameProfile: {
+		cash: string,
+	},
+	coins: Array<{
+		id: string;
+		name: string;
+		symbol: string;
+		number: number;
+	}>,
+}
 
+class InfoBar extends React.Component<InfoBarProps> {
+
+	// TODO - get price of coins to calculate current net worth
+	// also will probably have to worry about casting
+	private getNetWorth = () => {
+		let { cash } = this.props.gameProfile;
+		this.props.coins.forEach(coin => {
+			cash += coin.number;
+		})
+		return cash;
+	}
 
 	render() {
+		const { gameProfile } = this.props;
 		return (
 			<div className="InfoBar" style={styles.main}>
 				{/* Game info row */}
 				<Row>
 					<Col>
 						<Row>
-							<span>Cash: $45990</span>
+							<span>Cash: ${gameProfile.cash}</span>
 						</Row>
 						<Row>
-							<span>Net worth: $60592</span>
+							<span>Net worth: ${this.getNetWorth()}</span>
 						</Row>
 					</Col>
 
@@ -30,8 +52,8 @@ class InfoBar extends React.Component {
 					</Col>
 
 					<Col>
+						<div style={{ alignSelf: 'center' }}>Time span:  </div>
 						<ButtonGroup aria-label="Time Span">
-							<div style={{ alignSelf: 'center' }}>Time span:  </div>
 							<Button variant="secondary">Hour</Button>
 							<Button variant="secondary">Day</Button>
 							<Button variant="secondary">Week</Button>
@@ -41,8 +63,8 @@ class InfoBar extends React.Component {
 					</Col>
 
 					<Col>
+						<div style={{ alignSelf: 'center' }}>Price:  </div>
 						<ButtonGroup aria-label="Price">
-							<div style={{ alignSelf: 'center' }}>Price:  </div>
 							<Button variant="secondary">Minimum</Button>
 							<Button variant="secondary">Maximum</Button>
 						</ButtonGroup>

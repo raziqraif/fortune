@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { RootState } from '../redux/reducers';
-import { Container, Row } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import Actions from '../redux/actions';
 import { connect } from 'react-redux';
-import { GameType } from '../redux/actions/Game'
+import { GameType } from '../redux/actions/Game';
 import HeaderBar from './HeaderBar/HeaderBar';
 import InfoBar from './InfoBar/InfoBar';
 import Cointable from './CoinTable/Cointable';
@@ -13,47 +13,28 @@ export interface GameProps {
 		id: number
 	) => void;
 	gameId?: string;
+	game: {
+		data: GameType,
+		gameProfile: {
+			cash: string,
+		},
+		coins: Array<{
+			id: string;
+			name: string;
+			symbol: string;
+			number: number;
+		}>
+	}
 	error: string;
-	game: GameType;
 }
 
-interface GameState {
-	coins: Array<{ id: string, name: string }>;
-}
-
-class Game extends React.Component<GameProps, GameState> {
+class Game extends React.Component<GameProps> {
 
 	constructor(props: GameProps) {
 		super(props);
 
 		this.state = {
-			// TODO - dummy data - fix when get_game_coins endpoint has been made
-			coins: [
-				{
-					id: "1",
-					name: "Bitcoin"
-				},
-				{
-					id: "2",
-					name: "Ethereum"
-				},
-				{
-					id: "3",
-					name: "Litecoin"
-				},
-				{
-					id: "4",
-					name: "Coin 3"
-				},
-				{
-					id: "5",
-					name: "Coin 4"
-				},
-				{
-					id: "6",
-					name: "Coin 5"
-				},
-			]
+			
 		}
 	}
 
@@ -69,7 +50,7 @@ class Game extends React.Component<GameProps, GameState> {
 
 		// TODO global game - get global game 
 		else {
-
+			this.props.getGame(1);
 		}
 	}
 
@@ -84,12 +65,15 @@ class Game extends React.Component<GameProps, GameState> {
 			<div className="Game">
 				<Container>
 					<HeaderBar
-						game={game}
+						game={game.data}
 						global={global}
 					/>
-					<InfoBar/>
+					<InfoBar
+						gameProfile={game.gameProfile}
+						coins={game.coins}
+					/>
 					<Cointable
-						coins={this.state.coins}
+						coins={game.coins}
 					/>
 				</Container>
 			</div>

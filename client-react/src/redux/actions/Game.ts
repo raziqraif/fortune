@@ -4,6 +4,7 @@ import { Action } from '../reducers/AuthReducer'
 import {Type} from './Types'
 import {push} from 'connected-react-router'
 import {handleAxiosError} from './Utils'
+import { fetchAuthToken } from './Auth'
 
 type CreateGameResponse = {
   data: {
@@ -16,13 +17,28 @@ type CreateGameResponse = {
   }
 }
 
+// I'm taking ID out of here for now because if I understand right
+// the global game won't have an ID. - SAM
 export type GameType = {
+  name: string;
+  startingCash: string;
+  shareableLink: string;
+  shareableCode: string;
+  endsAt: Date;
+}
+
+export type GetGameResponse = {
   data: {
-    name: string;
-    startingCash: string;
-    shareableLink: string;
-    shareableCode: string;
-    endsAt: Date;
+    game: GameType,
+    gameProfile: {
+      cash: string;
+    }
+    coins: Array<{
+      id: string;
+      name: string;
+      symbol: string;
+      number: number;
+    }>
   }
 }
 
@@ -34,7 +50,7 @@ export const createGame = (
 ) => {
   return async (dispatch: Dispatch<Action>) => {
     try {
-      const res = await axios.post('http://localhost:5000/game/', {activeCoins, endsOn, startingCash, title});
+      const res: CreateGameResponse = await axios.post('http://localhost:5000/game/', {activeCoins, endsOn, startingCash, title});
       const action: any = push(`/game/${res.data.id}`);
       dispatch(action);
     } catch (e) {
@@ -49,22 +65,12 @@ export const getGame = (
 ) => {
   return async (dispatch: Dispatch<Action>) => {
     try {
-      // FIXME - dispatching dummy data until I can figure out how to send authorization token lol
-      // const res = await axios.get(`http://localhost:5000/game/${id}`, {
-      //   headers: {
-      //     Authorization: axios.defaults.headers.common['AUTHORIZATION']
-      //   }
-      // });
-      const res: GameType = {
-        data: {
-          name: 'Sam\'s game 1',
-          startingCash: '10000.00',
-          shareableLink: 'http://localhost:5000/game/78da4a0b-0381-4d6f-a487-89ce3866e365',
-          shareableCode: 'OWCO',
-          endsAt: new Date("March 15, 2020"),
-        }
-      }
-      dispatch({type: Type.SET_GAME, payload: res});
+      await fetchAuthToken();
+      const res = await axios.get(`http://localhost:5000/game/${id}`);
+      
+      dispatch({type: Type.SET_GAME, payload: res.data.game});
+      dispatch({type: Type.SET_GAME_COINS, payload: res.data.coins});
+      dispatch({type: Type.SET_GAME_PROFILE, payload: res.data.gameProfile});
     } catch (e) {
       handleAxiosError(e, dispatch, Type.SET_GAME_FAILED);
     }
