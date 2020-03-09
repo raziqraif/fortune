@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Row } from 'react-bootstrap';
+import { Row, Modal, Col, Button } from 'react-bootstrap';
 import { GameType } from '../../redux/actions/Game'
 import CSS from 'csstype';
 import moment from 'moment';
@@ -9,6 +9,7 @@ interface HeaderBarState {
 	hours: string;
 	minutes: string;
 	seconds: string;
+	showShare: boolean;
 }
 
 interface HeaderBarProps {
@@ -34,6 +35,7 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 			hours: '',
 			minutes: '',
 			seconds: '',
+			showShare: false,
 		}
 	}
 
@@ -58,8 +60,12 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 		this.setState({ days, hours, minutes, seconds });
 	}
 
+	private toggleShow = () => {
+		this.setState({ showShare: !this.state.showShare });
+	}
+
 	render() {
-		const { days, hours, minutes, seconds } = this.state;
+		const { days, hours, minutes, seconds, showShare } = this.state;
 		const { global, game } = this.props;
 		return (
 			<div className="HeaderBar">
@@ -71,7 +77,24 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 						<h3>{global ? `Global Game` : `Private Game: ${game.name}`}</h3>
 						<div>Ends in: {days} {hours} {minutes} {seconds} </div>
 					</div>
+					<Button variant="primary" onClick={this.toggleShow}>Share</Button>
 				</Row>
+
+				{/* Share modal */}
+				<Modal show={showShare} onHide={this.toggleShow}>
+					<Modal.Header closeButton>
+						<Modal.Title>Share this game!</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						<span>Link: {game.shareableLink}</span> <br/>
+						<span>Code: {game.shareableCode}</span>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button variant="secondary" onClick={this.toggleShow}>
+							Close
+          				</Button>
+					</Modal.Footer>
+				</Modal>
 			</div>
 		)
 	}
