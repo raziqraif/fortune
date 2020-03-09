@@ -1,9 +1,9 @@
-from tests.utils import DbTest
+from tests.utils import DbTest, AuthDbTest
 
 from db import Profile
 
 
-class SmokeTest(DbTest):
+class SmokeTest(AuthDbTest):
     def test_hello_world(self):
         res = self.client.get('/')
         self.assertEqual('hello world', res.data.decode())

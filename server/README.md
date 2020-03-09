@@ -14,3 +14,6 @@ them in the file)
 - `PORT`
 
 To run the smoke test, `green tests/integration/smoke.py`
+
+TODOs
+- Add custom marshmallow error messages so we don't have to do weird parsing in errors/handlers.py

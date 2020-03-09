@@ -9,6 +9,7 @@ import { Redirect } from 'react-router-dom';
 interface MenuBarProps {
     loggedIn: boolean;
     logout: () => void;
+    fetchAuthToken: () => void;
 }
 
 interface MenuBarState {
@@ -21,6 +22,10 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
         this.state = {
             toLogin: false,
         }
+    }
+
+    componentDidMount() {
+      this.props.fetchAuthToken()
     }
 
     private navigateToLogin = () => {
@@ -78,5 +83,6 @@ const mapStateToProps = (state: RootState) => ({
 })
 const mapDispatchToProps = {
   logout: Actions.auth.logout,
+  fetchAuthToken: Actions.auth.fetchAuthToken,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar)

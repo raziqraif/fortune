@@ -9,6 +9,8 @@ interface RegisterProps {
     username: string,
     password: string,
   ) => void;
+  error: string;
+  loading: boolean;
 }
 
 interface RegisterState {
@@ -61,8 +63,9 @@ class Register extends React.Component<RegisterProps, RegisterState> {
               <Form.Label>Confirm Password</Form.Label>
               <Form.Control name="confirmPassword" type="password" value={this.state.confirmPassword} placeholder="Confirm Password" onChange={this.onChange}/>
             </Form.Group>
-            <Button variant="primary" type="submit">
-              Submit
+            <p style={{color: 'red'}}>{this.props.error}</p>
+            <Button disabled={this.props.loading} variant="primary" type="submit">
+              {this.props.loading ? 'Loading...' : 'Submit'}
             </Button>
           </Form>
         )
@@ -70,6 +73,8 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 }
 
 const mapStateToProps = (state: RootState) => ({
+  error: state.auth.registrationErrorMessage,
+  loading: state.auth.registrationLoading,
 })
 
 const mapDispatchToProps = {
