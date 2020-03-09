@@ -5,10 +5,12 @@ import {CSSProperties} from "react";
 import ActiveGames from "./active";
 
 const buttonStyle: CSSProperties = {
-    width: 300,
-    height: 145,
-    fontSize: '120%',
-    lineHeight: "620%",
+    width: 100,
+    height: 38,
+    marginRight: 2,
+    marginLeft: 2
+    // fontSize: '120%',
+    // lineHeight: "620%",
 };
 
 export default class Play extends React.Component {
@@ -18,52 +20,12 @@ export default class Play extends React.Component {
 
     render() {
         return (
+            // <div>
             <div className={'container'}>
-                <h1>Play a Game</h1>
-                {/*<Container>*/}
-                {/*    <Row>*/}
-                {/*        <Col>*/}
-                {/*            <Button*/}
-                {/*                style={buttonStyle}*/}
-                {/*                href={"/global"}*/}
-                {/*                variant={"primary"}*/}
-                {/*                size={"lg"}*/}
-                {/*            > Global Game*/}
-                {/*            </Button>*/}
-                {/*        </Col>*/}
-                {/*        <Col>*/}
-                {/*            <Button*/}
-                {/*                style={buttonStyle}*/}
-                {/*                href={"/globalTimed"}  // TODO: Update link*/}
-                {/*                variant={"primary"}*/}
-                {/*                size={"lg"}*/}
-                {/*                title={"Global Timed Game"}*/}
-                {/*            > Global Timed Game*/}
-                {/*            </Button>*/}
-                {/*        </Col>*/}
-                {/*    </Row>*/}
-                {/*    <br/>*/}
-                {/*    <Row>*/}
-                {/*        <Col>*/}
-                {/*            <Button*/}
-                {/*                style={buttonStyle}*/}
-                {/*                href={"/join"}*/}
-                {/*                variant={"primary"}*/}
-                {/*                size={"lg"}*/}
-                {/*                onClick={this.showJoinModal}*/}
-                {/*            > Join a Game </Button>*/}
-                {/*        </Col>*/}
-                {/*        <Col>*/}
-                {/*            <Button*/}
-                {/*                style={buttonStyle}*/}
-                {/*                href={"/create"}*/}
-                {/*                variant={"primary"}*/}
-                {/*                size={"lg"}*/}
-                {/*            > Create a Game </Button>*/}
-                {/*        </Col>*/}
-                {/*    </Row>*/}
-                {/*    <br/>*/}
-                    <div className={"wrapper"}>
+            <h1>Play a Game</h1>
+                <br/>
+                <div className={"searchbar-wrapper"}>
+                    <div className={"wrapper"} style={{marginRight:10}}>
                         <InputGroup>
                             <FormControl
                                 placeholder={"Game title"}
@@ -72,10 +34,29 @@ export default class Play extends React.Component {
                                 <Button variant={"primary"}>Search</Button>
                             </InputGroup.Append>
                         </InputGroup>
-                        <br/>
                     </div>
-                {/*</Container>*/}
-                <ActiveGames></ActiveGames>
-            </div>)
+                    <br/>
+                    {/*<ButtonGroup>*/}
+                    <div>
+                        <Button
+                            style={buttonStyle}
+                            variant={"primary"}
+                            // size={"sm"}
+                            onClick={this.showJoinModal}
+                        > Join </Button>
+                        <Button
+                            style={buttonStyle}
+                            href={"/create"}
+                            variant={"primary"}
+                            // size={"sm"}
+                        > Create </Button>
+                    </div>
+                    {/*</ButtonGroup>*/}
+                </div>
+                <br/>
+                <ActiveGames/>
+            {/*</div>*/}
+            </div>
+        )
     }
 }

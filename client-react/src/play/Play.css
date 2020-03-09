@@ -8,11 +8,16 @@
     padding: 15px 0px;
 }
 
+.searchbar-wrapper {
+    display: flex;
+    flex-direction: row;
+}
+
 .wrapper {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: 56%;
-    padding: 15px 0px;
+    width: 30rem;
+    /*padding: 15px 0px;*/
 }
