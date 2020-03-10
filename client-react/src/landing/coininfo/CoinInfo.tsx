@@ -1,18 +1,31 @@
 import * as React from 'react';
 import { Table } from 'react-bootstrap';
+import Actions from '../../redux/actions';
+import { RootState } from '../../redux/reducers';
+import { connect } from 'react-redux';
 
-export default class CoinInfo extends React.Component {
+interface CoinInfoProps {
+  allCoins: Array<{ id: string, name: string }>;
+  getAllCoins: () => {};
+}
+
+class CoinInfo extends React.Component<CoinInfoProps> {
+  constructor(props: CoinInfoProps) {
+      super(props);
+  }
+
+  componentDidMount() {
+      this.props.getAllCoins();
+  }
 
 private dynamicRowRender(num:number) {
   let rows = [];
-  for (let index = 0; index < num; index++) {
-    rows.push(      <tr>
-                      <td>hardcoding is bad</td>
-                      <td>stonks</td>
-                      <td> m0duLaR pRoGrAmMiNg </td>
-                    </tr>)
-
-  }
+  rows = this.props.allCoins.map(coin => <tr>
+                                         <td>{coin.name}</td>
+                                         <td>Price</td>
+                                         <td>Graph</td>
+                                         <td>Change</td>
+                                         </tr> );
 
   return rows
 }
@@ -21,9 +34,10 @@ private dynamicRowRender(num:number) {
         return (
             <Table bordered>
               <thead>
-                <th>Name</th>
+                <th>Coin</th>
                 <th>Price</th>
-                <th>something else idk</th>
+                <th>History</th>
+                <th>24hr % Change</th>
               </thead>
 
               <tbody>
@@ -31,5 +45,13 @@ private dynamicRowRender(num:number) {
               </tbody>
             </Table>
         )
-    }
-}
+    }//render()
+}//class CoinInfo
+
+const mapStateToProps = (state: RootState) => ({
+    allCoins: state.coins.coins,
+});
+const mapDispatchToProps = {
+    getAllCoins: Actions.coins.getAllCoins,
+};
+export default connect(mapStateToProps, mapDispatchToProps)(CoinInfo);
