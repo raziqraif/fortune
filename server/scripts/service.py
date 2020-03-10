@@ -23,7 +23,7 @@ def ping(*coins):
     for coin_res in res.json():
         symbol = coin_res['symbol']
         coin = Coin.get(Coin.symbol == symbol)
-        price = coin_res['price']
+        price = Decimal(coin_res['price'])
         print(f'{symbol}: {price}')
         Ticker.create(coin=coin, price=price)
 

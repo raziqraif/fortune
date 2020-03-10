@@ -1,3 +1,4 @@
+from decimal import Decimal
 import os
 from unittest import TestCase
 from unittest.mock import call, patch, Mock, MagicMock
@@ -17,18 +18,18 @@ class TestService(TestCase):
         url = get_api_url('BTC', 'ETH', 'LTC')
         self.assertEqual('https://api.nomics.com/v1/currencies/ticker?ids=BTC,ETH,LTC&key=foo', url)
     
-    @patch('requests.get', MagicMock(return_value=Mock(json=lambda: [{'symbol': 'FOO', 'price': 56}])))
+    @patch('requests.get', MagicMock(return_value=Mock(json=lambda: [{'symbol': 'FOO', 'price': '56.12345678'}])))
     @patch('scripts.service.Coin')
     @patch('scripts.service.Ticker')
     def test_parsing_with_one_coin(self, mock_ticker, mock_coin):
         mock_coin.get.return_value = Coin(symbol='FOO', name='Foocoin')
         os.environ['NOMICS_BASE_URL'] = 'foo'
         ping('FOO')
-        mock_ticker.create.assert_called_with(coin=mock_coin.get.return_value, price=56)
+        mock_ticker.create.assert_called_with(coin=mock_coin.get.return_value, price=Decimal('56.12345678'))
 
     @patch('requests.get', MagicMock(return_value=Mock(json=lambda: [
-        {'symbol': 'FOO', 'price': 56},
-        {'symbol': 'BAR', 'price': 42},
+        {'symbol': 'FOO', 'price': '56.12345678'},
+        {'symbol': 'BAR', 'price': '42.98765432'},
     ])))
     @patch('scripts.service.Coin')
     @patch('scripts.service.Ticker')
@@ -41,8 +42,8 @@ class TestService(TestCase):
         os.environ['NOMICS_BASE_URL'] = 'foo'
         ping('FOO', 'BAR')
         calls = [
-            call(coin=side_effect[0], price=56),
-            call(coin=side_effect[1], price=42),
+            call(coin=side_effect[0], price=Decimal('56.12345678')),
+            call(coin=side_effect[1], price=Decimal('42.98765432')),
         ]
         mock_ticker.create.assert_has_calls(calls, any_order=False)
 
