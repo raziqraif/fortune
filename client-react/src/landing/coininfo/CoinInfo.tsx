@@ -5,7 +5,7 @@ import { RootState } from '../../redux/reducers';
 import { connect } from 'react-redux';
 
 interface CoinInfoProps {
-  allCoins: Array<{ id: string, name: string }>;
+  allCoins: Array<{ id: string, name: string, symbol:string}>;
   getAllCoins: () => {};
 }
 
@@ -21,7 +21,7 @@ class CoinInfo extends React.Component<CoinInfoProps> {
 private dynamicRowRender() {
   let rows = [];
   rows = this.props.allCoins.map(coin => <tr>
-                                         <td>{coin.name}</td>
+                                         <td>{coin.name} ({coin.symbol})</td>
                                          <td>Price</td>
                                          <td>Graph</td>
                                          <td>Change</td>
