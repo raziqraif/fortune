@@ -18,7 +18,7 @@ class CoinInfo extends React.Component<CoinInfoProps> {
       this.props.getAllCoins();
   }
 
-private dynamicRowRender(num:number) {
+private dynamicRowRender() {
   let rows = [];
   rows = this.props.allCoins.map(coin => <tr>
                                          <td>{coin.name}</td>
@@ -41,7 +41,7 @@ private dynamicRowRender(num:number) {
               </thead>
 
               <tbody>
-              {this.dynamicRowRender(5)}
+              {this.dynamicRowRender()}
               </tbody>
             </Table>
         )
