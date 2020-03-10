@@ -2,7 +2,7 @@ import { Type } from '../actions/Types'
 
 export type CoinState = typeof initialState;
 const initialState = {
-  coins: [] as Array<{ id: string, name: string }>,
+  coins: [] as Array<{ id: string, name: string, symbol:string }>,
 }
 
 export type Action = {
