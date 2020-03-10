@@ -26,7 +26,7 @@ private dynamicRowRender() {
                                          <td>Graph</td>
                                          <td>Change</td>
                                          </tr> );
-
+  rows = rows.slice(0,10) //only show first 10 coins - in reality need to filter through rows for certain coins
   return rows
 }
 
