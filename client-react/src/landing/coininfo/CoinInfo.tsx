@@ -4,6 +4,8 @@ import Actions from '../../redux/actions';
 import { RootState } from '../../redux/reducers';
 import { connect } from 'react-redux';
 
+import CoinGraph from './coingraph/CoinGraph'
+
 interface CoinInfoProps {
   allCoins: Array<{ id: string, name: string, symbol:string}>;
   getAllCoins: () => {};
@@ -23,7 +25,7 @@ private dynamicRowRender() {
   rows = this.props.allCoins.map(coin => <tr>
                                          <td>{coin.name} ({coin.symbol})</td>
                                          <td>Price</td>
-                                         <td>Graph</td>
+                                         <td> <CoinGraph/> </td>
                                          <td>Change</td>
                                          </tr> );
   rows = rows.slice(0,10) //only show first 10 coins - in reality need to filter through rows for certain coins

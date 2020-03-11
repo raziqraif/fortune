@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { Table } from 'react-bootstrap';
-import Actions from '../../redux/actions';
-import { RootState } from '../../redux/reducers';
-import { connect } from 'react-redux';
 
-export default class CoinInfo extends React.Component {
+export default class CoinGraph extends React.Component {
 
     render() {
-        return ()
+        return (
+          <div>test</div>
+        )
     }//render()
 }//class CoinGraph
