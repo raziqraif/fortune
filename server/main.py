@@ -3,6 +3,7 @@ import traceback
 
 from flask import Flask 
 from flask_cors import CORS
+from flask_socketio import SocketIO
 
 from auth.routes import auth_bp
 from errors.handlers import errors_bp
@@ -33,4 +34,12 @@ def create_app():
     def hello():
         return 'hello world'
 
-    return app
+    socketio = SocketIO(app)
+
+    @socketio.on('message')
+    def handle_message(message):
+        print('received message: ' + message)
+    @socketio.on('my event')
+    def handle_my_custom_event(json):
+        print('received json: ' + str(json))
+    return app, socketio
