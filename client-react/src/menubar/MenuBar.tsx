@@ -27,12 +27,12 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
 
     componentDidMount() {
       this.props.fetchAuthToken()
-      const socket = io('http://localhost:5000/auth/login');
+      const socket = io('http://localhost:5000');
       socket.on('connect', () => {
-        socket.emit('my event', {data: "I'm connected"})
-      })
-      socket.on('connect', function(){
-        socket.emit('message', 'n00b')
+        console.log('syn')
+        socket.emit('message', 'ack', (data: string) => {
+          console.log(data)
+        })
       });
       socket.on('event', function(data: string){
         console.log('event received:', data)

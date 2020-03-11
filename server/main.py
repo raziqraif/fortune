@@ -34,12 +34,10 @@ def create_app():
     def hello():
         return 'hello world'
 
-    socketio = SocketIO(app)
+    socketio = SocketIO(app, cors_allowed_origins='*')
 
     @socketio.on('message')
     def handle_message(message):
         print('received message: ' + message)
-    @socketio.on('my event')
-    def handle_my_custom_event(json):
-        print('received json: ' + str(json))
+        return 'syn ack'
     return app, socketio
