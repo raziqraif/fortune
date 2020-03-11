@@ -24,8 +24,9 @@ def ping(*coins):
         symbol = coin_res['symbol']
         coin = Coin.get(Coin.symbol == symbol)
         price = Decimal(coin_res['price'])
-        print(f'{symbol}: {price}')
-        Ticker.create(coin=coin, price=price)
+        price_change_day_pct = Decimal(coin_res['1d']['price_change_pct'])
+        print(f'{symbol}: {price} {price_change_day_pct}%')
+        Ticker.create(coin=coin, price=price, price_change_day_pct=price_change_day_pct)
 
 
 def stubbed(*coins):
@@ -37,12 +38,18 @@ def stubbed(*coins):
             .limit(1))
         if last_ticker.count() == 0:
             price = random.uniform(500, 12000)
-            print(f'Creating first ticker for {coin.symbol}: {price}')
-            Ticker.create(coin=coin, price=price)
+            print(f'Creating first ticker for {coin.symbol}: {price} 0%')
+            Ticker.create(
+                coin=coin,
+                price=price,
+                price_change_day_pct=0,
+            )
         else:
-            new_price = last_ticker.get().price * Decimal(random.uniform(0.98, 1.02))
-            print(f'{coin.symbol}: {new_price}')
-            Ticker.create(coin=coin, price=new_price)
+            last_ticker = last_ticker.get()
+            new_price = last_ticker.price * Decimal(random.uniform(0.98, 1.02))
+            price_change_day_pct = (new_price - last_ticker.price) / last_ticker.price
+            print(f'{coin.symbol}: {new_price} {price_change_day_pct}%')
+            Ticker.create(coin=coin, price=new_price, price_change_day_pct=price_change_day_pct)
 
 
 def begin():

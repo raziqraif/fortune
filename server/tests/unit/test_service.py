@@ -18,18 +18,24 @@ class TestService(TestCase):
         url = get_api_url('BTC', 'ETH', 'LTC')
         self.assertEqual('https://api.nomics.com/v1/currencies/ticker?ids=BTC,ETH,LTC&key=foo', url)
     
-    @patch('requests.get', MagicMock(return_value=Mock(json=lambda: [{'symbol': 'FOO', 'price': '56.12345678'}])))
+    @patch('requests.get', MagicMock(return_value=Mock(json=lambda: [
+        {'symbol': 'FOO', 'price': '56.12345678', '1d': {'price_change_pct': '-1.23456789'}}
+    ])))
     @patch('scripts.service.Coin')
     @patch('scripts.service.Ticker')
     def test_parsing_with_one_coin(self, mock_ticker, mock_coin):
         mock_coin.get.return_value = Coin(symbol='FOO', name='Foocoin')
         os.environ['NOMICS_BASE_URL'] = 'foo'
         ping('FOO')
-        mock_ticker.create.assert_called_with(coin=mock_coin.get.return_value, price=Decimal('56.12345678'))
+        mock_ticker.create.assert_called_with(
+            coin=mock_coin.get.return_value,
+            price=Decimal('56.12345678'),
+            price_change_day_pct=Decimal('-1.23456789'),
+        )
 
     @patch('requests.get', MagicMock(return_value=Mock(json=lambda: [
-        {'symbol': 'FOO', 'price': '56.12345678'},
-        {'symbol': 'BAR', 'price': '42.98765432'},
+        {'symbol': 'FOO', 'price': '56.12345678', '1d': {'price_change_pct': '-1.23456789'}},
+        {'symbol': 'BAR', 'price': '42.98765432', '1d': {'price_change_pct': '-1.23456789'}},
     ])))
     @patch('scripts.service.Coin')
     @patch('scripts.service.Ticker')
@@ -42,8 +48,16 @@ class TestService(TestCase):
         os.environ['NOMICS_BASE_URL'] = 'foo'
         ping('FOO', 'BAR')
         calls = [
-            call(coin=side_effect[0], price=Decimal('56.12345678')),
-            call(coin=side_effect[1], price=Decimal('42.98765432')),
+            call(
+                coin=side_effect[0],
+                price=Decimal('56.12345678'),
+                price_change_day_pct=Decimal('-1.23456789'),
+            ),
+            call(
+                coin=side_effect[1],
+                price=Decimal('42.98765432'),
+                price_change_day_pct=Decimal('-1.23456789'),
+            ),
         ]
         mock_ticker.create.assert_has_calls(calls, any_order=False)
 
