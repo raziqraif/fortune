@@ -28,7 +28,6 @@ class InfoBar extends React.Component<InfoBarProps> {
 		let cash_d: number = Number(this.props.gameProfile.cash) ? Number(this.props.gameProfile.cash) : 0.0
 		this.props.coins.forEach(coin => {
 			cash_d = cash_d + 1 + Number(coin.number);
-			console.log(cash_d)
 		})
 		return cash_d;
 	}
