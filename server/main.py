@@ -1,4 +1,5 @@
 import flask
+from threading import Thread
 import traceback
 
 from flask import Flask 
@@ -9,6 +10,7 @@ from auth.routes import auth_bp
 from errors.handlers import errors_bp
 from game.routes import game_bp
 from db import * # FIXME get rid of * when you have db migrations
+from scripts.service import begin
 
 def create_app():
     app = Flask(__name__)
@@ -41,3 +43,7 @@ def create_app():
         print('received message: ' + message)
         return 'syn ack'
     return app, socketio
+    Thread(target=begin).start()
+
+    return app
+
