@@ -1,6 +1,7 @@
 from decimal import Decimal
 import os
 import random
+import sys
 import time
 
 import requests
@@ -26,7 +27,7 @@ def ping(*coins):
         price = Decimal(coin_res['price'])
         price_change_day_pct = Decimal(coin_res['1d']['price_change_pct'])
         print(f'{symbol}: {price} {price_change_day_pct}%')
-        Ticker.create(coin=coin, price=price, price_change_day_pct=price_change_day_pct)
+        yield Ticker.create(coin=coin, price=price, price_change_day_pct=price_change_day_pct)
 
 
 def stubbed(*coins):
@@ -39,7 +40,7 @@ def stubbed(*coins):
         if last_ticker.count() == 0:
             price = random.uniform(500, 12000)
             print(f'Creating first ticker for {coin.symbol}: {price} 0%')
-            Ticker.create(
+            yield Ticker.create(
                 coin=coin,
                 price=price,
                 price_change_day_pct=0,
@@ -49,10 +50,10 @@ def stubbed(*coins):
             new_price = last_ticker.price * Decimal(random.uniform(0.98, 1.02))
             price_change_day_pct = (new_price - last_ticker.price) / last_ticker.price
             print(f'{coin.symbol}: {new_price} {price_change_day_pct}%')
-            Ticker.create(coin=coin, price=new_price, price_change_day_pct=price_change_day_pct)
+            yield Ticker.create(coin=coin, price=new_price, price_change_day_pct=price_change_day_pct)
 
 
-def begin():
+def begin(cb=None):
     env = os.environ['FLASK_ENV']
     if env == 'testing':
         # TODO stubbed implementation
@@ -62,12 +63,17 @@ def begin():
             return
         coins = Coin.select()
         while True:
-            stubbed(*coins)
+            tickers = list(stubbed(*coins))
+            print('checking cb', flush=True)
+            if cb is not None:
+                print('calling cb', flush=True)
+                cb(tickers)
             time.sleep(WAIT)
     elif env == 'production':
         while True:
-            ping('BTC', 'ETH', 'LTC')
+            tickers = list(ping('BTC', 'ETH', 'LTC'))
             time.sleep(WAIT)
+            if cb is not None: cb(tickers)
 
 
 if __name__ == '__main__':

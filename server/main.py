@@ -1,10 +1,12 @@
+import eventlet
+eventlet.monkey_patch()
 import flask
 from threading import Thread
 import traceback
 
 from flask import Flask 
 from flask_cors import CORS
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
 
 from auth.routes import auth_bp
 from errors.handlers import errors_bp
@@ -38,12 +40,25 @@ def create_app():
 
     socketio = SocketIO(app, cors_allowed_origins='*')
 
-    @socketio.on('message')
-    def handle_message(message):
-        print('received message: ' + message)
-        return 'syn ack'
-    return app, socketio
-    Thread(target=begin).start()
+    # as a decorator:
+    @socketio.on('connect')
+    def connect_handler():
+        print('IP->' + 'fjkdsjaklfjkdsl')
+        # If I emit here it works e.g. sio.emit('status-update', {'core0_in': 8, 'core1_in': 12,'cpu_usage_in': 5, 'users': 7})
+        socketio.emit('message', {'core0_in': 8, 'core1_in': 12,'cpu_usage_in': 5, 'users': 7})
 
-    return app
+
+    @socketio.on('disconnect')
+    def disconnect():
+        socketio.emit('message', 'why disconnect?')
+
+    def send_tickers(tickers):
+        from scripts.serializers import TickersResponse
+        print('emitting to message', tickers)
+        socketio.emit('message', 'yodel')
+        socketio.emit('message', TickersResponse.serialize(tickers, many=True))
+
+    Thread(target=begin, kwargs={'cb': send_tickers}).start()
+
+    return app, socketio
 
