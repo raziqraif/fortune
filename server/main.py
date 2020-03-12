@@ -2,6 +2,7 @@ import eventlet
 eventlet.monkey_patch()
 import flask
 from threading import Thread
+import time
 import traceback
 
 from flask import Flask 
@@ -38,27 +39,29 @@ def create_app():
     def hello():
         return 'hello world'
 
-    socketio = SocketIO(app, cors_allowed_origins='*')
+    socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins='*')
+    #socketio = SocketIO(app, async_mode='threading', cors_allowed_origins='*')
 
     # as a decorator:
     @socketio.on('connect')
     def connect_handler():
-        print('IP->' + 'fjkdsjaklfjkdsl')
         # If I emit here it works e.g. sio.emit('status-update', {'core0_in': 8, 'core1_in': 12,'cpu_usage_in': 5, 'users': 7})
-        socketio.emit('message', {'core0_in': 8, 'core1_in': 12,'cpu_usage_in': 5, 'users': 7})
+        socketio.emit('message', 'whaddup')
 
 
     @socketio.on('disconnect')
     def disconnect():
         socketio.emit('message', 'why disconnect?')
 
-    def send_tickers(tickers):
-        from scripts.serializers import TickersResponse
-        print('emitting to message', tickers)
-        socketio.emit('message', 'yodel')
-        socketio.emit('message', TickersResponse.serialize(tickers, many=True))
+    def haha(sio):
+        while True:
+            print('waaaaaaaaaaaaaaaaaaaaat')
+            sio.emit('message', 'whaaaaaaaaaaaaaat')
+            time.sleep(3)
 
-    Thread(target=begin, kwargs={'cb': send_tickers}).start()
+    socketio.start_background_task(haha, socketio)
+    socketio.start_background_task(begin, socketio)
+    #Thread(target=begin, kwargs={'cb': send_tickers}).start()
 
     return app, socketio
 

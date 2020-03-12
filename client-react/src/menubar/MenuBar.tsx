@@ -34,10 +34,10 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
         socket.emit('message', 'ack', (data: string) => {
           console.log(data)
         })
+        */
         socket.on('message', function(data: any){
           console.log('event received:', data)
         });
-        */
       });
       socket.on('message', function(data: any){
         console.log('event received:', data)
