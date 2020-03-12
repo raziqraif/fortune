@@ -59,7 +59,7 @@ def create_app():
             sio.emit('message', 'whaaaaaaaaaaaaaat')
             time.sleep(3)
 
-    socketio.start_background_task(haha, socketio)
+    #socketio.start_background_task(haha, socketio)
     socketio.start_background_task(begin, socketio)
     #Thread(target=begin, kwargs={'cb': send_tickers}).start()
 

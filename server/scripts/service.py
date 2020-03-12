@@ -1,3 +1,4 @@
+from datetime import datetime
 from decimal import Decimal
 import json
 import os
@@ -22,10 +23,17 @@ def get_api_url(*coins):
     return f'{NOMICS_BASE_URL}/currencies/ticker?ids={",".join(coins)}&key={NOMICS_API_KEY}'
 
 
+DATABASE = {
+    'host': DATABASE['HOST'],
+    'dbname': DATABASE['NAME'],
+    'user': DATABASE['USER'],
+    'password': DATABASE['PASSWORD'],
+}
+
 #@db.atomic()
 def ping(*coins):
     conn = psycopg2.connect(**DATABASE)
-    cur = conn.cursor()
+    cur = conn.cursor(cursor_factory=NamedTupleCursor)
     res = requests.get(get_api_url(*coins))
     for coin_res in res.json():
         symbol = coin_res['symbol']
@@ -38,53 +46,76 @@ def ping(*coins):
         cur.execute("""
             insert into ticker (coin_id, price, price_change_day_pct)
             values (%s, %s, %s) returning *
-        """, (coin_id, price, price_change_day_pct)
+        """, (coin_id, price, price_change_day_pct))
         yield cur.fetchone()
         #yield Ticker.create(coin=coin, price=price, price_change_day_pct=price_change_day_pct)
+    cur.close()
+    conn.close()
 
 
-def stubbed(*coins):
+def stubbed():
+    conn = psycopg2.connect(**DATABASE)
+    cur = conn.cursor(cursor_factory=NamedTupleCursor)
     res = []
-    for coin in coins:
-        last_ticker = (Ticker
-            .select()
-            .where(Ticker.coin == coin)
-            .order_by(Ticker.captured_at.desc())
-            .limit(1))
-        if last_ticker.count() == 0:
+    cur.execute('select id from coin')
+    for coin_id in cur.fetchall():
+        #last_ticker = (Ticker
+        #    .select()
+        #    .where(Ticker.coin == coin)
+        #    .order_by(Ticker.captured_at.desc())
+        #    .limit(1))
+        cur.execute("""
+            select * from ticker where coin_id = %s order by captured_at desc
+            limit 1
+        """, (coin_id,))
+        last_ticker = cur.fetchone()
+        if last_ticker is None:
             price = random.uniform(500, 12000)
-            print(f'Creating first ticker for {coin.symbol}: {price} 0%')
-            res.append(Ticker.create(
-                coin=coin,
-                price=price,
-                price_change_day_pct=0,
-            ))
+            print(f'Creating first ticker for {coin_id}: {price} 0%')
+            cur.execute("""
+                insert into ticker (coin_id, price, price_change_day_pct, captured_at) values
+                (%s, %s, %s, %s) returning *
+            """, (coin_id, price, 0, datetime.utcnow()))
+            #res.append(Ticker.create(
+            #    coin=coin,
+            #    price=price,
+            #    price_change_day_pct=0,
+            #))
+            res.append(cur.fetchone())
         else:
-            last_ticker = last_ticker.get()
+            #last_ticker = last_ticker.get()
             new_price = last_ticker.price * Decimal(random.uniform(0.98, 1.02))
             price_change_day_pct = (new_price - last_ticker.price) / last_ticker.price
-            print(f'{coin.symbol}: {new_price} {price_change_day_pct}%')
-            res.append(Ticker.create(coin=coin, price=new_price, price_change_day_pct=price_change_day_pct))
+            print(f'{coin_id}: {new_price} {price_change_day_pct}%')
+            cur.execute("""
+                insert into ticker (coin_id, price, price_change_day_pct,
+                captured_at) values (%s, %s, %s, %s) returning *
+            """, (coin_id, new_price, price_change_day_pct, datetime.utcnow()))
+            #res.append(Ticker.create(coin=coin, price=new_price, price_change_day_pct=price_change_day_pct))
+            res.append(cur.fetchone())
+    conn.commit()
+    cur.close()
+    conn.close()
     return res
 
 
 def begin(socketio):
     env = os.environ['FLASK_ENV']
-    while True:
-        socketio.emit('message', 'hiiii')
-        time.sleep(WAIT)
     if env == 'testing':
         # TODO stubbed implementation
         return
     elif env == 'development':
-        if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
-            return
-        coins = Coin.select()
+        #while True:
+        #    socketio.emit('message', 'hiiii')
+        #    time.sleep(WAIT)
+        #if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
+        #    return
+        #coins = Coin.select()
         # while True:
         #     socketio.emit('message', 'hiiii')
         #     time.sleep(WAIT)
         while True:
-            tickers = list(stubbed(*coins))
+            tickers = list(stubbed())
             print('emitting hi===================', flush=True)
             socketio.emit('message', 'hi')
             socketio.emit('message', json.dumps(TickersResponse.serialize(tickers, many=True)))
