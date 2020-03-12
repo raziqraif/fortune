@@ -21,13 +21,16 @@ def get_api_url(*coins):
 @db.atomic()
 def ping(*coins):
     res = requests.get(get_api_url(*coins))
+    tokens = []
     for coin_res in res.json():
         symbol = coin_res['symbol']
         coin = Coin.get(Coin.symbol == symbol)
         price = Decimal(coin_res['price'])
         price_change_day_pct = Decimal(coin_res['1d']['price_change_pct'])
         print(f'{symbol}: {price} {price_change_day_pct}%')
-        yield Ticker.create(coin=coin, price=price, price_change_day_pct=price_change_day_pct)
+        tok = Ticker.create(coin=coin, price=price, price_change_day_pct=price_change_day_pct)
+        tokens.append(tok)
+    return tokens
 
 
 def stubbed(*coins):

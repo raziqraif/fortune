@@ -13,13 +13,13 @@ from migrations.seed import seed
 class IntegrationTest(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.app = create_app()
+        cls.app, _ = create_app()
         cls.client = cls.app.test_client()
 
 class AuthTest(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.app = create_app()
+        cls.app, _ = create_app()
 
         @cls.app.route('/testauth')
         @require_authentication
