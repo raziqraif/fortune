@@ -42,26 +42,12 @@ def create_app():
     socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins='*')
     #socketio = SocketIO(app, async_mode='threading', cors_allowed_origins='*')
 
-    # as a decorator:
-    @socketio.on('connect')
-    def connect_handler():
-        # If I emit here it works e.g. sio.emit('status-update', {'core0_in': 8, 'core1_in': 12,'cpu_usage_in': 5, 'users': 7})
-        socketio.emit('message', 'whaddup')
+    def cb(tickers):
+        print(tickers)
+        from scripts.serializers import TickersResponse
+        socketio.emit('message', TickersResponse.serialize(tickers, many=True))
 
-
-    @socketio.on('disconnect')
-    def disconnect():
-        socketio.emit('message', 'why disconnect?')
-
-    def haha(sio):
-        while True:
-            print('waaaaaaaaaaaaaaaaaaaaat')
-            sio.emit('message', 'whaaaaaaaaaaaaaat')
-            time.sleep(3)
-
-    #socketio.start_background_task(haha, socketio)
-    socketio.start_background_task(begin, socketio)
-    #Thread(target=begin, kwargs={'cb': send_tickers}).start()
+    socketio.start_background_task(begin, cb=cb)
 
     return app, socketio
 
