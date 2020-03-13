@@ -18,13 +18,13 @@ interface PlayProp {
 }
 
 interface PlayState {
-    activeGames: GameType[],
+    filteredGames: GameType[],
 }
 
 type GameType = { name: string, link: string, endTime: Date }
 
 export default class Play extends React.Component<PlayProp, PlayState> {
-    activeGames: GameType[] = [];
+    activeGames: GameType[] = [];  // TODO: Remove this after real data has been pulled
     keyword = '';
 
     constructor(props: PlayProp) {
@@ -32,7 +32,7 @@ export default class Play extends React.Component<PlayProp, PlayState> {
         this.populateSeedData()
 
         this.state = {
-            activeGames: this.requestActiveGames(),
+            filteredGames: this.filteredGames(),
         };
     }
 
@@ -63,17 +63,17 @@ export default class Play extends React.Component<PlayProp, PlayState> {
         console.log("Clicked Join");
     };
 
-    handleTitleChange = (event: any) => {
+    handleKeywordChange = (event: any) => {
         this.keyword = event.target.value.trim();
     };
 
-    handleSearch = (event: any) => {
-        this.setState({activeGames: this.filteredGames()});
+    handleSearchGames = (event: any) => {
+        this.setState({filteredGames: this.filteredGames()});
     };
 
     handleEnterKey = (event: any) => {
         if (event.key === "Enter") {
-            this.handleSearch(event);
+            this.handleSearchGames(event);
         }
     };
 
@@ -87,14 +87,14 @@ export default class Play extends React.Component<PlayProp, PlayState> {
                     <div className={"wrapper"} style={{marginRight:10}}>
                         <InputGroup>
                             <FormControl
-                                onChange={this.handleTitleChange}
+                                onChange={this.handleKeywordChange}
                                 onKeyPress={this.handleEnterKey}
                                 placeholder={"Game title"}
                             />
                             <InputGroup.Append>
                                 <Button
                                     variant={"primary"}
-                                    onClick={this.handleSearch}
+                                    onClick={this.handleSearchGames}
                                 >Search</Button>
                             </InputGroup.Append>
                         </InputGroup>
@@ -116,11 +116,7 @@ export default class Play extends React.Component<PlayProp, PlayState> {
                     {/*</ButtonGroup>*/}
                 </div>
                 <br/>
-                <ActiveGames
-                    currentPage={1}
-                    maxPerPage={9}
-                    activeGames={this.state.activeGames}
-                />
+                <ActiveGames filteredGames={this.state.filteredGames}/>
             {/*</div>*/}
             </div>
         )

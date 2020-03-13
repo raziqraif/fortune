@@ -1,5 +1,6 @@
 import React, {CSSProperties} from "react";
-import {Pagination, Card, Container, Row, Button, Col} from "react-bootstrap";
+import {Card, Container, Row, Button, Col} from "react-bootstrap";
+import Pagination from '../../pagination'
 
 const buttonStyle: CSSProperties = {
     width: 120,
@@ -11,12 +12,12 @@ const gameCardStyle: CSSProperties = {
     width: '18rem',
 };
 
+const MAX_ITEMS_PER_PAGE = 9;
+
 type GameType = { name: string, link: string, endTime: Date }
 
 interface ActiveGamesProps {
-    currentPage: number,
-    maxPerPage: number,
-    activeGames: GameType[]
+    filteredGames: GameType[]
 }
 
 interface ActiveGamesState {
@@ -28,19 +29,17 @@ export default class ActiveGames extends React.Component<ActiveGamesProps, Activ
         super(props);
 
         this.state = {
-            currentPage: this.props.currentPage,
+            currentPage: 1,
         };
+        this.handlePageChange = this.handlePageChange.bind(this);
     }
 
     endTimeToString = (game: GameType) => {
         return game.endTime.toLocaleString();
     };
 
-    handlePageChanged = (event: any) => {
-        if (!event.currentTarget.text) {    // Active page number was clicked
-            return;
-        }
-        this.setState({currentPage: Number(event.currentTarget.text)})
+    handlePageChange(currentPage: number) {
+        this.setState({currentPage: currentPage})
     };
 
     // TODO: Prevent cards from being shifted when the window is resized
@@ -49,8 +48,7 @@ export default class ActiveGames extends React.Component<ActiveGamesProps, Activ
     // TODO: Implement tooltip to display game title
     getGameCards = () => {
         let pageNum = this.state.currentPage - 1;
-        let maxPerPage = this.props.maxPerPage;
-        let games = this.props.activeGames.slice(pageNum * maxPerPage, (pageNum + 1) * maxPerPage);
+        let games = this.props.filteredGames.slice(pageNum * MAX_ITEMS_PER_PAGE, (pageNum + 1) * MAX_ITEMS_PER_PAGE);
         let gameCards = [];
         for (let i = 0; i < games.length; i += 3) {
             let gameCardsInARow = [];
@@ -86,31 +84,18 @@ export default class ActiveGames extends React.Component<ActiveGamesProps, Activ
         return gameCards;
     };
 
-    // TODO: Make sure this won't break when handling a large number of pages.
-    getPaginationItems = () => {
-        let pItems = [];
-        let maxPerPage = this.props.maxPerPage;
-        for (let i = 1; i <= Math.ceil(this.props.activeGames.length / maxPerPage); i++) {
-                pItems.push((
-                    <Pagination.Item
-                        active={this.state.currentPage === i}
-                        onClick={this.handlePageChanged}
-                    >{i}
-                    </Pagination.Item>
-                ));
-        }
-        return pItems;
-    };
-
     render() {
         return (
             <div>
                 <Container>
                     {this.getGameCards()}
                     <Row>
-                        <Pagination>
-                            {this.getPaginationItems()}
-                        </Pagination>
+                        <Pagination
+                            currentPage={this.state.currentPage}
+                            maxItemsPerPage={MAX_ITEMS_PER_PAGE}
+                            totalItems={this.props.filteredGames.length}
+                            handlePageChange={this.handlePageChange}
+                        />
                     </Row>
                 </Container>
             </div>
