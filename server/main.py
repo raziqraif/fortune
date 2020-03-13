@@ -43,7 +43,6 @@ def create_app():
     #socketio = SocketIO(app, async_mode='threading', cors_allowed_origins='*')
 
     def cb(tickers):
-        print(tickers)
         from scripts.serializers import TickersResponse
         socketio.emit('message', TickersResponse.serialize(tickers, many=True))
 

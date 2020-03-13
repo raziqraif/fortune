@@ -68,7 +68,6 @@ def begin(cb=None):
         while True:
             tickers = list(stubbed(*coins))
             if cb is not None:
-                print('calling cb', flush=True)
                 cb(tickers)
             time.sleep(WAIT)
     elif env == 'production':
