@@ -9,8 +9,24 @@ import pytz
 
 from auth.decorators import require_authentication
 from db import Game, GameProfile, Coin, GameCoin, db
-from .serializers import GameCreateRequest, CreateGameResponse, CoinsResponse
-from .services import create_game, update_game, get_game_by_id
+from .serializers import (
+    GetCoinsRequest,
+    GameCreateRequest,
+    GameResponse,
+    CoinsResponse,
+    GetGameResponse,
+    GetCoinsResponse
+)
+from .services import (
+    create_game,
+    update_game,
+    get_game_by_id,
+    get_game_profile_by_profile_id_and_game_id,
+    get_coins_by_game_id,
+    get_game_profile_coins_by_game_profile_id,
+    get_start_time_from_time_span,
+    get_coins_by_game_id_and_sorting
+)
 
 game_bp = Blueprint('game', __name__, url_prefix='/game')
 
@@ -57,6 +73,35 @@ def get(profile, game_id):
 @game_bp.route('/coins', methods=['GET'])
 def get_coins():
     return jsonify(CoinsResponse.serialize(Coin.select(), many=True))
+
+@game_bp.route('/<game_id>/coins', methods=['GET'])
+@require_authentication
+def get_game_coins(profile, game_id):
+    try:
+        int(game_id)
+    except:
+        raise BadRequest('Invalid game id')
+    gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
+    validated_data: dict = GetCoinsRequest.deserialize(request.json)
+    start_time = get_start_time_from_time_span(validated_data['timeSpan'])
+    coins = get_coins_by_game_id_and_sorting(
+        game_id,
+        validated_data['sortBy'],
+        validated_data['pageNum'],
+        validated_data['numPerPage']
+    )
+    coins_and_prices = get_pricing_by_coins(coins, start_time)
+    gameProfileCoins = get_game_profile_coins_by_game_profile_id(gameProfile.id)
+    for coin_and_prices in coins_and_prices:
+        coinNumber = 0
+        for gameProfileCoin in gameProfileCoins:
+            if gameProfileCoin.coin == coin_and_prices.coin.id:
+                coinNumber = gameProfileCoin.number
+                break
+        coin_and_prices.coin.id = coinNumber
+    return jsonify(GetCoinsResponse.serialize({
+        'coins_and_prices': coins_and_prices
+    }))
 
 
 @game_bp.route('/<game_id>', methods=['PUT'])
