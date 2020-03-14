@@ -16,21 +16,21 @@ export default class CoinGraph extends React.Component {
           },
           id: "history",
         },//chart
+
         tooltip: {
           enabled: false
         },
         xaxis: {
           labels:{
             show:false,
-            axisBorder:{
-              show:false
-            }
           },//labels
         },//xaxis
         yaxis: {
           labels:{
             show: false
           },//labels
+          min: function(min) { return min},
+          max: 100,
         },//yaxis
         grid: {
           show:false
@@ -38,7 +38,6 @@ export default class CoinGraph extends React.Component {
       },//options
       series: [
         {
-          name: "series-1",
           data: [10, 40, 55, 20, 49, 0, 70, 91]
         }
       ]
@@ -52,8 +51,8 @@ export default class CoinGraph extends React.Component {
             options={this.state.options}
             series={this.state.series}
             type="line"
-            height="100"
-            width="500"/>
+            height="100%"
+            width="300"/>
           </div>
         )
     }//render()

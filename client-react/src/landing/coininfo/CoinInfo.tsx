@@ -34,7 +34,7 @@ private dynamicRowRender() {
 
     render() {
         return (
-            <Table bordered>
+            <Table bordered size="sm">
               <thead>
                 <th>Coin</th>
                 <th>Price</th>
