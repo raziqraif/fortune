@@ -13,14 +13,18 @@ interface MenuBarProps {
 }
 
 interface MenuBarState {
+    toHome: boolean;
     toLogin: boolean;
+    toPlay: boolean;
 }
 
 class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
     constructor(props: MenuBarProps) {
         super(props);
         this.state = {
+            toHome: false,
             toLogin: false,
+            toPlay: false,
         }
     }
 
@@ -32,10 +36,27 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
         this.setState({ toLogin: true });
     }
 
+    private navigateToPlay = () => {
+        this.setState({ toPlay: true });
+    }
+
+    private logout = () => {
+        this.props.logout();
+        this.setState({ toHome: true });
+    }
+
     render() {
         if (this.state.toLogin === true) {
             this.setState({ toLogin: false });
             return <Redirect to='/login' />
+        }
+        if (this.state.toPlay === true) {
+            this.setState({ toPlay: false });
+            return <Redirect to='/play' />
+        }
+        if (this.state.toHome === true) {
+            this.setState({ toHome: false });
+            return <Redirect to='/' />
         }
         
         return (
@@ -53,7 +74,7 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                     <Nav>
-                        <Nav.Link href="play">Play</Nav.Link>
+                        <Nav.Link onClick={this.navigateToPlay}>Play</Nav.Link>
                         {this.renderLoginOrUsername()}
                     </Nav>
                 </Navbar.Collapse>
@@ -67,7 +88,7 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
                 <NavDropdown title="Username" id="basic-nav-dropdown" alignRight>
                     <NavDropdown.Item href="play">Games</NavDropdown.Item>
                     <NavDropdown.Divider />
-                    <NavDropdown.Item onClick={this.props.logout}>Logout</NavDropdown.Item>
+                    <NavDropdown.Item onClick={this.logout}>Logout</NavDropdown.Item>
                 </NavDropdown>
             )
         } else {
