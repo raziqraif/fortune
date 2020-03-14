@@ -8,11 +8,17 @@ export default class CoinGraph extends React.Component {
     this.state = {
       options: {
         chart: {
+          zoom: {
+            enabled: false
+          },
           toolbar: {
             show: false
           },
           id: "history",
         },//chart
+        tooltip: {
+          enabled: false
+        },
         xaxis: {
           labels:{
             show:false,
