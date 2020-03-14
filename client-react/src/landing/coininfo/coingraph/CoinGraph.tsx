@@ -13,11 +13,27 @@ export default class CoinGraph extends React.Component {
           },
           id: "history",
         },//chart
+        xaxis: {
+          labels:{
+            show:false,
+            axisBorder:{
+              show:false
+            }
+          },//labels
+        },//xaxis
+        yaxis: {
+          labels:{
+            show: false
+          },//labels
+        },//yaxis
+        grid: {
+          show:false
+        }
       },//options
       series: [
         {
           name: "series-1",
-          data: [30, 40, 45, 50, 49, 60, 70, 91]
+          data: [10, 40, 55, 20, 49, 0, 70, 91]
         }
       ]
     };//this.state
