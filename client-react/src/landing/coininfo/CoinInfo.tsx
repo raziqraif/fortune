@@ -25,7 +25,7 @@ private dynamicRowRender() {
   rows = this.props.allCoins.map(coin => <tr>
                                          <td>{coin.name} ({coin.symbol})</td>
                                          <td>Price</td>
-                                         <td> <CoinGraph/> </td>
+                                         <td><div align="center"><CoinGraph/></div></td>
                                          <td>Change</td>
                                          </tr> );
   rows = rows.slice(0,10) //only show first 10 coins - in reality need to filter through rows for certain coins
@@ -34,11 +34,11 @@ private dynamicRowRender() {
 
     render() {
         return (
-            <Table bordered size="sm">
+            <Table responsive size="sm">
               <thead>
                 <th>Coin</th>
                 <th>Price</th>
-                <th>History</th>
+                <th><div align="center">History</div></th>
                 <th>24hr % Change</th>
               </thead>
 

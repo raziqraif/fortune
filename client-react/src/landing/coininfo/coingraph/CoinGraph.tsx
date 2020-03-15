@@ -21,6 +21,9 @@ export default class CoinGraph extends React.Component {
           enabled: false
         },
         xaxis: {
+          axisBorder: {
+            show: false,
+          },
           labels:{
             show:false,
           },//labels
@@ -29,8 +32,9 @@ export default class CoinGraph extends React.Component {
           labels:{
             show: false
           },//labels
-          min: function(min) { return min},
-          max: 100,
+          min: function(min) { return min}, // Most realistically, the price min will never equal 0
+                                            // therefore, need a function to adjust min
+        //  max: 100,
         },//yaxis
         grid: {
           show:false
@@ -38,7 +42,7 @@ export default class CoinGraph extends React.Component {
       },//options
       series: [
         {
-          data: [10, 40, 55, 20, 49, 0, 70, 91]
+          data: [10, 40, 12, 0, 49, 0, 70, 91]
         }
       ]
     };//this.state
@@ -51,8 +55,8 @@ export default class CoinGraph extends React.Component {
             options={this.state.options}
             series={this.state.series}
             type="line"
-            height="100%"
-            width="300"/>
+            height="50%"
+            width="50%"/>
           </div>
         )
     }//render()
