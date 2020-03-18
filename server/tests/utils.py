@@ -7,7 +7,6 @@ from auth.decorators import require_authentication
 from db import *
 from main import create_app
 from migrations.migrate import migrate
-from migrations.seed import seed
 
 
 class IntegrationTest(TestCase):

@@ -1,7 +1,6 @@
 from playhouse.migrate import PostgresqlMigrator, migrate
 
 from db import MODELS, Coin
-from migrations.seed import seed
 
 
 def up(db):
@@ -9,7 +8,6 @@ def up(db):
         migrator = PostgresqlMigrator(db)
         db.bind(MODELS, bind_refs=False, bind_backrefs=False)
         db.create_tables(MODELS)
-        #seed()
         Coin.create(name='Bitcoin', symbol='BTC')
         Coin.create(name='Ethereum', symbol='ETH')
         Coin.create(name='Litecoin', symbol='LTC')
