@@ -159,7 +159,7 @@ function _populateSeedData() {
 
 function _filteredGames(keyword: string) {
     let activeGames = ACTIVE_GAMES;
-    if (keyword != '') {
+    if (keyword !== '') {
         activeGames = activeGames.filter((game: GameType) =>
             game.title.toLowerCase().includes(keyword.toLowerCase()));
     }

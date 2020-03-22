@@ -74,7 +74,7 @@ export default class Pagination extends React.Component <PaginationProps> {
         }
 
         // return object with all pager properties required by the view
-        let pager = {
+        return {
             totalItems: totalItems,
             currentPage: currentPage,
             pageSize: pageSize,
@@ -85,14 +85,13 @@ export default class Pagination extends React.Component <PaginationProps> {
             endIndex: endIndex,
             pages: pages,
         };
-        return pager;
     }
 
     paginationItems() {
         let paginationItems = [];
-        let pager = this.getPager()
+        let pager = this.getPager();
 
-        if (pager.totalItems == 0) {
+        if (pager.totalItems === 0) {
             return;
         }
 

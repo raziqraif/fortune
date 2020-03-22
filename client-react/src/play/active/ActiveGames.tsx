@@ -18,13 +18,7 @@ interface ActiveGamesProps {
     games: GameType[]
 }
 
-interface ActiveGamesState {
-}
-
-export default class ActiveGames extends React.Component<ActiveGamesProps, ActiveGamesState> {
-    constructor(props: ActiveGamesProps) {
-        super(props);
-    }
+export default class ActiveGames extends React.Component<ActiveGamesProps> {
 
     endTimeToString = (game: GameType) => {
         return game.endTime.toLocaleString();
@@ -64,7 +58,7 @@ export default class ActiveGames extends React.Component<ActiveGamesProps, Activ
             gameCards.push(<Row>{gameCardsInARow}</Row>);
             gameCards.push(<br/>);
         }
-        if (gameCards.length == 0) {
+        if (gameCards.length === 0) {
             return <p> No matches were found </p>
         }
         return <div className={"gamecards-container"}> {gameCards} </div>;
