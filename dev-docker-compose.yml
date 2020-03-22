@@ -17,13 +17,14 @@ services:
     depends_on:
       - postgres
     # TODO add migrations after 'done;' below:
-    command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 1; done; python run-dev.py'
+    command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 1; done; python migrations/migrate.py up v1; python run-dev.py'
 
     build:
       dockerfile: Dockerfile.dev
       context: ./server/
     volumes:
       - ./server:/app
+      - /app/venv
     ports:
       - "5000:5000"
     tty: true
@@ -37,4 +38,6 @@ services:
       - DB_NAME=postgres
       - DB_PASSWORD=
       # NOTE do this
-      - PYTHONPATH=
+      - PYTHONPATH=/app
+      - HTTP_HOST=http://localhost:5000
+      - NOMICS_API_KEY=foo

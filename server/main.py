@@ -1,28 +1,23 @@
+import eventlet
+eventlet.monkey_patch()
 import flask
+from threading import Thread
+import time
 import traceback
 
 from flask import Flask 
 from flask_cors import CORS
+from flask_socketio import SocketIO, emit
 
 from auth.routes import auth_bp
 from errors.handlers import errors_bp
 from game.routes import game_bp
 from db import * # FIXME get rid of * when you have db migrations
+from scripts.service import begin
 
 def create_app():
-    db.create_tables([Profile, AuthToken, Game, GameProfile, Coin, GameCoin,
-        Ticker, Trade, GameProfileCoin])
-    try:
-        Coin.create(name='Bitcoin', symbol='BTC')
-        Coin.create(name='Ethereum', symbol='ETH')
-        Coin.create(name='Litecoin', symbol='LTC')
-        Coin.create(name='Coin 3', symbol='CO3')
-        Coin.create(name='Coin 4', symbol='CO4')
-        Coin.create(name='Coin 5', symbol='CO5')
-    except:
-        pass
-    # FIXME get rid of this when you have db migrations
     app = Flask(__name__)
+    app.url_map.strict_slashes = False
     CORS(app)
 
     @app.before_request
@@ -44,4 +39,14 @@ def create_app():
     def hello():
         return 'hello world'
 
-    return app
+    socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins='*')
+    #socketio = SocketIO(app, async_mode='threading', cors_allowed_origins='*')
+
+    def cb(tickers):
+        from scripts.serializers import TickersResponse
+        socketio.emit('message', TickersResponse.serialize(tickers, many=True))
+
+    socketio.start_background_task(begin, cb=cb)
+
+    return app, socketio
+

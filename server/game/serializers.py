@@ -8,7 +8,7 @@ class BaseSerializer(Schema):
         Shortcut method for using a serializer to serialize a Python object
         to a Python dictionary
         """
-        return cls().dump(obj, many=many).data
+        return cls().dump(obj, many=many)
 
     @classmethod
     def deserialize(cls, obj, many=False):
@@ -25,3 +25,17 @@ class GameCreateRequest(BaseSerializer):
     startingCash = fields.Decimal(required=True, as_string=True)
     title = fields.Str(required=True, validate=title_length_validator)
 
+
+class CreateGameResponse(BaseSerializer):
+    id = fields.Int(required=True)
+    name = fields.Str(required=True)
+    starting_cash = fields.Decimal(required=True, as_string=True)
+    shareable_link = fields.Str(required=True)
+    shareable_code = fields.Str(required=True)
+    ends_at = fields.DateTime(required=True)
+
+
+class CoinsResponse(BaseSerializer):
+    id = fields.Int(required=True)
+    name = fields.Str(required=True)
+    symbol = fields.Str(required=True)

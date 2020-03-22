@@ -14,6 +14,8 @@ interface CreateGameProps {
         startingCash: string,
         title: string
     ) => void;
+    error: string;
+    loading: boolean;
     getAllCoins: () => {};
 }
 
@@ -90,9 +92,9 @@ class CreateGame extends React.Component<CreateGameProps, CreateGameState>  {
                     allCoins={this.props.allCoins}
                     setActiveCoins={this.setActiveCoins}
                 />
-                
-                <Button variant="primary" type="submit">
-                    Submit
+                <p style={{color: 'red'}}>{this.props.error}</p>
+                <Button disabled={this.props.loading} variant="primary" type="submit">
+                {this.props.loading ? 'Loading...' : 'Submit'}
                 </Button>
             </Form>
         )
@@ -101,6 +103,8 @@ class CreateGame extends React.Component<CreateGameProps, CreateGameState>  {
 
 const mapStateToProps = (state: RootState) => ({
     allCoins: state.coins.coins,
+    error: state.game.createGameErrorMessage,
+    loading: state.game.createGameLoading,
 });
 const mapDispatchToProps = {
     createGame: Actions.game.createGame,
