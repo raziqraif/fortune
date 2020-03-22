@@ -93,8 +93,8 @@ export default class Play extends React.Component<PlayProp, PlayState> {
             <div className={'container'}>
             <h1>Play a Game</h1>
                 <br/>
-                <div className={"searchbar-wrapper"}>
-                    <div className={"wrapper"} style={{marginRight:10}}>
+                <div className={"tools-wrapper"}>
+                    <div className={"searchbar-wrapper"} style={{marginRight:10}}>
                         <InputGroup>
                             <FormControl
                                 onChange={this.handleKeywordChange}
@@ -111,7 +111,7 @@ export default class Play extends React.Component<PlayProp, PlayState> {
                     </div>
                     <br/>
                     {/*<ButtonGroup>*/}
-                    <div>
+                    <div className={"buttons-wrapper"}>
                         <Button
                             style={buttonStyle}
                             variant={"primary"}
@@ -142,7 +142,6 @@ export default class Play extends React.Component<PlayProp, PlayState> {
         )
     }
 }
-
 
 /* Temporary interface to backend data */
 // TODO: Remove all of these

@@ -8,16 +8,23 @@
     padding: 15px 0px;
 }
 
-.searchbar-wrapper {
+.tools-wrapper {
     display: flex;
     flex-direction: row;
 }
 
-.wrapper {
+.searchbar-wrapper {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     width: 30rem;
     /*padding: 15px 0px;*/
+}
+
+.buttons-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: right;
 }

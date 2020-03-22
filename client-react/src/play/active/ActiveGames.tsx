@@ -1,5 +1,6 @@
 import React, {CSSProperties} from "react";
 import {Card, Container, Row, Button, Col} from "react-bootstrap";
+import "./ActiveGames.css"
 
 const buttonStyle: CSSProperties = {
     width: 120,
@@ -61,13 +62,12 @@ export default class ActiveGames extends React.Component<ActiveGamesProps, Activ
                 gameCardsInARow.push(gameCard);
             }
             gameCards.push(<Row>{gameCardsInARow}</Row>);
-            // gameCards.push({gameCardsInARow});
             gameCards.push(<br/>);
         }
         if (gameCards.length == 0) {
             return <p> No matches were found </p>
         }
-        return gameCards;
+        return <div className={"gamecards-container"}> {gameCards} </div>;
     };
 
     render() {
