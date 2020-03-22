@@ -25,13 +25,17 @@ class CoinInfo extends React.Component<CoinInfoProps> {
       const socket = io('http://localhost:5000').connect();
       socket.on('message', function(data:any){
         this.setState({data:data});
-        console.log('yuh', this.state.data);
       }.bind(this));
   }
 
-  private showPrice(num:number) {
-    if(this.state.data[num]){
-      return this.state.data[num].price
+  private showPrice(id:number) {
+    if(this.state.data){
+      for (let i = 0; i < this.state.data.length; i++) {
+        if(this.state.data[i].coin.id === id){
+          return Number(this.state.data[i].price).toFixed(2)
+        }
+      }
+      return <div>Retrieving...</div>
     } else {
       return <div>Retrieving...</div>
     }
@@ -41,7 +45,7 @@ private dynamicRowRender() {
   let rows = [];
   rows = this.props.allCoins.map(coin => <tr>
                                          <td>{coin.name} ({coin.symbol})</td>
-                                         <td>Price: {this.showPrice(0)}</td>
+                                         <td>{this.showPrice(coin.id)}</td>
                                          <td><div align="center"><CoinGraph/></div></td>
                                          <td>Change</td>
                                          </tr> );
