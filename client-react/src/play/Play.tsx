@@ -131,8 +131,9 @@ export default class Play extends React.Component<PlayProp, PlayState> {
     render() {
         return (
             <div className={'container'}>
-            <h1>Play a Game</h1>
-                <br/>
+                <div className={"title-wrapper"}>
+                    <h1>Play</h1>
+                </div>
                 <div className={"toolbar-wrapper"}>
                     <div className={"searchbar-wrapper"} style={{marginRight:5}}>
                         <InputGroup>
@@ -189,7 +190,6 @@ export default class Play extends React.Component<PlayProp, PlayState> {
                         > Create </Button>
                     </div>
                 </div>
-                <br/>
                 <Container>
                     <ActiveGames games={this.state.gamesInCurrentPage}/>
                     <Row>

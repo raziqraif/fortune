@@ -1,5 +1,5 @@
 import React, {CSSProperties} from "react";
-import {Card, Container, Row, Button, Col} from "react-bootstrap";
+import {Card, Container, Row, Button, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import "./ActiveGames.css"
 
 const buttonStyle: CSSProperties = {
@@ -24,9 +24,16 @@ export default class ActiveGames extends React.Component<ActiveGamesProps> {
         return game.endTime.toLocaleString();
     };
 
-    // TODO: Prevent cards from being shifted when the window is resized
-    // TODO: Prevent things from being shifted when there are less than 9 cards in a page.
-    // TODO: Truncate long game titles
+    gameCardTitle(title: string) {
+        let maxTitleLength = 26;    // TODO: Title consisting of 16 W will take two lines, but 16 is too short.
+        if (title.length <= maxTitleLength) {
+            return title;
+        }
+        title = title.substring(0, maxTitleLength - 3);
+        title += "...";
+        return title;
+    }
+
     // TODO: Implement tooltip to display game title
     getGameCards = () => {
         let games = this.props.games;
@@ -34,29 +41,39 @@ export default class ActiveGames extends React.Component<ActiveGamesProps> {
         for (let i = 0; i < games.length; i += 3) {
             let gameCardsInARow = [];
             for (let j = i; (j < i + 3) && (j < games.length); j++) {
-                let gameCard = <Col>
-                    <Card
-                        bg={"primary"}
-                        text={"white"}
-                        style={gameCardStyle}
-                    >{/* className={"col-sm-4"}>*/}
-                        <Card.Header><h6>{games[j].title}</h6></Card.Header>
-                        <Card.Body>
-                            <Card.Text>Ends at: {this.endTimeToString(games[j])}</Card.Text>
-                            <Container>
-                                <Button variant={"primary"}
-                                        size={"sm"}
-                                        href={games[j].link}
-                                        style={buttonStyle}
-                                >Play</Button>
-                            </Container>
-                        </Card.Body>
-                    </Card>
+                let gameCard =
+                    <Col>
+                        <Card
+                            bg={"primary"}
+                            text={"white"}
+                            style={gameCardStyle}
+                        >
+                            <OverlayTrigger
+                                placement={"right"}
+                                delay={{show: 300, hide: 0}}
+                                overlay={
+                                    <Tooltip id={'tooltip-title'}>
+                                        {games[j].title}
+                                    </Tooltip>
+                                }
+                            >
+                                <Card.Header><h6>{this.gameCardTitle(games[j].title)}</h6></Card.Header>
+                            </OverlayTrigger>
+                            <Card.Body>
+                                <Card.Text>Ends at: {this.endTimeToString(games[j])}</Card.Text>
+                                <Container>
+                                    <Button variant={"primary"}
+                                            size={"sm"}
+                                            href={games[j].link}
+                                            style={buttonStyle}
+                                    >Play</Button>
+                                </Container>
+                            </Card.Body>
+                        </Card>
                 </Col>;
                 gameCardsInARow.push(gameCard);
             }
-            gameCards.push(<Row>{gameCardsInARow}</Row>);
-            gameCards.push(<br/>);
+            gameCards.push(<Row style={{marginBottom: 30}}>{gameCardsInARow}</Row>);
         }
         if (gameCards.length === 0) {
             return <p> No matches were found </p>

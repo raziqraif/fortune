@@ -8,11 +8,21 @@
     padding: 15px 0px;
 }
 
+.title-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: left;
+    width: 63rem;
+}
+
 .toolbar-wrapper {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     justify-content: left;
+    margin-top: 25px;
+    margin-bottom: 25px;
     width: 58rem;
 }
 
