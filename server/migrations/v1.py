@@ -16,6 +16,7 @@ def up(db):
         Coin.create(name='Coin 5', symbol='CO5')
 
 
+
 def down(db):
     with db.atomic():
         migrator = PostgresqlMigrator(db)

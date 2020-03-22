@@ -21,13 +21,6 @@ def mock_require_authentication():
 
 class GameTest(AuthDbTest):
 
-    def setUp(self):
-        super().setUp()
-        with db.atomic() as txn:
-            Coin.create(name='Bitcoin', symbol='BTC')
-            Coin.create(name='Ethereum', symbol='ETH')
-            Coin.create(name='Litecoin', symbol='LTC')
-
     # @patch('game.routes.require_authentication', mock_require_authentication())
     def test_create_game_with_valid_info(self):
         res = self.client.post('/auth/register/',
