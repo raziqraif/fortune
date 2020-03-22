@@ -1,9 +1,10 @@
 import * as React from 'react';
-import {Button, ButtonGroup, ButtonToolbar, Col, Container, FormControl, InputGroup, Row} from "react-bootstrap";
+import {Button, Container, FormControl, InputGroup, Row} from "react-bootstrap";
 import './Play.css'
 import {CSSProperties} from "react";
 import ActiveGames from "./active";
-import Game from "../game";
+import assert from "assert";
+import Pagination from "../pagination";
 
 const buttonStyle: CSSProperties = {
     width: 100,
@@ -18,65 +19,74 @@ interface PlayProp {
 }
 
 interface PlayState {
-    filteredGames: GameType[],
+    gamesInCurrentPage: GameType[],
+    pageSize: number,
+    totalGames: number,
 }
 
-type GameType = { name: string, link: string, endTime: Date }
+type GameType = { title: string, link: string, endTime: Date }
+type ResponseType = {gamesInCurrentPage: GameType[],  pageSize: number, totalGames: number}
 
 export default class Play extends React.Component<PlayProp, PlayState> {
-    activeGames: GameType[] = [];  // TODO: Remove this after real data has been pulled
+    pageNumber = 1;
     keyword = '';
+    sortByTitle = false;
+    sortByEndTime = false;
 
     constructor(props: PlayProp) {
         super(props);
-        this.populateSeedData()
+        _populateSeedData();  // TODO: Remove this later
 
         this.state = {
-            filteredGames: this.filteredGames(),
+            gamesInCurrentPage: [],
+            pageSize: 0,
+            totalGames: 0,
         };
     }
 
-    populateSeedData() {
-        this.activeGames.push({name: "Global Game", link: "/global", endTime: new Date()});
-        this.activeGames.push({name: "Global Timed Game", link: "/global_timed", endTime: new Date()});
-        this.activeGames.push({name: "Boilermaker", link: "boilermaker", endTime: new Date()});
-        for (let i = 4; i <= 40; i++) {
-            this.activeGames.push({name: "Game " + i, link: "/my_game" + i, endTime: new Date()})
-        }
+    componentDidMount(): void {
+        this.updateBackendData();
     }
 
-    requestActiveGames() {
-        // TODO: Request all active games from the backend
-        return this.activeGames;
-    }
-
-    filteredGames() {
-        let activeGames = this.requestActiveGames();
-        if (this.keyword != '') {
-            activeGames = activeGames.filter((game: GameType) =>
-                game.name.toLowerCase().includes(this.keyword.toLowerCase()));
-        }
-        return activeGames;
+    // TODO: Use proper API call
+    updateBackendData() {
+        let resp = gameAPI(
+            this.pageNumber,
+            this.keyword,
+            this.sortByTitle,
+            this.sortByEndTime
+        );
+        this.setState({
+            gamesInCurrentPage: resp.gamesInCurrentPage,
+            totalGames: resp.totalGames,
+            pageSize: resp.pageSize
+        });
     }
 
     showJoinModal() {
         console.log("Clicked Join");
     };
 
+    handlePageChange = (pageNumber: number) => {
+        this.pageNumber = pageNumber;
+        this.updateBackendData()
+    };
+
     handleKeywordChange = (event: any) => {
         this.keyword = event.target.value.trim();
     };
 
-    handleSearchGames = (event: any) => {
-        this.setState({filteredGames: this.filteredGames()});
+    handleSearchGames = (_event: any) => {
+        this.updateBackendData()
     };
 
-    handleEnterKey = (event: any) => {
+    handleKeyPress = (event: any) => {
         if (event.key === "Enter") {
             this.handleSearchGames(event);
         }
     };
 
+    // TODO: Design API to prevent too large of a data request.
     render() {
         return (
             // <div>
@@ -88,7 +98,7 @@ export default class Play extends React.Component<PlayProp, PlayState> {
                         <InputGroup>
                             <FormControl
                                 onChange={this.handleKeywordChange}
-                                onKeyPress={this.handleEnterKey}
+                                onKeyPress={this.handleKeyPress}
                                 placeholder={"Game title"}
                             />
                             <InputGroup.Append>
@@ -116,9 +126,94 @@ export default class Play extends React.Component<PlayProp, PlayState> {
                     {/*</ButtonGroup>*/}
                 </div>
                 <br/>
-                <ActiveGames filteredGames={this.state.filteredGames}/>
-            {/*</div>*/}
+                <Container>
+                    <ActiveGames games={this.state.gamesInCurrentPage}/>
+                    <Row>
+                        <Pagination
+                            currentPage={this.pageNumber}
+                            pageSize={this.state.pageSize}
+                            totalItems={this.state.totalGames}
+                            handlePageChange={this.handlePageChange}
+                        />
+                    </Row>
+                </Container>
+                {/*</div>*/}
             </div>
         )
     }
 }
+
+
+/* Temporary interface to backend data */
+// TODO: Remove all of these
+
+let ACTIVE_GAMES: GameType[] = [];
+
+function _populateSeedData() {
+    ACTIVE_GAMES.push({title: "Global Game", link: "/global", endTime: new Date()});
+    ACTIVE_GAMES.push({title: "Global Timed Game", link: "/global_timed", endTime: new Date()});
+    ACTIVE_GAMES.push({title: "Boilermaker", link: "boilermaker", endTime: new Date()});
+    for (let i = 4; i <= 20; i++) {
+        ACTIVE_GAMES.push({title: "Game " + i, link: "/my_game" + i, endTime: new Date()})
+    }
+}
+
+function _filteredGames(keyword: string) {
+    let activeGames = ACTIVE_GAMES;
+    if (keyword != '') {
+        activeGames = activeGames.filter((game: GameType) =>
+            game.title.toLowerCase().includes(keyword.toLowerCase()));
+    }
+    return activeGames;
+}
+
+function _compareTitle(a: GameType, b: GameType) {
+    const titleA = a.title;
+    const titleB = b.title;
+    if (titleA < titleB) {
+        return -1;
+    } else if (titleA > titleB) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+function _compareEndTime(a: GameType, b: GameType) {
+    const dateA = a.endTime;
+    const dateB = b.endTime;
+    if (dateA < dateB) {
+        return -1;
+    } else if (dateA > dateB) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+function gameAPI(
+    pageNumber: number,
+    keyword: string = '',
+    sortByTitle: boolean = false,
+    sortByEndTime: boolean = false) {
+
+    assert(!sortByTitle || !sortByEndTime);
+
+    const PAGE_SIZE = 9;
+    let games = _filteredGames(keyword);
+    let totalGames = games.length;
+    if (sortByTitle) {
+        games = games.slice().sort(_compareTitle)
+    } else if (sortByEndTime) {
+        games = games.slice().sort(_compareEndTime)
+    }
+    let gamesInCurrentPage = games.slice((pageNumber - 1) * PAGE_SIZE, pageNumber * PAGE_SIZE);
+
+    let resp: ResponseType = {
+        gamesInCurrentPage: gamesInCurrentPage,
+        totalGames: totalGames,
+        pageSize: PAGE_SIZE
+    };
+    return resp;
+}
+
