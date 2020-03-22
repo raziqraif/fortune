@@ -7,6 +7,8 @@ import io from 'socket.io-client'
 
 import CoinGraph from './coingraph/CoinGraph'
 
+const HTTP_HOST = 'http://localhost:5000'
+
 interface CoinInfoProps {
   allCoins: Array<{ id: string, name: string, symbol:string}>;
   getAllCoins: () => {};
@@ -22,7 +24,7 @@ class CoinInfo extends React.Component<CoinInfoProps> {
 
   componentDidMount() {
       this.props.getAllCoins();
-      const socket = io('http://localhost:5000').connect();
+      const socket = io(HTTP_HOST).connect();
       socket.on('message', function(data:any){
         this.setState({data:data});
       }.bind(this));
