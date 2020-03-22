@@ -92,6 +92,10 @@ export default class Pagination extends React.Component <PaginationProps> {
         let paginationItems = [];
         let pager = this.getPager()
 
+        if (pager.totalItems == 0) {
+            return;
+        }
+
         paginationItems.push(
             <ReactPagination.First
                 onClick={() => {this.setPageNumber(1)}}
