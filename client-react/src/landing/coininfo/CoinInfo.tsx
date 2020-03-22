@@ -40,6 +40,18 @@ class CoinInfo extends React.Component<CoinInfoProps> {
       return <div>Retrieving...</div>
     }
   }
+  private showChange(id:number) {
+    if(this.state.data){
+      for (let i = 0; i < this.state.data.length; i++) {
+        if(this.state.data[i].coin.id === id){
+          return Number(this.state.data[i].price_change_day_pct * 100).toFixed(2)
+        }
+      }
+      return <div>Retrieving...</div>
+    } else {
+      return <div>Retrieving...</div>
+    }
+  }
 
 private dynamicRowRender() {
   let rows = [];
@@ -47,7 +59,7 @@ private dynamicRowRender() {
                                          <td>{coin.name} ({coin.symbol})</td>
                                          <td>{this.showPrice(coin.id)}</td>
                                          <td><div align="center"><CoinGraph/></div></td>
-                                         <td>Change</td>
+                                         <td>{this.showChange(coin.id)}%</td>
                                          </tr> );
   rows = rows.slice(0,10) //only show first 10 coins - in reality need to filter through rows for certain coins
   return rows
