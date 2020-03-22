@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Button, Container, FormControl, InputGroup, Row} from "react-bootstrap";
+import {Button, Container, Dropdown, DropdownButton, FormControl, InputGroup, Row} from "react-bootstrap";
 import './Play.css'
 import {CSSProperties} from "react";
 import ActiveGames from "./active";
@@ -11,8 +11,6 @@ const buttonStyle: CSSProperties = {
     height: 38,
     marginRight: 2,
     marginLeft: 2
-    // fontSize: '120%',
-    // lineHeight: "620%",
 };
 
 interface PlayProp {
@@ -24,14 +22,42 @@ interface PlayState {
     totalGames: number,
 }
 
-type GameType = { title: string, link: string, endTime: Date }
-type ResponseType = {gamesInCurrentPage: GameType[],  pageSize: number, totalGames: number}
+type GameType = {
+    title: string,
+    link: string,
+    endTime: Date
+}
+
+type ResponseType = {
+    gamesInCurrentPage: GameType[],
+    pageSize: number,
+    totalGames: number
+}
+
+type SortCriteriaType = {
+    [key: string]: boolean,
+    titleSmallest: boolean,
+    titleLargest: boolean,
+    endTimeEarliest: boolean,
+    endTimeLatest: boolean
+}
+
+enum SortCriteriaKey {
+    TITLE_SMALLEST = "titleSmallest",
+    TITLE_LARGEST = "titleLargest",
+    ENDTIME_EARLIEST = "endTimeEarliest",
+    ENDTIME_LATEST = "endTimeLatest",
+}
 
 export default class Play extends React.Component<PlayProp, PlayState> {
     pageNumber = 1;
     keyword = '';
-    sortByTitle = false;
-    sortByEndTime = false;
+    sortCriteria: SortCriteriaType = {
+        titleSmallest: false,
+        titleLargest: false,
+        endTimeEarliest: false,
+        endTimeLatest: false
+    };
 
     constructor(props: PlayProp) {
         super(props);
@@ -48,19 +74,34 @@ export default class Play extends React.Component<PlayProp, PlayState> {
         this.updateBackendData();
     }
 
-    // TODO: Use proper API call
-    updateBackendData() {
+    // TODO: Use a proper API call
+    updateBackendData(resetPageNumber= false) {
+        if (resetPageNumber) {
+            this.pageNumber = 1;
+        }
         let resp = gameAPI(
             this.pageNumber,
             this.keyword,
-            this.sortByTitle,
-            this.sortByEndTime
+            this.sortCriteria
         );
         this.setState({
             gamesInCurrentPage: resp.gamesInCurrentPage,
             totalGames: resp.totalGames,
             pageSize: resp.pageSize
         });
+    }
+
+    toggleSortCriteria(criteria: string) {
+        let sortCriteriaProps = Object.keys(this.sortCriteria);
+        assert(sortCriteriaProps.includes(criteria));
+
+        let prevCriteriaValue: boolean = (this.sortCriteria as SortCriteriaType)[criteria];
+        sortCriteriaProps.forEach((prop) => {
+            this.sortCriteria[prop] = false;
+        });
+
+        this.sortCriteria[criteria] = !prevCriteriaValue;
+        this.updateBackendData(true);
     }
 
     showJoinModal() {
@@ -77,6 +118,7 @@ export default class Play extends React.Component<PlayProp, PlayState> {
     };
 
     handleSearchGames = (_event: any) => {
+        this.pageNumber = 1;
         this.updateBackendData()
     };
 
@@ -86,15 +128,13 @@ export default class Play extends React.Component<PlayProp, PlayState> {
         }
     };
 
-    // TODO: Design API to prevent too large of a data request.
     render() {
         return (
-            // <div>
             <div className={'container'}>
             <h1>Play a Game</h1>
                 <br/>
-                <div className={"tools-wrapper"}>
-                    <div className={"searchbar-wrapper"} style={{marginRight:10}}>
+                <div className={"toolbar-wrapper"}>
+                    <div className={"searchbar-wrapper"} style={{marginRight:5}}>
                         <InputGroup>
                             <FormControl
                                 onChange={this.handleKeywordChange}
@@ -109,9 +149,34 @@ export default class Play extends React.Component<PlayProp, PlayState> {
                             </InputGroup.Append>
                         </InputGroup>
                     </div>
-                    <br/>
-                    {/*<ButtonGroup>*/}
-                    <div className={"buttons-wrapper"}>
+                    <div className={"widgets-wrapper"} style={{marginRight:40}}>
+                        <DropdownButton
+                            id={'dropdown-basic-button'}
+                            title={'Sort by'}
+                        >
+                            <Dropdown.Item
+                                eventKey="1"
+                                active={this.sortCriteria.titleSmallest}
+                                onClick={() => this.toggleSortCriteria(SortCriteriaKey.TITLE_SMALLEST)}
+                            >Title: smallest first</Dropdown.Item>
+                            <Dropdown.Item
+                                eventKey="2"
+                                active={this.sortCriteria.titleLargest}
+                                onClick={() => this.toggleSortCriteria(SortCriteriaKey.TITLE_LARGEST)}
+                            >Title: largest first</Dropdown.Item>
+                            <Dropdown.Item
+                                eventKey="3"
+                                active={this.sortCriteria.endTimeEarliest}
+                                onClick={() => this.toggleSortCriteria(SortCriteriaKey.ENDTIME_EARLIEST)}
+                            >End time: earliest first</Dropdown.Item>
+                            <Dropdown.Item
+                                eventKey="4"
+                                active={this.sortCriteria.endTimeLatest}
+                                onClick={() => this.toggleSortCriteria(SortCriteriaKey.ENDTIME_LATEST)}
+                            >End time: latest first</Dropdown.Item>
+                        </DropdownButton>
+                    </div>
+                    <div className={"widgets-wrapper"}>
                         <Button
                             style={buttonStyle}
                             variant={"primary"}
@@ -123,7 +188,6 @@ export default class Play extends React.Component<PlayProp, PlayState> {
                             variant={"primary"}
                         > Create </Button>
                     </div>
-                    {/*</ButtonGroup>*/}
                 </div>
                 <br/>
                 <Container>
@@ -137,7 +201,6 @@ export default class Play extends React.Component<PlayProp, PlayState> {
                         />
                     </Row>
                 </Container>
-                {/*</div>*/}
             </div>
         )
     }
@@ -152,7 +215,8 @@ function _populateSeedData() {
     ACTIVE_GAMES.push({title: "Global Game", link: "/global", endTime: new Date()});
     ACTIVE_GAMES.push({title: "Global Timed Game", link: "/global_timed", endTime: new Date()});
     ACTIVE_GAMES.push({title: "Boilermaker", link: "boilermaker", endTime: new Date()});
-    for (let i = 4; i <= 20; i++) {
+    ACTIVE_GAMES.push({title: "A Really Long Game Name Because Why Not", link: "boilermaker", endTime: new Date()});
+    for (let i = 5; i <= 40; i++) {
         ACTIVE_GAMES.push({title: "Game " + i, link: "/my_game" + i, endTime: new Date()})
     }
 }
@@ -166,7 +230,7 @@ function _filteredGames(keyword: string) {
     return activeGames;
 }
 
-function _compareTitle(a: GameType, b: GameType) {
+function _compareTitleSmallest(a: GameType, b: GameType) {
     const titleA = a.title;
     const titleB = b.title;
     if (titleA < titleB) {
@@ -178,7 +242,19 @@ function _compareTitle(a: GameType, b: GameType) {
     }
 }
 
-function _compareEndTime(a: GameType, b: GameType) {
+function _compareTitleLargest(a: GameType, b: GameType) {
+    const titleA = a.title;
+    const titleB = b.title;
+    if (titleA > titleB) {
+        return -1;
+    } else if (titleA < titleB) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+function _compareEndTimeEarliest(a: GameType, b: GameType) {
     const dateA = a.endTime;
     const dateB = b.endTime;
     if (dateA < dateB) {
@@ -190,21 +266,42 @@ function _compareEndTime(a: GameType, b: GameType) {
     }
 }
 
+function _compareEndTimeLatest(a: GameType, b: GameType) {
+    const dateA = a.endTime;
+    const dateB = b.endTime;
+    if (dateA > dateB) {
+        return -1;
+    } else if (dateA < dateB) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 function gameAPI(
     pageNumber: number,
     keyword: string = '',
-    sortByTitle: boolean = false,
-    sortByEndTime: boolean = false) {
+    sortCriteria: SortCriteriaType) {
 
-    assert(!sortByTitle || !sortByEndTime);
+    let trueCount = 0;
+    for (let prop in sortCriteria) {
+        if (Object.prototype.hasOwnProperty.call(sortCriteria, prop) && sortCriteria.prop) {
+            trueCount++;
+        }
+    }
+    assert(trueCount <= 1);
 
-    const PAGE_SIZE = 9;
+    const PAGE_SIZE = 12;
     let games = _filteredGames(keyword);
     let totalGames = games.length;
-    if (sortByTitle) {
-        games = games.slice().sort(_compareTitle)
-    } else if (sortByEndTime) {
-        games = games.slice().sort(_compareEndTime)
+    if (sortCriteria.titleSmallest) {
+        games = games.slice().sort(_compareTitleSmallest)
+    } else if (sortCriteria.titleLargest) {
+        games = games.slice().sort(_compareTitleLargest)
+    } else if (sortCriteria.endTimeEarliest) {
+        games = games.slice().sort(_compareEndTimeEarliest)
+    } else if (sortCriteria.endTimeLatest) {
+        games = games.slice().sort(_compareEndTimeLatest)
     }
     let gamesInCurrentPage = games.slice((pageNumber - 1) * PAGE_SIZE, pageNumber * PAGE_SIZE);
 

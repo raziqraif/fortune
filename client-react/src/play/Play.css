@@ -8,9 +8,12 @@
     padding: 15px 0px;
 }
 
-.tools-wrapper {
+.toolbar-wrapper {
     display: flex;
     flex-direction: row;
+    align-items: flex-start;
+    justify-content: left;
+    width: 58rem;
 }
 
 .searchbar-wrapper {
@@ -18,11 +21,11 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: 30rem;
+    width: 36.4rem;
     /*padding: 15px 0px;*/
 }
 
-.buttons-wrapper {
+.widgets-wrapper {
     display: flex;
     flex-direction: row;
     align-items: flex-end;
