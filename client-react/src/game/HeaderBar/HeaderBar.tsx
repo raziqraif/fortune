@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Row, Modal, Col, Button } from 'react-bootstrap';
+import { Row, Modal, Col, Button, Container } from 'react-bootstrap';
 import { GameType } from '../../redux/actions/Game'
 import CSS from 'csstype';
 import moment from 'moment';
@@ -19,9 +19,9 @@ interface HeaderBarProps {
 
 const styles: { [name: string]: CSS.Properties } = {
 	heading: {
-		width: '100%',
 		borderBottom: 'medium solid',
-		alignItems: 'center'
+		alignItems: 'center',
+		padding: 'none',
 	},
 
 	toolbar: {
@@ -74,40 +74,41 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 		const { days, hours, minutes, seconds, showShare } = this.state;
 		const { global, game } = this.props;
 		return (
-			<div className="HeaderBar">
-				<Row style={styles.heading}>
-					<Col md="auto">
-						<div>
-							<h1>{global ? `Global Game` : `Private Game: ${game.name}`}</h1>
-						</div>
-					</Col>
-					<Col>
-						<Row style={styles.toolbar}>
-							<div style={{ paddingRight: '1em' }}>Ends in: {days} {hours} {minutes} {seconds} </div>
-							<Button style={{ marginRight: '1em' }} variant="primary" onClick={this.toggleShow}>Share</Button>
-							<Button variant="primary">Leaderboard</Button>
-						</Row>
-					</Col>
-				</Row>
+			<div style={styles.heading}>
+				<Row style={{ alignItems: 'center' }}>
+				<Col md="auto">
+					<div>
+						<h1>{global ? `Global Game` : `Private Game: ${game.name}`}</h1>
+					</div>
+				</Col>
+				<Col>
+					<Row style={styles.toolbar}>
+						<div style={{ paddingRight: '1em' }}>Ends in: {days} {hours} {minutes} {seconds} </div>
+						<Button style={{ marginRight: '1em' }} variant="primary" onClick={this.toggleShow}>Share</Button>
+						<Button variant="primary">Leaderboard</Button>
+					</Row>
+				</Col>
+			</Row>
 
-				{/* Share modal */}
-				<div className="myModal">
-					<Modal show={showShare} onHide={this.toggleShow}>
-						<Modal.Header closeButton>
-							<Modal.Title>Share this game!</Modal.Title>
-						</Modal.Header>
-						<Modal.Body>
-							<Row>Link: {game.shareableLink}</Row>
-							<Row>Code: {game.shareableCode}</Row>
-						</Modal.Body>
-						<Modal.Footer style={{ justifyContent: 'center' }}>
-							<Button variant="secondary" onClick={this.toggleShow}>
-								Close
-								</Button>
-						</Modal.Footer>
-					</Modal>
-				</div>
+				{/* Share modal */ }
+			<div className="myModal">
+				<Modal show={showShare} onHide={this.toggleShow}>
+					<Modal.Header closeButton>
+						<Modal.Title>Share this game!</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						<Row>Link: {game.shareableLink}</Row>
+						<Row>Code: {game.shareableCode}</Row>
+					</Modal.Body>
+					<Modal.Footer style={{ justifyContent: 'center' }}>
+						<Button variant="secondary" onClick={this.toggleShow}>
+							Close
+									</Button>
+					</Modal.Footer>
+				</Modal>
 			</div>
+			</div>
+			
 		)
 	}
 }
