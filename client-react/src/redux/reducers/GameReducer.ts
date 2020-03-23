@@ -94,6 +94,8 @@ export default (state = initialState, action: Action) => {
             coins: action.payload,
           }
         }
+    case Type.LIQUIFY_FAILED:
+      return state;
     default:
       return state
   }
