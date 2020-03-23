@@ -6,11 +6,13 @@ import {connect} from 'react-redux'
 import Actions from '../redux/actions'
 import { RootState } from '../redux/reducers';
 import { Redirect } from 'react-router-dom';
+import { currentPricesType } from '../redux/reducers/CoinReducer'
 
 interface MenuBarProps {
     loggedIn: boolean;
     logout: () => void;
     fetchAuthToken: () => void;
+    setCurrentPrices: (payload: currentPricesType) => void;
 }
 
 interface MenuBarState {
@@ -28,9 +30,9 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
     componentDidMount() {
       this.props.fetchAuthToken()
       const socket = io('http://localhost:5000').connect();
-      socket.on('message', function(data: any){
-        console.log('event received:', data)
-        // TODO dispatch
+      socket.on('message', (data: any) => {
+        console.log('event received:', data);
+        this.setCurrentPrices(data);
       });
     }
 
@@ -41,6 +43,10 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
     private logout = () => {
         this.props.logout();
         this.navigateTo('/')();
+    }
+
+    private setCurrentPrices = (payload: currentPricesType) => {
+        this.props.setCurrentPrices(payload);
     }
 
     render() {
@@ -95,5 +101,6 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = {
   logout: Actions.auth.logout,
   fetchAuthToken: Actions.auth.fetchAuthToken,
+  setCurrentPrices: Actions.coins.setCurrentPrices,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar)

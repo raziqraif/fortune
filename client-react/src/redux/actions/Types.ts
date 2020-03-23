@@ -11,6 +11,7 @@ export enum Type {
     // coin types
     SET_COINS,
     SET_GAME_COINS,
+    SET_CURRENT_PRICES,
 
     // game types
     CREATE_GAME,
