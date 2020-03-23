@@ -4,7 +4,7 @@ from unittest.mock import Mock, patch, MagicMock
 import json
 import pytz
 
-from db import db, Profile, Coin
+from db import db, Profile, Coin, Game, GameProfile, GameCoin
 from tests.utils import DbTest, AuthDbTest
 
 
@@ -53,10 +53,6 @@ class GameTest(AuthDbTest):
             'Authorization': 'Bearer ' + token
         })
         self.assertEqual(int(HTTPStatus.OK), res._status_code)
-
-    def test_get_game_with_invalid_pk_fails(self):
-        res = self.client.get('/game/42')
-        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
 
     @patch('auth.decorators.get_auth_token', MagicMock(return_value=Mock(profile='hi')))
     def test_create_game_with_invalid_starting_cash_fails(self):
@@ -140,3 +136,67 @@ class GameTest(AuthDbTest):
         )
         self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
 
+    def test_get_game_with_invalid_pk_fails(self):
+        res = self.client.post('/auth/register/',
+            data=json.dumps({
+                'username': 'theusername',
+                'password': 'thepassword',
+            }),
+            content_type='application/json',
+        )
+        token = res.json['token']
+        res = self.client.post('/game/',
+            data=json.dumps({
+                'title': 'jfkldsajklfd',
+                'startingCash': 42,
+                'endsOn': (datetime.utcnow().replace(tzinfo=pytz.utc) + timedelta(days=7)).isoformat(),
+                'activeCoins': [
+                    {
+                        'id': 1,
+                        'name': 'Bitcoin'
+                    }
+                ]
+            }),
+            headers={
+                'Authorization': 'Bearer ' + token,
+            },
+            content_type='application/json',
+        )
+        self.assertEqual(int(HTTPStatus.OK), res._status_code)
+        res = self.client.get('/game/42', headers={
+            'Authorization': 'Bearer ' + token
+        })
+        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+
+    def test_get_game_without_join(self):
+        res = self.client.post('/auth/register/',
+            data=json.dumps({
+                'username': 'theusername',
+                'password': 'thepassword',
+            }),
+            content_type='application/json',
+        )
+        token = res.json['token']
+        res = self.client.get('/game/1', headers={
+            'Authorization': 'Bearer ' + token
+        })
+        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+
+    def test_get_game_without_coins(self):
+        res = self.client.post('/auth/register/',
+            data=json.dumps({
+                'username': 'theusername',
+                'password': 'thepassword',
+            }),
+            content_type='application/json',
+        )
+        token = res.json['token']
+        GameProfile.create(
+            game=1,
+            profile=1,
+            cash=10000
+        )
+        res = self.client.get('/game/1', headers={
+            'Authorization': 'Bearer ' + token
+        })
+        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
