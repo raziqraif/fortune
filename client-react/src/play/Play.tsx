@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Button, Container, Dropdown, DropdownButton, FormControl, InputGroup, Row} from "react-bootstrap";
+import {Button, Container, Dropdown, DropdownButton, FormControl, InputGroup, Modal, Row} from "react-bootstrap";
 import './Play.css'
 import {CSSProperties} from "react";
 import ActiveGames from "./active";
@@ -20,6 +20,7 @@ interface PlayState {
     gamesInCurrentPage: GameType[],
     pageSize: number,
     totalGames: number,
+    showJoinModal: boolean,
 }
 
 type GameType = {
@@ -58,6 +59,7 @@ export default class Play extends React.Component<PlayProp, PlayState> {
         endTimeEarliest: false,
         endTimeLatest: false
     };
+    gameCode = '';
 
     constructor(props: PlayProp) {
         super(props);
@@ -67,6 +69,7 @@ export default class Play extends React.Component<PlayProp, PlayState> {
             gamesInCurrentPage: [],
             pageSize: 0,
             totalGames: 0,
+            showJoinModal: false,
         };
     }
 
@@ -104,13 +107,26 @@ export default class Play extends React.Component<PlayProp, PlayState> {
         this.updateBackendData(true);
     }
 
-    showJoinModal() {
-        console.log("Clicked Join");
+    handleShowJoinModal = () => {
+        this.setState({showJoinModal: true})
     };
 
-    handlePageChange = (pageNumber: number) => {
-        this.pageNumber = pageNumber;
-        this.updateBackendData()
+    handleHideJoinModal = () => {
+        this.setState({showJoinModal: false})
+    };
+
+    handleModalKeyPress = (event: any) => {
+        if (event.key === "enter") {
+            this.handleJoinGame(event);
+        }
+    };
+
+    handleGameCodeChange = (event: any) => {
+        this.gameCode = event.target.value.trim();
+    };
+
+    handleJoinGame = (event: any) => {
+        // TODO: Show error if code is invalid/game doesn't exist. Add player to the game if it exists.
     };
 
     handleKeywordChange = (event: any) => {
@@ -122,11 +138,17 @@ export default class Play extends React.Component<PlayProp, PlayState> {
         this.updateBackendData()
     };
 
-    handleKeyPress = (event: any) => {
+    handleSearchBarKeyPress = (event: any) => {
         if (event.key === "Enter") {
             this.handleSearchGames(event);
         }
     };
+
+    handlePageChange = (pageNumber: number) => {
+        this.pageNumber = pageNumber;
+        this.updateBackendData()
+    };
+
 
     render() {
         return (
@@ -134,12 +156,13 @@ export default class Play extends React.Component<PlayProp, PlayState> {
                 <div className={"title-wrapper"}>
                     <h1>Play</h1>
                 </div>
+
                 <div className={"toolbar-wrapper"}>
                     <div className={"searchbar-wrapper"} style={{marginRight:5}}>
                         <InputGroup>
                             <FormControl
                                 onChange={this.handleKeywordChange}
-                                onKeyPress={this.handleKeyPress}
+                                onKeyPress={this.handleSearchBarKeyPress}
                                 placeholder={"Game title"}
                             />
                             <InputGroup.Append>
@@ -181,7 +204,7 @@ export default class Play extends React.Component<PlayProp, PlayState> {
                         <Button
                             style={buttonStyle}
                             variant={"primary"}
-                            onClick={this.showJoinModal}
+                            onClick={this.handleShowJoinModal}
                         > Join </Button>
                         <Button
                             style={buttonStyle}
@@ -190,6 +213,7 @@ export default class Play extends React.Component<PlayProp, PlayState> {
                         > Create </Button>
                     </div>
                 </div>
+
                 <Container>
                     <ActiveGames games={this.state.gamesInCurrentPage}/>
                     <Row>
@@ -201,13 +225,42 @@ export default class Play extends React.Component<PlayProp, PlayState> {
                         />
                     </Row>
                 </Container>
+
+                <Modal show={this.state.showJoinModal} onHide={this.handleHideJoinModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Join a Game</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body style={{display: "flex", flexDirection: "column", alignItems: "center",
+                        marginLeft: 50, marginRight: 50, marginTop: 15, marginBottom: 15}}>
+                        <InputGroup
+                        >
+                            <InputGroup.Prepend>
+                                <InputGroup.Text style={{background:"#2a79f7", color:"white"}}>Code</InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <FormControl
+                                onChange={this.handleGameCodeChange}
+                                onKeyPress={this.handleModalKeyPress}
+                                placeholder={"Enter the unique game code"}
+                            />
+                        </InputGroup>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant={"primary"} style={{width: 90}} onClick={this.handleJoinGame}>
+                        Join
+                    </Button>
+                    <Button variant={"primary"} style={{width: 90}} onClick={this.handleHideJoinModal}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
             </div>
         )
     }
 }
 
 /* Temporary interface to backend data */
-// TODO: Remove all of these
+// TODO: Move these methods to the test file
 
 let ACTIVE_GAMES: GameType[] = [];
 
@@ -216,7 +269,7 @@ function _populateSeedData() {
     ACTIVE_GAMES.push({title: "Global Timed Game", link: "/global_timed", endTime: new Date()});
     ACTIVE_GAMES.push({title: "Boilermaker", link: "boilermaker", endTime: new Date()});
     ACTIVE_GAMES.push({title: "A Really Long Game Name Because Why Not", link: "boilermaker", endTime: new Date()});
-    for (let i = 5; i <= 40; i++) {
+    for (let i = 5; i <= 1000; i++) {
         ACTIVE_GAMES.push({title: "Game " + i, link: "/my_game" + i, endTime: new Date()})
     }
 }
