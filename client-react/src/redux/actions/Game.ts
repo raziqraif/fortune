@@ -76,3 +76,19 @@ export const getGame = (
     }
   }
 }
+
+// liquify
+export const liquify = () => {
+  return async (dispatch: Dispatch<Action>) => {
+    try {
+      await fetchAuthToken();
+      const res = await axios.get(`http://localhost:5000/game/liquify`);
+
+      // I'm thinking this method's response will contain a player's new gameProfile and gameCoins after liquifying
+      dispatch({type: Type.SET_GAME_COINS, payload: res.data.coins});
+      dispatch({type: Type.SET_GAME_PROFILE, payload: res.data.gameProfile});
+    } catch (e) {
+      handleAxiosError(e, dispatch, Type.LIQUIFY_FAILED);
+    }
+  }
+}

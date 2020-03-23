@@ -1,6 +1,8 @@
 import * as React from 'react';
+import Actions from '../../redux/actions';
 import { Row, Col, Button, ButtonGroup } from 'react-bootstrap';
 import CSS from 'csstype';
+import { connect } from 'react-redux';
 
 const styles: { [name: string]: CSS.Properties } = {
 	main: {
@@ -18,6 +20,7 @@ interface InfoBarProps {
 		symbol: string;
 		number: number;
 	}>,
+	liquify: () => void,
 }
 
 interface InfoBarState {
@@ -56,6 +59,10 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 		this.setState({ price });
 	}
 
+	private liquify = () => {
+		this.props.liquify();
+	}
+
 	// TODO - get price of coins to calculate current net worth
 	// also will probably have to worry about casting
 	private getNetWorth = () => {
@@ -82,7 +89,7 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 					</Col>
 
 					<Col>
-						<Button variant="primary">Liquefy</Button>
+						<Button variant="primary" onClick={this.liquify}>Liquify</Button>
 					</Col>
 
 					<Col>
@@ -109,4 +116,9 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 	}
 }
 
-export default InfoBar;
+const mapDispatchToProps = {
+    liquify: Actions.game.liquify,
+};
+
+// no mapStateToProps, so pass null as first arg
+export default connect(null, mapDispatchToProps)(InfoBar);
