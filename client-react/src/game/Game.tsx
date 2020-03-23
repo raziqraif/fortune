@@ -62,7 +62,7 @@ class Game extends React.Component<GameProps> {
 
 		return (
 			<div className="Game">
-				<Container>
+				<Container fluid>
 					<HeaderBar
 						game={game.data}
 						global={global}

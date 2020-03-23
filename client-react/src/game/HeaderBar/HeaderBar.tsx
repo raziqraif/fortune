@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Row, Modal, Col, Button } from 'react-bootstrap';
+import { Row, Modal, Col, Button, Container } from 'react-bootstrap';
 import { GameType } from '../../redux/actions/Game'
 import CSS from 'csstype';
 import moment from 'moment';
@@ -21,12 +21,20 @@ const styles: { [name: string]: CSS.Properties } = {
 	heading: {
 		width: '100%',
 		borderBottom: 'medium solid',
-		alignItems: 'center'
+		alignItems: 'center',
+		flexWrap: 'nowrap',
 	},
 
 	toolbar: {
 		justifyContent: 'flex-end',
 		alignItems: 'center',
+		flexWrap: 'nowrap',
+	},
+
+	time: {
+		justifyContent: 'center',
+		alignItems: 'center',
+		flexWrap: 'nowrap',
 	}
 };
 
@@ -58,11 +66,11 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 	private countdown = () => {
 		const endsAt = moment(this.props.game.endsAt);
 		const now = moment();
-		const diff = moment(endsAt.diff(now));
-		const days = diff.format('D');
-		const hours = diff.format('HH');
-		const minutes = diff.format('mm');
-		const seconds = diff.format('ss');
+		const diff = moment.duration(endsAt.diff(now));
+		const days = diff.days().toString();
+		const hours = diff.hours().toString();
+		const minutes = diff.minutes().toString();
+		const seconds = diff.seconds().toString();
 		this.setState({ days, hours, minutes, seconds });
 	}
 
@@ -81,14 +89,36 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 							<h1>{global ? `Global Game` : `Private Game: ${game.name}`}</h1>
 						</div>
 					</Col>
-					<Col>
+
+					<Col md="auto">
 						<Row style={styles.toolbar}>
-							<div style={{ paddingRight: '1em' }}>Ends in: {days} {hours} {minutes} {seconds} </div>
+							<Col style={{ textAlign: 'right' }}>
+								<h4>
+									Ends in:
+								</h4>
+							</Col>
+							<Col style={styles.toolbar}>
+
+								<Row style={styles.time}>
+									<Col>{days}</Col>
+									<Col>{minutes}</Col>
+									<Col>{hours}</Col>
+									<Col>{seconds}</Col>
+								</Row>
+								<Row style={styles.time}>
+									<Col>days</Col>
+									<Col>minutes</Col>
+									<Col>hours</Col>
+									<Col>seconds</Col>
+								</Row>
+							</Col>
+							
 							<Button style={{ marginRight: '1em' }} variant="primary" onClick={this.toggleShow}>Share</Button>
 							<Button variant="primary">Leaderboard</Button>
 						</Row>
 					</Col>
 				</Row>
+				
 
 				{/* Share modal */}
 				<div className="myModal">
