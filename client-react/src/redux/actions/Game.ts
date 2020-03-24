@@ -93,13 +93,17 @@ export const liquify = () => {
   }
 }
 
-export const buy = (
-  amount: string
+// transaction type will either be "buy" or "sell"
+export const transaction = (
+  amount: string,
+  type: string,
 ) => {
   return async (dispatch: Dispatch<Action>) => {
+    console.log(amount)
+    console.log(type)
     try {
       await fetchAuthToken();
-      const res = await axios.post(`http://localhost:5000/game/buy`, {amount});
+      const res = await axios.post(`http://localhost:5000/game/${type}`, {amount});
 
       dispatch({type: Type.TRANSACTION});
       dispatch({type: Type.SET_GAME_COINS, payload: res.data.coins});
@@ -110,19 +114,10 @@ export const buy = (
   }
 }
 
-export const sell = (
-  amount: string
-) => {
+// clear all error messages
+// used when a user cannot complete a transaction, but tries to make another
+export const clearErrorMessages = () => {
   return async (dispatch: Dispatch<Action>) => {
-    try {
-      await fetchAuthToken();
-      const res = await axios.post(`http://localhost:5000/game/sell`, {amount});
-
-      dispatch({type: Type.TRANSACTION});
-      dispatch({type: Type.SET_GAME_COINS, payload: res.data.coins});
-      dispatch({type: Type.SET_GAME_PROFILE, payload: res.data.gameProfile});
-    } catch (e) {
-      handleAxiosError(e, dispatch, Type.TRANSACTION_FAILED);
-    }
+    dispatch({type: Type.CLEAR_ERRORS});
   }
 }

@@ -25,5 +25,6 @@ export enum Type {
 
     SET_REGISTRATION_ERROR,
     SET_LOGIN_ERROR,
-    
+
+    CLEAR_ERRORS
 }

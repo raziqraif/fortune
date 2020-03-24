@@ -1,11 +1,17 @@
 import * as React from "react";
 import { Button, InputGroup, FormControl, Modal, Row } from 'react-bootstrap';
 import CSS from 'csstype';
+import { connect } from "react-redux";
+import { RootState } from "../../redux/reducers";
+import Actions from '../../redux/actions';
 
 interface CointableCoinProps {
 	coin: { id: string, name: string };
 	price: string;
 	number: string;
+	error: string;
+	transaction: (amount: string, type: string) => void;
+	clearErrorMessages: () => void;
 }
 
 interface CointableCoinState {
@@ -13,6 +19,7 @@ interface CointableCoinState {
 	showConfirm: boolean;
 	errMes: string;
 	confirmMes: string;
+	type: string;
 }
 
 enum transactionType {
@@ -37,6 +44,7 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 			showConfirm: false,
 			errMes: '',
 			confirmMes: '',
+			type: 'buy',
 		}
 	}
 
@@ -44,7 +52,7 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 		this.setState({ amount: event.currentTarget.value });
 	}
 
-	private transaction = (type: transactionType) => {
+	private transactionDialogue = (type: transactionType) => {
 		const amount = Number(this.state.amount);
 		this.toggleConfirm();
 		if (!amount || amount <= 0) { // invalid input
@@ -57,6 +65,12 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 			confirmMes += " " + this.props.coin.name + "?";
 			this.setState({ confirmMes });
 		}
+
+		if (type === transactionType.BUY) {
+			this.setState({ type: 'buy' });
+		} else {
+			this.setState({ type: 'sell' });
+		}
 	}
 
 	private toggleConfirm = () => {
@@ -67,7 +81,13 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 		if (!showConfirm) {
 			this.setState({ errMes: '' });
 			this.setState({ confirmMes: '' });
+			this.props.clearErrorMessages();
 		}
+	}
+
+	private transaction = () => {
+		const { amount, type } = this.state;
+		this.props.transaction(amount, type);
 	}
 
 	render() {
@@ -92,8 +112,8 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 						/>
 					</InputGroup>
 				</td>
-				<td><Button variant="outline-primary" onClick={() => this.transaction(transactionType.BUY)}>Buy</Button></td>
-				<td><Button variant="outline-danger" onClick={() => this.transaction(transactionType.SELL)}>Sell</Button></td>
+				<td><Button variant="outline-primary" onClick={() => this.transactionDialogue(transactionType.BUY)}>Buy</Button></td>
+				<td><Button variant="outline-danger" onClick={() => this.transactionDialogue(transactionType.SELL)}>Sell</Button></td>
 				<td>{number}</td>
 
 				{/* confirmation modal */}
@@ -107,12 +127,16 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 							errMes &&
 							<Row style={styles.errMes}>{errMes}</Row>
 						}
+						{
+							this.props.error &&
+							<Row style={styles.errMes}>{this.props.error}</Row>
+						}
 					</Modal.Body>
 					<Modal.Footer style={{ justifyContent: 'center' }}>
 						{/* Only show confirm button if there are no errors */}
 						{
 							!errMes &&
-							<Button variant="primary" onClick={this.toggleConfirm}>Confirm</Button>
+							<Button variant="primary" onClick={this.transaction}>Confirm</Button>
 						}
 						<Button variant="secondary" onClick={this.toggleConfirm}>Cancel</Button>
 					</Modal.Footer>
@@ -122,4 +146,12 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 	}
 }
 
-export default CointableCoin
+const mapStateToProps = (state: RootState) => ({
+    error: state.game.transactionErrorMessage,
+});
+const mapDispatchToProps = {
+	transaction: Actions.game.transaction,
+	clearErrorMessages: Actions.game.clearErrorMessages,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CointableCoin);
