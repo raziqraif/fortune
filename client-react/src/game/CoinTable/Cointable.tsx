@@ -60,14 +60,6 @@ class Cointable extends React.Component<CointableProps> {
 					</thead>
 					<tbody>
 					{coinRows}
-					{/* {
-						coins.map(coin => (
-							<CointableCoin
-								coin={coin}
-								key={coin.id}
-							/>
-						))
-					} */}
 					</tbody>
 				</Table>
 			</div>
