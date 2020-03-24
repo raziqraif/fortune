@@ -8,7 +8,7 @@ import HeaderBar from './HeaderBar/HeaderBar';
 import InfoBar from './InfoBar/InfoBar';
 import Cointable from './CoinTable/Cointable';
 
-export interface GameProps {
+interface GameProps {
 	getGame: (
 		id: number
 	) => void;
@@ -28,13 +28,22 @@ export interface GameProps {
 	error: string;
 }
 
-class Game extends React.Component<GameProps> {
+interface GameState {
+	price: price;
+}
+
+export enum price {
+	MINIMUM,
+	MAXIMUM,
+}
+
+class Game extends React.Component<GameProps, GameState> {
 
 	constructor(props: GameProps) {
 		super(props);
 
 		this.state = {
-			
+			price: price.MINIMUM,
 		}
 	}
 
@@ -54,6 +63,10 @@ class Game extends React.Component<GameProps> {
 		}
 	}
 
+	private changePrice = (price: price) => {
+		this.setState({ price });
+	}
+
 	render() {
 		const { gameId, error, game } = this.props;
 		const global = gameId ? false : true;
@@ -71,6 +84,7 @@ class Game extends React.Component<GameProps> {
 					<InfoBar
 						gameProfile={game.gameProfile}
 						coins={game.coins}
+						changePrice={this.changePrice}
 					/>
 					<Cointable
 						coins={game.coins}

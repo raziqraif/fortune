@@ -3,6 +3,7 @@ import Actions from '../../redux/actions';
 import { Row, Col, Button, ButtonGroup } from 'react-bootstrap';
 import CSS from 'csstype';
 import { connect } from 'react-redux';
+import { price } from '../Game';
 
 const styles: { [name: string]: CSS.Properties } = {
 	main: {
@@ -21,6 +22,7 @@ interface InfoBarProps {
 		number: number;
 	}>,
 	liquify: () => void,
+	changePrice: (price: price) => void,
 }
 
 interface InfoBarState {
@@ -34,11 +36,6 @@ enum timeSpan {
 	WEEK,
 	MONTH,
 	YEAR,
-}
-
-enum price {
-	MINIMUM,
-	MAXIMUM,
 }
 
 class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
@@ -56,7 +53,7 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 	}
 
 	private changePrice = (price: price) => {
-		this.setState({ price });
+		this.props.changePrice(price);
 	}
 
 	private liquify = () => {
