@@ -3,7 +3,7 @@ import Actions from '../../redux/actions';
 import { Row, Col, Button, ButtonGroup } from 'react-bootstrap';
 import CSS from 'csstype';
 import { connect } from 'react-redux';
-import { price } from '../Game';
+import { priceOrder } from '../Game';
 
 const styles: { [name: string]: CSS.Properties } = {
 	main: {
@@ -22,12 +22,11 @@ interface InfoBarProps {
 		number: number;
 	}>,
 	liquify: () => void,
-	changePrice: (price: price) => void,
+	changePriceOrder: (priceOrder: priceOrder) => void,
 }
 
 interface InfoBarState {
 	timeSpan: timeSpan,
-	price: price,
 }
 
 enum timeSpan {
@@ -44,7 +43,6 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 		super(props);
 		this.state = {
 			timeSpan: timeSpan.HOUR,
-			price: price.MINIMUM,
 		}
 	}
 
@@ -52,8 +50,8 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 		this.setState({ timeSpan });
 	}
 
-	private changePrice = (price: price) => {
-		this.props.changePrice(price);
+	private changePriceOrder = (priceOrder: priceOrder) => {
+		this.props.changePriceOrder(priceOrder);
 	}
 
 	private liquify = () => {
@@ -103,8 +101,8 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 					<Col>
 						<div style={{ alignSelf: 'center' }}>Price:  </div>
 						<ButtonGroup aria-label="Price">
-							<Button variant="secondary" onClick={() => this.changePrice(price.MINIMUM)}>Minimum</Button>
-							<Button variant="secondary" onClick={() => this.changePrice(price.MAXIMUM)}>Maximum</Button>
+							<Button variant="secondary" onClick={() => this.changePriceOrder(priceOrder.MINIMUM)}>Minimum</Button>
+							<Button variant="secondary" onClick={() => this.changePriceOrder(priceOrder.MAXIMUM)}>Maximum</Button>
 						</ButtonGroup>
 					</Col>
 				</Row>

@@ -29,10 +29,10 @@ interface GameProps {
 }
 
 interface GameState {
-	price: price;
+	priceOrder: priceOrder;
 }
 
-export enum price {
+export enum priceOrder {
 	MINIMUM,
 	MAXIMUM,
 }
@@ -43,7 +43,7 @@ class Game extends React.Component<GameProps, GameState> {
 		super(props);
 
 		this.state = {
-			price: price.MINIMUM,
+			priceOrder: priceOrder.MINIMUM,
 		}
 	}
 
@@ -63,12 +63,13 @@ class Game extends React.Component<GameProps, GameState> {
 		}
 	}
 
-	private changePrice = (price: price) => {
-		this.setState({ price });
+	private changePriceOrder = (priceOrder: priceOrder) => {
+		this.setState({ priceOrder });
 	}
 
 	render() {
 		const { gameId, error, game } = this.props;
+		const { priceOrder } = this.state;
 		const global = gameId ? false : true;
 		if (error) {
 			return <p style={{ color: 'red' }}>{error}</p>
@@ -84,10 +85,11 @@ class Game extends React.Component<GameProps, GameState> {
 					<InfoBar
 						gameProfile={game.gameProfile}
 						coins={game.coins}
-						changePrice={this.changePrice}
+						changePriceOrder={this.changePriceOrder}
 					/>
 					<Cointable
 						coins={game.coins}
+						priceOrder={priceOrder}
 					/>
 				</Container>
 			</div>

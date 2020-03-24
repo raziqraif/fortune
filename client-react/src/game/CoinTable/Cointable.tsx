@@ -5,10 +5,12 @@ import CointableCoin from './CointableCoin';
 import { currentPricesType } from '../../redux/reducers/CoinReducer';
 import { connect } from 'react-redux';
 import { RootState } from '../../redux/reducers';
+import { priceOrder } from '../Game';
 
 interface CointableProps {
 	coins: Array<{ id: string, name: string }>;
 	currentPrices: currentPricesType;
+	priceOrder: priceOrder;
 }
 
 const styles: { [name: string]: CSS.Properties } = {
@@ -17,28 +19,57 @@ const styles: { [name: string]: CSS.Properties } = {
 	},
 };
 
+type coinWithPrice = { id: string, name: string, price: string };
+
 class Cointable extends React.Component<CointableProps> {
 
 	private createCoinRows = (coins: Array<{ id: string, name: string }>) => {
 		let rows: JSX.Element[] = [];
 		const { currentPrices } = this.props;
+		let coinsWithPrices: Array<coinWithPrice> = [];
 		coins.forEach(coin => {
-			let price = '';
 			for (let i = 0; i < currentPrices.length; i++) {
 				if (currentPrices[i].coin.id === Number(coin.id)) {
-					price = currentPrices[i].price;
+					coinsWithPrices.push({ ...coin, price: currentPrices[i].price });
 					break;
 				}
 			}
+
+		})
+
+		if (this.props.priceOrder === priceOrder.MINIMUM) {
+			coinsWithPrices.sort(this.sortMin);
+		} else {
+			coinsWithPrices.sort(this.sortMax);
+		}
+
+		coinsWithPrices.forEach(coin => {
 			rows.push(
 				<CointableCoin
 					coin={coin}
 					key={coin.id}
-					price={price}
+					price={coin.price}
 				/>
 			)
 		})
+
 		return rows;
+	}
+
+	private sortMin = (coinA: coinWithPrice, coinB: coinWithPrice) => {
+		const priceA = Number(coinA.price);
+		const priceB = Number(coinB.price);
+		if (priceA > priceB) return 1;
+		if (priceA < priceB) return -1;
+		return 0;
+	}
+
+	private sortMax = (coinA: coinWithPrice, coinB: coinWithPrice) => {
+		const priceA = Number(coinA.price);
+		const priceB = Number(coinB.price);
+		if (priceA < priceB) return 1;
+		if (priceA > priceB) return -1;
+		return 0;
 	}
 
 	render() {
@@ -59,7 +90,7 @@ class Cointable extends React.Component<CointableProps> {
 						</tr>
 					</thead>
 					<tbody>
-					{coinRows}
+						{coinRows}
 					</tbody>
 				</Table>
 			</div>
