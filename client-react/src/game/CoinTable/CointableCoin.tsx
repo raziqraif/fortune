@@ -5,6 +5,7 @@ import CSS from 'csstype';
 interface CointableCoinProps {
 	coin: { id: string, name: string };
 	price: string;
+	number: string;
 }
 
 interface CointableCoinState {
@@ -71,7 +72,7 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 
 	render() {
 		const { name } = this.props.coin;
-		const { price } = this.props;
+		const { price, number } = this.props;
 		const { showConfirm, errMes, confirmMes } = this.state;
 		const price_f = price.substring(0, price.indexOf('.') + 3); // 2 digits after decimal
 		return (
@@ -93,7 +94,7 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 				</td>
 				<td><Button variant="outline-primary" onClick={() => this.transaction(transactionType.BUY)}>Buy</Button></td>
 				<td><Button variant="outline-danger" onClick={() => this.transaction(transactionType.SELL)}>Sell</Button></td>
-				<td>1.05</td>
+				<td>{number}</td>
 
 				{/* confirmation modal */}
 				<Modal show={showConfirm} onHide={this.toggleConfirm}>

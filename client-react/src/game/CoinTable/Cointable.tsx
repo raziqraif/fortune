@@ -8,7 +8,12 @@ import { RootState } from '../../redux/reducers';
 import { priceOrder } from '../Game';
 
 interface CointableProps {
-	coins: Array<{ id: string, name: string }>;
+	coins: Array<{
+		id: string;
+		name: string;
+		symbol: string;
+		number: string;
+	}>;
 	currentPrices: currentPricesType;
 	priceOrder: priceOrder;
 }
@@ -19,11 +24,16 @@ const styles: { [name: string]: CSS.Properties } = {
 	},
 };
 
-type coinWithPrice = { id: string, name: string, price: string };
+type coinWithPrice = { id: string, name: string, symbol: string, number: string, price: string };
 
 class Cointable extends React.Component<CointableProps> {
 
-	private createCoinRows = (coins: Array<{ id: string, name: string }>) => {
+	private createCoinRows = (coins: Array<{
+		id: string;
+		name: string;
+		symbol: string;
+		number: string;
+	}>) => {
 		let rows: JSX.Element[] = [];
 		const { currentPrices } = this.props;
 		let coinsWithPrices: Array<coinWithPrice> = [];
@@ -48,6 +58,7 @@ class Cointable extends React.Component<CointableProps> {
 				<CointableCoin
 					coin={coin}
 					key={coin.id}
+					number={coin.number}
 					price={coin.price}
 				/>
 			)

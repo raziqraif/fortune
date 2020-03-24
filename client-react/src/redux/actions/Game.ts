@@ -37,7 +37,7 @@ export type GetGameResponse = {
       id: string;
       name: string;
       symbol: string;
-      number: number;
+      number: string;
     }>
   }
 }
@@ -89,6 +89,40 @@ export const liquify = () => {
       dispatch({type: Type.SET_GAME_PROFILE, payload: res.data.gameProfile});
     } catch (e) {
       handleAxiosError(e, dispatch, Type.LIQUIFY_FAILED);
+    }
+  }
+}
+
+export const buy = (
+  amount: string
+) => {
+  return async (dispatch: Dispatch<Action>) => {
+    try {
+      await fetchAuthToken();
+      const res = await axios.post(`http://localhost:5000/game/buy`, {amount});
+
+      dispatch({type: Type.TRANSACTION});
+      dispatch({type: Type.SET_GAME_COINS, payload: res.data.coins});
+      dispatch({type: Type.SET_GAME_PROFILE, payload: res.data.gameProfile});
+    } catch (e) {
+      handleAxiosError(e, dispatch, Type.TRANSACTION_FAILED);
+    }
+  }
+}
+
+export const sell = (
+  amount: string
+) => {
+  return async (dispatch: Dispatch<Action>) => {
+    try {
+      await fetchAuthToken();
+      const res = await axios.post(`http://localhost:5000/game/sell`, {amount});
+
+      dispatch({type: Type.TRANSACTION});
+      dispatch({type: Type.SET_GAME_COINS, payload: res.data.coins});
+      dispatch({type: Type.SET_GAME_PROFILE, payload: res.data.gameProfile});
+    } catch (e) {
+      handleAxiosError(e, dispatch, Type.TRANSACTION_FAILED);
     }
   }
 }

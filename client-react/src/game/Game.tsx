@@ -22,7 +22,7 @@ interface GameProps {
 			id: string;
 			name: string;
 			symbol: string;
-			number: number;
+			number: string;
 		}>
 	}
 	error: string;

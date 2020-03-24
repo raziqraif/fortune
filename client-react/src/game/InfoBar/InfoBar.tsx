@@ -19,7 +19,7 @@ interface InfoBarProps {
 		id: string;
 		name: string;
 		symbol: string;
-		number: number;
+		number: string;
 	}>,
 	liquify: () => void,
 	changePriceOrder: (priceOrder: priceOrder) => void,
