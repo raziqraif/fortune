@@ -29,18 +29,14 @@ class Game extends React.Component<GameProps> {
 
 	componentDidMount() {
 		const { gameId } = this.props;
-		// private game - get game
-		// LOOKATME - getGame and the backend expect gameId to be a number,
-		// but since gameId comes from match.params, it is a string.
-		// not sure how we should unify this discrepency
-		if (gameId) {
-			this.props.getGame(parseInt(gameId));
-		}
-
-		// TODO global game - get global game 
-		else {
+		if (!gameId) { // global game
 			this.props.getGame(1);
-		}
+			return;
+		} 
+
+		const id = parseInt(gameId);
+		if (!id) this.props.history.push('/'); // non-numerical ID
+		else this.props.getGame(id); // private game 
 	}
 
 	render() {
