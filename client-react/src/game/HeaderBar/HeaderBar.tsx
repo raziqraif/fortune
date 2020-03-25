@@ -57,8 +57,8 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 	}
 
 	componentDidMount() {
-		// moment countdown interval
-		this.interval = setInterval(this.countdown, 1000);
+		// moment countdown interval if there's an endAt
+		if (this.props.game.endsAt) this.interval = setInterval(this.countdown, 1000);
 	}
 
 	componentWillUnmount() {
@@ -117,14 +117,14 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 
 										<Row style={styles.time}>
 											<Col>{days}</Col>
-											<Col>{minutes}</Col>
 											<Col>{hours}</Col>
+											<Col>{minutes}</Col>
 											<Col>{seconds}</Col>
 										</Row>
 										<Row style={styles.time}>
 											<Col>days</Col>
-											<Col>minutes</Col>
 											<Col>hours</Col>
+											<Col>minutes</Col>
 											<Col>seconds</Col>
 										</Row>
 									</Col>
