@@ -38,3 +38,4 @@ services:
       # NOTE do this
       - PYTHONPATH=/app
       - HTTP_HOST=http://localhost:5000
+      - NOMICS_API_KEY=foo
