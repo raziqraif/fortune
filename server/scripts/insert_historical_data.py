@@ -13,6 +13,14 @@ def get_coin_from_symbol(symbol):
         return 'Litecoin'
     if symbol == 'ZEC':
         return 'Zcash'
+    if symbol == 'DASH':
+        return 'Dash'
+    if symbol == 'OMG':
+        return 'OmiseGO'
+    if symbol == 'XMR':
+        return 'Monero'
+    if symbol == 'NEO':
+        return 'Neo'
 
 
 def get_bitfinex_time(split):
@@ -27,9 +35,11 @@ def get_bitfinex_data(line) -> tuple:
     open, high, low, close, volume = tuple(split[2:7])
 
     # TODO watch this! Not all currencies are 3 characters!!!
-    coin_symbol = currency_pair[:3]
-    fiat_symbol = currency_pair[3:]
-    assert fiat_symbol == 'USD'
+    coin_symbol = currency_pair.split('USD')[0]
+    #coin_symbol = currency_pair[:3]
+    #fiat_symbol = currency_pair[3:]
+    fiat_symbol = 'USD'
+    #assert fiat_symbol == 'USD'
     coin = Coin.get_or_none(Coin.symbol == coin_symbol)
     if coin is None:
         coin = Coin.create(
@@ -74,7 +84,7 @@ def get_tickers_from_file(filename):
         for line in lines[2:]:
             if filename.startswith('gemini'):
                 data = get_gemini_data(line)
-            elif filename.startswith('Bitfinex'):
+            elif filename.startswith('Bitfinex') or filename.startswith('Bittrex'):
                 data = get_bitfinex_data(line)
             else:
                 print(f'Unrecognized filename: {filename}')
