@@ -81,10 +81,10 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 				<Row>
 					<Col>
 						<Row>
-							<span>Cash: ${gameProfile.cash}</span>
+							Cash: ${gameProfile.cash}
 						</Row>
 						<Row>
-							<span>Net worth: ${this.getNetWorth()}</span>
+							Net worth: ${this.getNetWorth()}
 						</Row>
 					</Col>
 
@@ -93,7 +93,7 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 					</Col>
 
 					<Col>
-						<div style={{ alignSelf: 'center' }}>Time span:  </div>
+						Time span:
 						<ButtonGroup aria-label="Time Span">
 							<Button variant="secondary" onClick={() => this.changeTimeSpan(timeSpan.HOUR)}>Hour</Button>
 							<Button variant="secondary" onClick={() => this.changeTimeSpan(timeSpan.DAY)}>Day</Button>

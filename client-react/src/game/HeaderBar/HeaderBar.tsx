@@ -85,17 +85,13 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 			<div className="HeaderBar">
 				<Row style={styles.heading}>
 					<Col md="auto">
-						<div>
-							<h1>{global ? `Global Game` : `Private Game: ${game.name}`}</h1>
-						</div>
+						<h1>{global ? `Global Game` : `Private Game: ${game.name}`}</h1>
 					</Col>
 
 					<Col md="auto">
 						<Row style={styles.toolbar}>
 							<Col style={{ textAlign: 'right' }}>
-								<h4>
-									Ends in:
-								</h4>
+								<h4>Ends in:</h4>
 							</Col>
 							<Col style={styles.toolbar}>
 
@@ -112,13 +108,13 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 									<Col>seconds</Col>
 								</Row>
 							</Col>
-							
+
 							<Button style={{ marginRight: '1em' }} variant="primary" onClick={this.toggleShow}>Share</Button>
 							<Button variant="primary">Leaderboard</Button>
 						</Row>
 					</Col>
 				</Row>
-				
+
 
 				{/* Share modal */}
 				<div className="myModal">
