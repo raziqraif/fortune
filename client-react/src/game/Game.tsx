@@ -12,18 +12,7 @@ export interface GameProps {
 		id: number
 	) => void;
 	gameId?: string;
-	game: {
-		data: GameType,
-		gameProfile: {
-			cash: string,
-		},
-		coins: Array<{
-			id: string;
-			name: string;
-			symbol: string;
-			number: number;
-		}>
-	}
+	game: GameType;
 	error: string;
 	history: any;
 }

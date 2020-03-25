@@ -27,20 +27,9 @@ export type Action = {
 }
 
 export type GameState = {
+  game: GameType;
   createGameErrorMessage: string;
   createGameLoading: boolean;
-  game: {
-    data: GameType,
-    gameProfile: {
-      cash: string;
-    }
-    coins: Array<{
-      id: string;
-      name: string;
-      symbol: string;
-      number: number;
-    }>
-  };
   setGameErrorMessage: string;
 }
 

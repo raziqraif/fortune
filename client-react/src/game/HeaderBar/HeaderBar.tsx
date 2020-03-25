@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Row, Modal, Col, Button } from 'react-bootstrap';
-import { GameType } from '../../redux/actions/Game'
+import { GameDataType } from '../../redux/actions/Game'
 import CSS from 'csstype';
 import moment from 'moment';
 import copy from 'copy-to-clipboard';
@@ -14,7 +14,7 @@ interface HeaderBarState {
 }
 
 interface HeaderBarProps {
-	game: GameType,
+	game: GameDataType,
 	global: boolean,
 	history: any,
 	gameId?: string,

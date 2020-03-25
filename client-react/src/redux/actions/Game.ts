@@ -17,9 +17,7 @@ type CreateGameResponse = {
   }
 }
 
-// I'm taking ID out of here for now because if I understand right
-// the global game won't have an ID. - SAM
-export type GameType = {
+export type GameDataType = {
   name: string;
   startingCash: string;
   shareableLink: string;
@@ -27,19 +25,17 @@ export type GameType = {
   endsAt: Date;
 }
 
-export type GetGameResponse = {
-  data: {
-    game: GameType,
-    gameProfile: {
-      cash: string;
-    }
-    coins: Array<{
-      id: string;
-      name: string;
-      symbol: string;
-      number: number;
-    }>
-  }
+export type GameType = {
+  data: GameDataType,
+  gameProfile: {
+    cash: string,
+  },
+  coins: Array<{
+    id: string;
+    name: string;
+    symbol: string;
+    number: number;
+  }>
 }
 
 export const createGame = (
