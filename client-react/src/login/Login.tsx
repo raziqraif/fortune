@@ -10,6 +10,8 @@ interface LoginProps {
         username: string,
         password: string,
     ) => void;
+    error: string;
+    loading: boolean;
 }
 
 interface LoginState {
@@ -61,11 +63,13 @@ class Login extends React.Component<LoginProps, LoginState> {
                         <Form.Control type="password" placeholder="Enter password" name="password" value={this.state.password} onChange={this.handleChange}/>
                     </Form.Group>
                 </Form.Row>
-                
+                <Form.Control.Feedback type='invalid'>
+                </Form.Control.Feedback>
+                <p style={{color: 'red'}}>{this.props.error}</p>
                 <Form.Row>
                     <Col>
-                        <Button variant="primary" type="submit">
-                            Login
+                        <Button disabled={this.props.loading} variant="primary" type="submit">
+                            {this.props.loading ? 'Loading...' : 'Login'}
                         </Button>
                     </Col>
                     <Col className="text-right">
@@ -81,6 +85,8 @@ class Login extends React.Component<LoginProps, LoginState> {
 
 const mapStateToProps = (state: RootState) => ({
     allCoins: state.coins.coins,
+    error: state.auth.loginErrorMessage,
+    loading: state.auth.loginLoading,
 })
 const mapDispatchToProps = {
     login: Actions.auth.login,

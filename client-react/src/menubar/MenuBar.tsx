@@ -1,4 +1,5 @@
 import * as React from 'react';
+import io from 'socket.io-client'
 import logo from '../logo.svg';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import {connect} from 'react-redux'
@@ -9,6 +10,7 @@ import { Redirect } from 'react-router-dom';
 interface MenuBarProps {
     loggedIn: boolean;
     logout: () => void;
+    fetchAuthToken: () => void;
 }
 
 interface MenuBarState {
@@ -21,6 +23,15 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
         this.state = {
             toLogin: false,
         }
+    }
+
+    componentDidMount() {
+      this.props.fetchAuthToken()
+      const socket = io('http://localhost:5000').connect();
+      socket.on('message', function(data: any){
+        console.log('event received:', data)
+        // TODO dispatch
+      });
     }
 
     private navigateToLogin = () => {
@@ -78,5 +89,6 @@ const mapStateToProps = (state: RootState) => ({
 })
 const mapDispatchToProps = {
   logout: Actions.auth.logout,
+  fetchAuthToken: Actions.auth.fetchAuthToken,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar)
