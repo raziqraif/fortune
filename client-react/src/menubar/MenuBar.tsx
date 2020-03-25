@@ -1,4 +1,5 @@
 import * as React from 'react';
+import io from 'socket.io-client'
 import logo from '../logo.svg';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import {connect} from 'react-redux'
@@ -26,6 +27,11 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
 
     componentDidMount() {
       this.props.fetchAuthToken()
+      const socket = io('http://localhost:5000').connect();
+      socket.on('message', function(data: any){
+        console.log('event received:', data)
+        // TODO dispatch
+      });
     }
 
     private navigateTo = (navigateTo: string) => () => {
