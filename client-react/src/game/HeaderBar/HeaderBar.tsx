@@ -16,6 +16,8 @@ interface HeaderBarState {
 interface HeaderBarProps {
 	game: GameType,
 	global: boolean,
+	history: any,
+	gameId?: string,
 }
 
 const styles: { [name: string]: CSS.Properties } = {
@@ -65,8 +67,13 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 
 	// calculates how much time is left in the game
 	private countdown = () => {
-		const endsAt = moment(this.props.game.endsAt);
+		const endsAt = moment.utc(this.props.game.endsAt);
 		const now = moment();
+		// game time is expired, so navigate to leaderboard
+		if (now > endsAt) {
+			this.navigateToLeaderBoard();
+			return;
+		}
 		const diff = moment.duration(endsAt.diff(now));
 		const days = diff.days().toString();
 		const hours = diff.hours().toString();
@@ -83,6 +90,11 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 		copy(this.props.game.shareableLink);
 	}
 
+	private navigateToLeaderBoard = () => {
+		if (this.props.gameId) this.props.history.push(`/${this.props.gameId}/leaderboard`); // private game leaderboard
+		else this.props.history.push('/leaderboard'); // global leaderboard
+	}
+
 	render() {
 		const { days, hours, minutes, seconds, showShare } = this.state;
 		const { global, game } = this.props;
@@ -95,27 +107,32 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 
 					<Col md="auto">
 						<Row style={styles.toolbar}>
-							<Col style={{ textAlign: 'right' }}>
-								<h4>Ends in:</h4>
-							</Col>
-							<Col style={styles.toolbar}>
+							{
+								game.endsAt &&
+								<>
+									<Col style={{ textAlign: 'right' }}>
+										<h4>Ends in:</h4>
+									</Col>
+									<Col style={styles.toolbar}>
 
-								<Row style={styles.time}>
-									<Col>{days}</Col>
-									<Col>{minutes}</Col>
-									<Col>{hours}</Col>
-									<Col>{seconds}</Col>
-								</Row>
-								<Row style={styles.time}>
-									<Col>days</Col>
-									<Col>minutes</Col>
-									<Col>hours</Col>
-									<Col>seconds</Col>
-								</Row>
-							</Col>
+										<Row style={styles.time}>
+											<Col>{days}</Col>
+											<Col>{minutes}</Col>
+											<Col>{hours}</Col>
+											<Col>{seconds}</Col>
+										</Row>
+										<Row style={styles.time}>
+											<Col>days</Col>
+											<Col>minutes</Col>
+											<Col>hours</Col>
+											<Col>seconds</Col>
+										</Row>
+									</Col>
+								</>
+							}
 
 							<Button style={{ marginRight: '1em' }} variant="primary" onClick={this.toggleShow}>Share</Button>
-							<Button variant="primary">Leaderboard</Button>
+							<Button variant="primary" onClick={this.navigateToLeaderBoard}>Leaderboard</Button>
 						</Row>
 					</Col>
 				</Row>
@@ -130,7 +147,7 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 						<Modal.Body>
 							<Row style={{ justifyContent: 'center' }}>Link:</Row>
 							<Row onClick={this.copyLink}>{game.shareableLink}</Row>
-							<br/>
+							<br />
 							<Row style={{ justifyContent: 'center' }}>Code:</Row>
 							<Row style={{ justifyContent: 'center' }}>{game.shareableCode}</Row>
 						</Modal.Body>
@@ -145,5 +162,6 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 		)
 	}
 }
+
 
 export default HeaderBar

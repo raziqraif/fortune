@@ -25,6 +25,7 @@ export interface GameProps {
 		}>
 	}
 	error: string;
+	history: any;
 }
 
 class Game extends React.Component<GameProps> {
@@ -66,6 +67,8 @@ class Game extends React.Component<GameProps> {
 					<HeaderBar
 						game={game.data}
 						global={global}
+						history={this.props.history}
+						gameId={gameId}
 					/>
 					<InfoBar
 						gameProfile={game.gameProfile}
