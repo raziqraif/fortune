@@ -3,6 +3,7 @@ import { Row, Modal, Col, Button } from 'react-bootstrap';
 import { GameType } from '../../redux/actions/Game'
 import CSS from 'csstype';
 import moment from 'moment';
+import copy from 'copy-to-clipboard';
 
 interface HeaderBarState {
 	days: string;
@@ -78,6 +79,10 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 		this.setState({ showShare: !this.state.showShare });
 	}
 
+	private copyLink = () => {
+		copy(this.props.game.shareableLink);
+	}
+
 	render() {
 		const { days, hours, minutes, seconds, showShare } = this.state;
 		const { global, game } = this.props;
@@ -123,13 +128,16 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 							<Modal.Title>Share this game!</Modal.Title>
 						</Modal.Header>
 						<Modal.Body>
-							<Row>Link: {game.shareableLink}</Row>
-							<Row>Code: {game.shareableCode}</Row>
+							<Row style={{ justifyContent: 'center' }}>Link:</Row>
+							<Row onClick={this.copyLink}>{game.shareableLink}</Row>
+							<br/>
+							<Row style={{ justifyContent: 'center' }}>Code:</Row>
+							<Row style={{ justifyContent: 'center' }}>{game.shareableCode}</Row>
 						</Modal.Body>
 						<Modal.Footer style={{ justifyContent: 'center' }}>
 							<Button variant="secondary" onClick={this.toggleShow}>
 								Close
-								</Button>
+							</Button>
 						</Modal.Footer>
 					</Modal>
 				</div>
