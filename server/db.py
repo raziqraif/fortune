@@ -83,7 +83,7 @@ class Ticker(BaseModel):
     price = peewee.DecimalField(max_digits=20, decimal_places=8)
     captured_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
     # don't want to take up precious db space?, just making a float
-    price_change_day_pct =  peewee.DecimalField(max_digits=20, decimal_places=8)
+    price_change_day_pct =  peewee.DecimalField(max_digits=20, decimal_places=8, null=True)
 
 
 class Trade(BaseModel):
