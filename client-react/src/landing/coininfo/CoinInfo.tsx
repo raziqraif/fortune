@@ -2,56 +2,52 @@ import * as React from 'react';
 import { Table } from 'react-bootstrap';
 import Actions from '../../redux/actions';
 import { RootState } from '../../redux/reducers';
+import { currentPricesType } from '../../redux/reducers/CoinReducer';
 import { connect } from 'react-redux';
-import io from 'socket.io-client'
 
 import CoinGraph from './coingraph/CoinGraph'
-
-const HTTP_HOST = 'http://localhost:5000'
 
 interface CoinInfoProps {
   allCoins: Array<{ id: string, name: string, symbol:string}>;
   getAllCoins: () => {};
+  currentPrices: currentPricesType;
 }
 
 class CoinInfo extends React.Component<CoinInfoProps> {
   constructor(props: CoinInfoProps) {
       super(props);
       this.state ={
-        data:{},
       }
   }
 
   componentDidMount() {
       this.props.getAllCoins();
-      const socket = io(HTTP_HOST).connect();
-      socket.on('message', function(data:any){
-        this.setState({data:data});
-      }.bind(this));
   }
 
   private showPrice(id:number) {
-    if(this.state.data){
-      for (let i = 0; i < this.state.data.length; i++) {
-        if(this.state.data[i].coin.id === id){
-          return <div> ${Number(this.state.data[i].price).toFixed(2)}</div>
+    const { currentPrices } = this.props;
+    if(currentPrices){
+      for (let i = 0; i < currentPrices.length; i++) {
+        if(currentPrices[i].coin.id === id){
+          return <div> ${Number(currentPrices[i].price).toFixed(2)}</div>
         }
       }
       return <div>Retrieving...</div>
     } else {
-      return <div>Retrieving...</div>
+      return <div>Error displaying price</div>
     }
   }
   private showChange(id:number) {
-    if(this.state.data){
-      for (let i = 0; i < this.state.data.length; i++) {
-        if(this.state.data[i].coin.id === id){
-          return <div>{Number(this.state.data[i].price_change_day_pct * 100).toFixed(2)}%</div>
+    const { currentPrices } = this.props;
+    if(currentPrices){
+      for (let i = 0; i < currentPrices.length; i++) {
+        if(currentPrices[i].coin.id === id){
+          return <div>{Number(currentPrices[i].price_change_day_pct * 100).toFixed(2)}%</div>
         }
       }
       return <div>Retrieving...</div>
     } else {
-      return <div>Retrieving...</div>
+      return <div>Error displaying price changes</div>
     }
   }
 
@@ -87,6 +83,7 @@ private dynamicRowRender() {
 
 const mapStateToProps = (state: RootState) => ({
     allCoins: state.coins.coins,
+    currentPrices: state.coins.currentPrices,
 });
 const mapDispatchToProps = {
     getAllCoins: Actions.coins.getAllCoins,
