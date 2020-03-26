@@ -34,6 +34,16 @@ class TestService(TestCase):
         )
 
     @patch('requests.get', MagicMock(return_value=Mock(json=lambda: [
+    ])))
+    @patch('scripts.service.Coin')
+    @patch('scripts.service.Ticker')
+    def test_parsing_with_no_coins(self, mock_ticker, mock_coin):
+        os.environ['NOMICS_BASE_URL'] = 'foo'
+        ping()
+        mock_ticker.assert_not_called()
+        mock_coin.assert_not_called()
+
+    @patch('requests.get', MagicMock(return_value=Mock(json=lambda: [
         {'symbol': 'FOO', 'price': '56.12345678', '1d': {'price_change_pct': '-1.23456789'}},
         {'symbol': 'BAR', 'price': '42.98765432', '1d': {'price_change_pct': '-1.23456789'}},
     ])))
@@ -61,3 +71,9 @@ class TestService(TestCase):
         ]
         mock_ticker.create.assert_has_calls(calls, any_order=False)
 
+    @patch('requests.get', MagicMock(return_value=Mock(json=None)))
+    @patch('scripts.service.Coin')
+    @patch('scripts.service.Ticker')
+    def test_crashes_with_empty_api_response(self, mock_ticker, mock_coin):
+        with self.assertRaises(Exception):
+            ping('FOO')
