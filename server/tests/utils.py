@@ -7,19 +7,18 @@ from auth.decorators import require_authentication
 from db import *
 from main import create_app
 from migrations.migrate import migrate
-from migrations.seed import seed
 
 
 class IntegrationTest(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.app = create_app()
+        cls.app, _ = create_app()
         cls.client = cls.app.test_client()
 
 class AuthTest(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.app = create_app()
+        cls.app, _ = create_app()
 
         @cls.app.route('/testauth')
         @require_authentication

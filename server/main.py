@@ -1,9 +1,13 @@
+import eventlet
+eventlet.monkey_patch()
 import flask
 from threading import Thread
+import time
 import traceback
 
 from flask import Flask 
 from flask_cors import CORS
+from flask_socketio import SocketIO, emit
 
 from auth.routes import auth_bp
 from errors.handlers import errors_bp
@@ -35,6 +39,14 @@ def create_app():
     def hello():
         return 'hello world'
 
-    Thread(target=begin).start()
+    socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins='*')
+    #socketio = SocketIO(app, async_mode='threading', cors_allowed_origins='*')
 
-    return app
+    def cb(tickers):
+        from scripts.serializers import TickersResponse
+        socketio.emit('message', TickersResponse.serialize(tickers, many=True))
+
+    socketio.start_background_task(begin, cb=cb)
+
+    return app, socketio
+
