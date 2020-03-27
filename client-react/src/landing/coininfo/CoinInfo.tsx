@@ -42,7 +42,10 @@ class CoinInfo extends React.Component<CoinInfoProps> {
     if(currentPrices){
       for (let i = 0; i < currentPrices.length; i++) {
         if(currentPrices[i].coin.id === id){
-          return <div>{Number(currentPrices[i].price_change_day_pct * 100).toFixed(2)}%</div>
+          var style = {color:'green'}
+          var change = Number(currentPrices[i].price_change_day_pct) * 100
+          if (change < 0) { style = {color:'red'} }
+          return <div style={style}>{Number(change).toFixed(2)}%</div>
         }
       }
       return <div>Retrieving...</div>
