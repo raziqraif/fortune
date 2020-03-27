@@ -10,7 +10,8 @@ export default class CoinGraph extends React.Component<CoinGraphProps> {
   constructor(props) {
     super(props);
     this.state = {
-      data: []
+      data: [],
+      colorSeed: Math.random(),
     }
   }
 
@@ -22,10 +23,14 @@ export default class CoinGraph extends React.Component<CoinGraphProps> {
     return{ data: nData }
   }
 
+  private deriveColorFromID() {
+    return '#'+(this.state.colorSeed*0xFFFFFF<<0).toString(16);
+  }
+
     render() {
         return (
           <Sparklines data={this.state.data}>
-            <SparklinesLine color="blue" />
+            <SparklinesLine color={this.deriveColorFromID()} />
           </Sparklines>
         )
     }//render()
