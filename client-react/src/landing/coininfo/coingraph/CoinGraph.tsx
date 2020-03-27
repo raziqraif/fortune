@@ -11,26 +11,25 @@ export default class CoinGraph extends React.Component<CoinGraphProps> {
     super(props);
     this.state = {
       data: [],
-      colorSeed: Math.random(),
+      color: 'green',
     }
   }
 
   static getDerivedStateFromProps(props,state){
     let nData = state.data
+    let nColor = state.color
     if(props.currentPrices.length > 0) {
       nData.push(props.currentPrices[Number(props.id)-1].price)
+      nColor = (Number(props.currentPrices[Number(props.id)-1].price_change_day_pct) < 0) ? 'red' : 'green'
     }
-    return{ data: nData }
-  }
-
-  private deriveColorFromID() {
-    return '#'+(this.state.colorSeed*0xFFFFFF<<0).toString(16);
+    return{ data: nData,
+            color: nColor }
   }
 
     render() {
         return (
           <Sparklines data={this.state.data}>
-            <SparklinesLine color={this.deriveColorFromID()} />
+            <SparklinesLine color={this.state.color} />
           </Sparklines>
         )
     }//render()
