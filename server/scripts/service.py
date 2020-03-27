@@ -1,4 +1,5 @@
 from decimal import Decimal
+from datetime import datetime
 import os
 import random
 import sys
@@ -76,3 +77,11 @@ def begin(cb=None):
             if cb is not None: cb(tickers)
             time.sleep(WAIT)
 
+
+
+@db.atomic()
+def get_tickers_from_date(past_date):
+    tickers = Ticker.select().where(Ticker.captured_at > past_date)
+    if not tickers:
+        return []
+    return tickers
