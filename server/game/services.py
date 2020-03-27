@@ -3,7 +3,6 @@ from decimal import Decimal
 
 import pytz
 from werkzeug.exceptions import BadRequest
-
 from db import db, Game, GameCoin, Coin, GameProfile, GameProfileCoin, Ticker
 
 
@@ -48,7 +47,7 @@ def create_game(
     GameProfile.create(
         game=game,
         profile=profile,
-        cash=0,
+        cash=game.starting_cash,
     )
     return game
 
@@ -76,7 +75,7 @@ def update_game(
 def get_game_by_id(game_id):
     game = Game.get_or_none(Game.id == game_id)
     if not game:
-        raise BadRequest('Invalid game id')
+        raise BadRequest('Game not found')
     return game
 
 @db.atomic()
@@ -88,7 +87,7 @@ def get_coins_by_game_id(game_id):
 
 @db.atomic()
 def get_game_profile_by_profile_id_and_game_id(profile_id, game_id):
-    gameProfile = GameProfile.get_or_none(GameProfile.game == game_id and GameProfile.profile == profile_id)
+    gameProfile = GameProfile.get_or_none(GameProfile.game == game_id, GameProfile.profile == profile_id)
     if not gameProfile:
         raise BadRequest('User not in game')
     return gameProfile
@@ -119,7 +118,7 @@ def get_coins_by_game_id_and_sorting(game_id, sorting_int, page_num, num_per_pag
 @db.atomic()
 def get_pricing_by_coins(coins, start_time):
     for coin in coins:
-        prices = Ticker.select().join(Coin).where(Coin.id == coin.id and Ticker.captured_at > start_time).order_by(-Ticker.captured_at)
+        prices = Ticker.select().join(Coin).where(Coin.id == coin.id, Ticker.captured_at > start_time).order_by(-Ticker.captured_at)
         if not prices:
             raise BadRequest("Coin's prices not found: {}".format(coin.name))
         coins_and_prices.append({

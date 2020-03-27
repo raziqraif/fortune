@@ -43,6 +43,8 @@ class GameResponse(BaseSerializer):
     shareable_code = fields.Str(required=True)
     ends_at = fields.DateTime(required=True)
 
+class GameProfileResponse(BaseSerializer):
+    cash = fields.Decimal(required=True, as_string=True)
 
 class CoinsResponse(BaseSerializer):
     id = fields.Int(required=True)

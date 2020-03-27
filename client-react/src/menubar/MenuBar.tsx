@@ -1,43 +1,43 @@
 import * as React from 'react';
+import io from 'socket.io-client'
 import logo from '../logo.svg';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import {connect} from 'react-redux'
 import Actions from '../redux/actions'
 import { RootState } from '../redux/reducers';
-import { Redirect } from 'react-router-dom';
+import { push } from 'connected-react-router';
 
 interface MenuBarProps {
     loggedIn: boolean;
     logout: () => void;
+    navigateTo: (location: string) => void;
     fetchAuthToken: () => void;
 }
 
-interface MenuBarState {
-    toLogin: boolean;
-}
-
-class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
+class MenuBar extends React.Component<MenuBarProps> {
     constructor(props: MenuBarProps) {
         super(props);
-        this.state = {
-            toLogin: false,
-        }
     }
 
     componentDidMount() {
       this.props.fetchAuthToken()
+      const socket = io('http://localhost:5000').connect();
+      socket.on('message', function(data: any){
+        console.log('event received:', data)
+        // TODO dispatch
+      });
     }
 
-    private navigateToLogin = () => {
-        this.setState({ toLogin: true });
+    private navigateTo = (location: string) => () => {
+        this.props.navigateTo(location);
+    }
+
+    private logout = () => {
+        this.props.logout();
+        this.navigateTo('/')();
     }
 
     render() {
-        if (this.state.toLogin === true) {
-            this.setState({ toLogin: false });
-            return <Redirect to='/login' />
-        }
-        
         return (
             <Navbar collapseOnSelect expand="md" bg="dark" variant="dark">
                 <Navbar.Brand href="/">
@@ -53,7 +53,7 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                     <Nav>
-                        <Nav.Link href="play">Play</Nav.Link>
+                        <Nav.Link onClick={this.navigateTo('/play')}>Play</Nav.Link>
                         {this.renderLoginOrUsername()}
                     </Nav>
                 </Navbar.Collapse>
@@ -65,14 +65,14 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
         if (this.props.loggedIn) {
             return (
                 <NavDropdown title="Username" id="basic-nav-dropdown" alignRight>
-                    <NavDropdown.Item href="play">Games</NavDropdown.Item>
+                    <NavDropdown.Item onClick={this.navigateTo('/play')} >Games</NavDropdown.Item>
                     <NavDropdown.Divider />
-                    <NavDropdown.Item onClick={this.props.logout}>Logout</NavDropdown.Item>
+                    <NavDropdown.Item onClick={this.logout}>Logout</NavDropdown.Item>
                 </NavDropdown>
             )
         } else {
             return (
-                <Nav.Link onClick={this.navigateToLogin}>Sign In</Nav.Link>
+                <Nav.Link onClick={this.navigateTo('/login')}>Sign In</Nav.Link>
             )
         }
     }
@@ -81,8 +81,9 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
 const mapStateToProps = (state: RootState) => ({
   loggedIn: state.auth.loggedIn,
 })
-const mapDispatchToProps = {
+const mapDispatchToProps = (dispatch: any) => ({
   logout: Actions.auth.logout,
+  navigateTo: (location: string) => dispatch(push(location)),
   fetchAuthToken: Actions.auth.fetchAuthToken,
-}
+})
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar)
