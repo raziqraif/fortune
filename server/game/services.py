@@ -88,7 +88,7 @@ def get_coins_by_game_id(game_id):
 
 @db.atomic()
 def get_game_profile_by_profile_id_and_game_id(profile_id, game_id):
-    gameProfile = GameProfile.get_or_none(GameProfile.game == game_id and GameProfile.profile == profile_id)
+    gameProfile = GameProfile.get_or_none(GameProfile.game == game_id, GameProfile.profile == profile_id)
     if not gameProfile:
         raise BadRequest('User not in game')
     return gameProfile
