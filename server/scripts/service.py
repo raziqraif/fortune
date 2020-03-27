@@ -64,8 +64,8 @@ def begin(cb=None):
     elif env == 'development':
         if os.environ.get('WERKZEUG_RUN_MAIN') != 'true':
             return
-        coins = Coin.select()
         while True:
+            coins = Coin.select()
             tickers = list(stubbed(*coins))
             if cb is not None:
                 cb(tickers)
