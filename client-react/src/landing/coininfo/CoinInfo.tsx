@@ -16,8 +16,6 @@ interface CoinInfoProps {
 class CoinInfo extends React.Component<CoinInfoProps> {
   constructor(props: CoinInfoProps) {
       super(props);
-      this.state ={
-      }
   }
 
   componentDidMount() {
@@ -26,9 +24,9 @@ class CoinInfo extends React.Component<CoinInfoProps> {
 
   private showPrice(id:number) {
     const { currentPrices } = this.props;
-    if(currentPrices){
+    if(currentPrices) {
       for (let i = 0; i < currentPrices.length; i++) {
-        if(currentPrices[i].coin.id === id){
+        if(currentPrices[i].coin.id === id) {
           return <div> ${Number(currentPrices[i].price).toFixed(2)}</div>
         }
       }
@@ -39,7 +37,7 @@ class CoinInfo extends React.Component<CoinInfoProps> {
   }
   private showChange(id:number) {
     const { currentPrices } = this.props;
-    if(currentPrices){
+    if(currentPrices) {
       for (let i = 0; i < currentPrices.length; i++) {
         if(currentPrices[i].coin.id === id){
           return <div>{Number(currentPrices[i].price_change_day_pct * 100).toFixed(2)}%</div>
@@ -56,7 +54,7 @@ private dynamicRowRender() {
   rows = this.props.allCoins.map(coin => <tr>
                                          <td>{coin.name} ({coin.symbol})</td>
                                          <td>{this.showPrice(coin.id)}</td>
-                                         <td><div align="center"><CoinGraph/></div></td>
+                                         <td><div align="center"><CoinGraph id={coin.id} currentPrices={this.props.currentPrices}/></div></td>
                                          <td>{this.showChange(coin.id)}</td>
                                          </tr> );
   rows = rows.slice(0,10) //only show first 10 coins - in reality need to filter through rows for certain coins
