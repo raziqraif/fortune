@@ -53,7 +53,7 @@ class CoinInfo extends React.Component<CoinInfoProps> {
 
 private dynamicRowRender() {
   let rows = [];
-  rows = this.props.allCoins.map(coin => <tr>
+  rows = this.props.allCoins.map(coin => <tr key={coin.id}>
                                          <td>{coin.name} ({coin.symbol})</td>
                                          <td>{this.showPrice(coin.id)}</td>
                                          <td><div align="center"><CoinGraph/></div></td>
@@ -67,10 +67,12 @@ private dynamicRowRender() {
         return (
             <Table responsive size="sm">
               <thead>
-                <th>Coin</th>
-                <th>Price</th>
-                <th><div align="center">History</div></th>
-                <th>24hr % Change</th>
+                <tr>
+                  <th>Coin</th>
+                  <th>Price</th>
+                  <th><div align="center">History</div></th>
+                  <th>24hr % Change</th>
+                </tr>
               </thead>
 
               <tbody>
