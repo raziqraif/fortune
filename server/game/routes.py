@@ -92,19 +92,19 @@ def get_coins():
 
 @game_bp.route('/<game_id>/coins', methods=['GET'])
 @require_authentication
-def get_game_coins(profile, game_id):
+def get_game_coins(profile, game_id, timeSpan, sortBy, pageNum, numPerPage):
     try:
         int(game_id)
     except:
         raise BadRequest('Invalid game id')
+    raise BadRequest('wow')
     gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
-    validated_data: dict = GetCoinsRequest.deserialize(request.json)
-    start_time = get_start_time_from_time_span(validated_data['timeSpan'])
+    start_time = get_start_time_from_time_span(timeSpan)
     coins = get_coins_by_game_id_and_sorting(
         game_id,
-        validated_data['sortBy'],
-        validated_data['pageNum'],
-        validated_data['numPerPage']
+        sortBy,
+        pageNum,
+        numPerPage
     )
     coins_and_prices = get_pricing_by_coins(coins, start_time)
     gameProfileCoins = get_game_profile_coins_by_game_profile_id(gameProfile.id)
@@ -117,7 +117,7 @@ def get_game_coins(profile, game_id):
         coin_and_prices.coin.id = coinNumber
     return jsonify(GetCoinsResponse.serialize({
         'coins_and_prices': coins_and_prices
-    }))
+    }, many=True))
 
 
 @game_bp.route('/<game_id>', methods=['PUT'])

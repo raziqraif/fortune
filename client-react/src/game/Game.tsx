@@ -11,6 +11,13 @@ export interface GameProps {
 	getGame: (
 		id: number
 	) => void;
+	getCoins: (
+		gameId: number,
+		timeSpan?: number,
+		sortBy?: number,
+		pageNum?: number,
+		numPerPage?: number
+	) => void;
 	gameId?: string;
 	error: string;
 	game: GameType;
@@ -34,11 +41,13 @@ class Game extends React.Component<GameProps> {
 		// not sure how we should unify this discrepency
 		if (gameId) {
 			this.props.getGame(parseInt(gameId));
+			this.props.getCoins(parseInt(gameId));
 		}
 
 		// TODO global game - get global game 
 		else {
 			this.props.getGame(1);
+			this.props.getCoins(1);
 		}
 	}
 
@@ -72,6 +81,7 @@ const mapStateToProps = (state: RootState) => ({
 })
 
 const mapDispatchToProps = {
+	getCoins: Actions.coins.getAllCoinsForGame,
 	getGame: Actions.game.getGame,
 }
 

@@ -13,3 +13,18 @@ export const getAllCoins = () => {
     dispatch({type: Type.SET_COINS, payload: res.data})
   }
 }
+
+export const getAllCoinsForGame = (
+  gameId: number,
+  timeSpan: number = 1,
+  sortBy: number = 0,
+  pageNum: number = 1,
+  numPerPage: number = 25) => {
+  return async (dispatch: Dispatch<Action>) => {
+    const res = await axios.get(
+      'http://localhost:5000/game/' + gameId + '/coins',
+      { params: { timeSpan, sortBy, numPerPage, pageNum } }
+    );
+    console.log(res);
+  }
+}
