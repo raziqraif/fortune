@@ -117,13 +117,14 @@ def get_coins_by_game_id_and_sorting(game_id, sorting_int, page_num, num_per_pag
 
 @db.atomic()
 def get_pricing_by_coins(coins, start_time):
-    for coin in coins:
-        prices = Ticker.select().join(Coin).where(Coin.id == coin.id, Ticker.captured_at > start_time).order_by(-Ticker.captured_at)
+    coins_and_prices = []
+    for currentCoin in coins:
+        prices = Ticker.select().join(Coin).where(Coin.id == currentCoin.id, Ticker.captured_at > start_time).order_by(-Ticker.captured_at)
         if not prices:
-            raise BadRequest("Coin's prices not found: {}".format(coin.name))
+            raise BadRequest("Coin's prices not found")
         coins_and_prices.append({
-            coin=coin
-            prices=prices
+            coin: currentCoin,
+            prices: prices
         })
     return coins_and_prices
 
