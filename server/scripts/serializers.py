@@ -27,4 +27,4 @@ class TickersResponse(BaseSerializer):
     price_change_day_pct = fields.Decimal(as_string=True)
 
 class HistoricalTickersResponse(BaseSerializer):
-    tickers = fields.Nested(TickersResponse)
+    tickers = fields.List(fields.Nested(TickersResponse), required=True)
