@@ -55,15 +55,24 @@ class CoinInfo extends React.Component<CoinInfoProps> {
     }
   }
 
+  private parseTickers(id:Number) {
+    let oneCoinTickers: Array<{tickers: currentPricesType}> = [];
+    this.props.oneDayTickers.forEach(ticker => {
+      if(Number(ticker.coin.id) === id){
+        oneCoinTickers.push(ticker)
+      }
+    });
+    return oneCoinTickers;
+  }
+
 private dynamicRowRender() {
   let rows = [];
-  console.log('oneday:', this.props.oneDayTickers)
   rows = this.props.allCoins.map(coin => <tr key={coin.id}>
                                          <td>{coin.name} ({coin.symbol})</td>
                                          <td>{this.showPrice(coin.id)}</td>
                                          <td><div align="center"><CoinGraph id={coin.id}
                                                                             currentPrices={this.props.currentPrices}
-                                                                            oneDayTickers={this.props.oneDayTickers}/>
+                                                                            oneDayTickers={this.parseTickers(coin.id)}/>
                                                                             </div></td>
                                          <td>{this.showChange(coin.id)}</td>
                                          </tr> );
