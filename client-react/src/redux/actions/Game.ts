@@ -29,6 +29,7 @@ export type GameType = {
   data: GameDataType,
   gameProfile: {
     cash: string,
+    netWorth: string,
   },
   coins: Array<{
     id: string;
@@ -46,6 +47,8 @@ export const createGame = (
 ) => {
   return async (dispatch: Dispatch<Action>) => {
     try {
+      console.log('hi')
+      await fetchAuthToken();
       const res: CreateGameResponse = await axios.post('http://localhost:5000/game/', {activeCoins, endsOn, startingCash, title});
       const action: any = push(`/game/${res.data.id}`);
       dispatch(action);
@@ -59,10 +62,13 @@ export const createGame = (
 export const getGame = (
   id: number
 ) => {
+  console.log('hi')
   return async (dispatch: Dispatch<Action>) => {
     try {
+      console.log('hi')
       await fetchAuthToken();
       const res = await axios.get(`http://localhost:5000/game/${id}`);
+      console.log(res.data)
       
       dispatch({type: Type.SET_GAME, payload: res.data.game});
       dispatch({type: Type.SET_GAME_COINS, payload: res.data.coins});

@@ -14,7 +14,8 @@ const initialState = {
       endsAt: new Date()
     },
     gameProfile: {
-      cash: ''
+      cash: '',
+      netWorth: '',
     },
     coins: [],
   },
