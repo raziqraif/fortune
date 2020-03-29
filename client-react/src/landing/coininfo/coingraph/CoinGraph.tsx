@@ -4,6 +4,7 @@ import { Sparklines, SparklinesLine } from 'react-sparklines';
 interface CoinGraphProps {
   id: Number;
   currentPrices: currentPricesType;
+  oneDayTickers: Array<{tickers: currentPricesType}>
 }
 
 export default class CoinGraph extends React.Component<CoinGraphProps> {

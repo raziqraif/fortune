@@ -4,6 +4,7 @@ export type CoinState = typeof initialState;
 const initialState = {
   coins: [] as Array<{ id: string, name: string, symbol:string}>,
   currentPrices: [] as currentPricesType,
+  oneDayTickers: [] as Array<{ tickers: currentPricesType }>
 }
 
 export type Action = {
@@ -36,6 +37,11 @@ export default (state = initialState, action: Action) => {
       return {
         ...state,
         currentPrices: action.payload,
+      }
+    case Type.SET_ONEDAY_TICKERS:
+      return {
+        ...state,
+        oneDayTickers: action.payload,
       }
     default:
       return state

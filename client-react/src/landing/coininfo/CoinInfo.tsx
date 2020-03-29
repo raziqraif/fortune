@@ -11,6 +11,8 @@ interface CoinInfoProps {
   allCoins: Array<{ id: string, name: string, symbol:string}>;
   getAllCoins: () => {};
   currentPrices: currentPricesType;
+  oneDayTickers: Array<{tickers: currentPricesType}>;
+  get24hrTickers: () => {};
 }
 
 class CoinInfo extends React.Component<CoinInfoProps> {
@@ -20,6 +22,7 @@ class CoinInfo extends React.Component<CoinInfoProps> {
 
   componentDidMount() {
       this.props.getAllCoins();
+      this.props.get24hrTickers();
   }
 
   private showPrice(id:number) {
@@ -54,10 +57,14 @@ class CoinInfo extends React.Component<CoinInfoProps> {
 
 private dynamicRowRender() {
   let rows = [];
+  console.log('oneday:', this.props.oneDayTickers)
   rows = this.props.allCoins.map(coin => <tr key={coin.id}>
                                          <td>{coin.name} ({coin.symbol})</td>
                                          <td>{this.showPrice(coin.id)}</td>
-                                         <td><div align="center"><CoinGraph id={coin.id} currentPrices={this.props.currentPrices}/></div></td>
+                                         <td><div align="center"><CoinGraph id={coin.id}
+                                                                            currentPrices={this.props.currentPrices}
+                                                                            oneDayTickers={this.props.oneDayTickers}/>
+                                                                            </div></td>
                                          <td>{this.showChange(coin.id)}</td>
                                          </tr> );
   rows = rows.slice(0,10) //only show first 10 coins - in reality need to filter through rows for certain coins
@@ -87,8 +94,11 @@ private dynamicRowRender() {
 const mapStateToProps = (state: RootState) => ({
     allCoins: state.coins.coins,
     currentPrices: state.coins.currentPrices,
+    oneDayTickers: state.coins.oneDayTickers,
+
 });
 const mapDispatchToProps = {
     getAllCoins: Actions.coins.getAllCoins,
+    get24hrTickers: Actions.coins.get24hrTickers,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(CoinInfo);
