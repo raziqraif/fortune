@@ -14,4 +14,6 @@ export enum Type {
     // game types
     CREATE_GAME,
     CREATE_GAME_FAILED,
+    GET_ACTIVE_GAMES,
+    GET_ACTIVE_GAMES_FAILED,
 }

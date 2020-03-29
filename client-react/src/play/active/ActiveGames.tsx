@@ -34,9 +34,11 @@ export default class ActiveGames extends React.Component<ActiveGamesProps> {
         return title;
     }
 
-    // TODO: Implement tooltip to display game title
     getGameCards = () => {
         let games = this.props.games;
+        if (!games) {
+            games = [];
+        }
         let gameCards = [];
         for (let i = 0; i < games.length; i += 3) {
             let gameCardsInARow = [];

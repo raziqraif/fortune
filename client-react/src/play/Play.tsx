@@ -5,6 +5,10 @@ import {CSSProperties} from "react";
 import ActiveGames from "./active";
 import assert from "assert";
 import Pagination from "../pagination";
+import {RootState} from "../redux/reducers";
+import {GameType} from "../redux/reducers/PlayReducer";
+import Actions from "../redux/actions";
+import {connect} from "react-redux";
 
 const buttonStyle: CSSProperties = {
     width: 100,
@@ -14,61 +18,55 @@ const buttonStyle: CSSProperties = {
 };
 
 interface PlayProp {
+    activeGamesAtPage: (
+        pageNumber: number,
+        keyword: string,
+        sortCriteria: SortCriteriaType
+    ) => {}
+    gamesInPage: GameType[],
+    pageSize: number,
+    totalGames: number,
 }
 
 interface PlayState {
-    gamesInCurrentPage: GameType[],
-    pageSize: number,
-    totalGames: number,
     showJoinModal: boolean,
 }
 
-type GameType = {
-    title: string,
-    link: string,
-    endTime: Date
-}
-
-type ResponseType = {
-    gamesInCurrentPage: GameType[],
-    pageSize: number,
-    totalGames: number
-}
-
-type SortCriteriaType = {
+export type SortCriteriaType = {
+    // NOTE: Update SortCriteriaKey too if any attributes were changed
     [key: string]: boolean,
-    titleSmallest: boolean,
-    titleLargest: boolean,
-    endTimeEarliest: boolean,
-    endTimeLatest: boolean
+    titleAscending: boolean,
+    titleDescending: boolean,
+    endTimeAscending: boolean,
+    endTimeDescending: boolean
 }
 
 enum SortCriteriaKey {
-    TITLE_SMALLEST = "titleSmallest",
-    TITLE_LARGEST = "titleLargest",
-    ENDTIME_EARLIEST = "endTimeEarliest",
-    ENDTIME_LATEST = "endTimeLatest",
+    // The value corresponds to the attribute name in SortCriteria
+    TITLE_ASCENDING = "titleAscending",
+    TITLE_DESCENDING = "titleDescending",
+    ENDTIME_ASCENDING = "endTimeAscending",
+    ENDTIME_DESCENDING = "endTimeDescending",
 }
 
-export default class Play extends React.Component<PlayProp, PlayState> {
-    pageNumber = 1;
-    keyword = '';
+class Play extends React.Component<PlayProp, PlayState> {
+    pageNumber: number = 1;
+    keyword: string = '';
     sortCriteria: SortCriteriaType = {
-        titleSmallest: false,
-        titleLargest: false,
-        endTimeEarliest: false,
-        endTimeLatest: false
+        titleAscending: false,
+        titleDescending: false,
+        endTimeAscending: false,
+        endTimeDescending: false
     };
     gameCode = '';
 
     constructor(props: PlayProp) {
         super(props);
-        _populateSeedData();  // TODO: Remove this later
+
+        console.log("CONSTRUCTING:");
+        console.log(this.props.gamesInPage)
 
         this.state = {
-            gamesInCurrentPage: [],
-            pageSize: 0,
-            totalGames: 0,
             showJoinModal: false,
         };
     }
@@ -77,21 +75,16 @@ export default class Play extends React.Component<PlayProp, PlayState> {
         this.updateBackendData();
     }
 
-    // TODO: Use a proper API call
     updateBackendData(resetPageNumber= false) {
         if (resetPageNumber) {
             this.pageNumber = 1;
         }
-        let resp = gameAPI(
+        this.props.activeGamesAtPage(
             this.pageNumber,
             this.keyword,
             this.sortCriteria
         );
-        this.setState({
-            gamesInCurrentPage: resp.gamesInCurrentPage,
-            totalGames: resp.totalGames,
-            pageSize: resp.pageSize
-        });
+        console.log("API", this.props.gamesInPage)
     }
 
     toggleSortCriteria(criteria: string) {
@@ -180,24 +173,24 @@ export default class Play extends React.Component<PlayProp, PlayState> {
                         >
                             <Dropdown.Item
                                 eventKey="1"
-                                active={this.sortCriteria.titleSmallest}
-                                onClick={() => this.toggleSortCriteria(SortCriteriaKey.TITLE_SMALLEST)}
-                            >Title: smallest first</Dropdown.Item>
+                                active={this.sortCriteria.titleAscending}
+                                onClick={() => this.toggleSortCriteria(SortCriteriaKey.TITLE_ASCENDING)}
+                            >Title: Ascending</Dropdown.Item>
                             <Dropdown.Item
                                 eventKey="2"
-                                active={this.sortCriteria.titleLargest}
-                                onClick={() => this.toggleSortCriteria(SortCriteriaKey.TITLE_LARGEST)}
-                            >Title: largest first</Dropdown.Item>
+                                active={this.sortCriteria.titleDescending}
+                                onClick={() => this.toggleSortCriteria(SortCriteriaKey.TITLE_DESCENDING)}
+                            >Title: Descending</Dropdown.Item>
                             <Dropdown.Item
                                 eventKey="3"
-                                active={this.sortCriteria.endTimeEarliest}
-                                onClick={() => this.toggleSortCriteria(SortCriteriaKey.ENDTIME_EARLIEST)}
-                            >End time: earliest first</Dropdown.Item>
+                                active={this.sortCriteria.endTimeAscending}
+                                onClick={() => this.toggleSortCriteria(SortCriteriaKey.ENDTIME_ASCENDING)}
+                            >End Time: Ascending</Dropdown.Item>
                             <Dropdown.Item
                                 eventKey="4"
-                                active={this.sortCriteria.endTimeLatest}
-                                onClick={() => this.toggleSortCriteria(SortCriteriaKey.ENDTIME_LATEST)}
-                            >End time: latest first</Dropdown.Item>
+                                active={this.sortCriteria.endTimeDescending}
+                                onClick={() => this.toggleSortCriteria(SortCriteriaKey.ENDTIME_DESCENDING)}
+                            >End Time: Descending</Dropdown.Item>
                         </DropdownButton>
                     </div>
                     <div className={"widgets-wrapper"}>
@@ -215,12 +208,12 @@ export default class Play extends React.Component<PlayProp, PlayState> {
                 </div>
 
                 <Container>
-                    <ActiveGames games={this.state.gamesInCurrentPage}/>
+                    <ActiveGames games={this.props.gamesInPage}/>
                     <Row>
                         <Pagination
                             currentPage={this.pageNumber}
-                            pageSize={this.state.pageSize}
-                            totalItems={this.state.totalGames}
+                            pageSize={this.props.pageSize}
+                            totalItems={this.props.totalGames}
                             handlePageChange={this.handlePageChange}
                         />
                     </Row>
@@ -259,110 +252,31 @@ export default class Play extends React.Component<PlayProp, PlayState> {
     }
 }
 
-/* Temporary interface to backend data */
-// TODO: Move these methods to the test file
+const mapStateToProps = (state: RootState) => ({
+    gamesInPage: state.play.gamesInPage,
+    totalGames: state.play.totalGames,
+    pageSize: state.play.pageSize,
+});
 
-let ACTIVE_GAMES: GameType[] = [];
+const mapDispatchToProps = {
+    activeGamesAtPage: Actions.play.activeGamesAtPage,
+};
 
-function _populateSeedData() {
-    ACTIVE_GAMES.push({title: "Global Game", link: "/global", endTime: new Date()});
-    ACTIVE_GAMES.push({title: "Global Timed Game", link: "/global_timed", endTime: new Date()});
-    ACTIVE_GAMES.push({title: "Boilermaker", link: "boilermaker", endTime: new Date()});
-    ACTIVE_GAMES.push({title: "A Really Long Game Name Because Why Not", link: "boilermaker", endTime: new Date()});
-    for (let i = 5; i <= 1000; i++) {
-        ACTIVE_GAMES.push({title: "Game " + i, link: "/my_game" + i, endTime: new Date()})
-    }
-}
+export default connect(mapStateToProps, mapDispatchToProps)(Play);
 
-function _filteredGames(keyword: string) {
-    let activeGames = ACTIVE_GAMES;
-    if (keyword !== '') {
-        activeGames = activeGames.filter((game: GameType) =>
-            game.title.toLowerCase().includes(keyword.toLowerCase()));
-    }
-    return activeGames;
-}
 
-function _compareTitleSmallest(a: GameType, b: GameType) {
-    const titleA = a.title;
-    const titleB = b.title;
-    if (titleA < titleB) {
-        return -1;
-    } else if (titleA > titleB) {
-        return 1;
-    } else {
-        return 0;
-    }
-}
 
-function _compareTitleLargest(a: GameType, b: GameType) {
-    const titleA = a.title;
-    const titleB = b.title;
-    if (titleA > titleB) {
-        return -1;
-    } else if (titleA < titleB) {
-        return 1;
-    } else {
-        return 0;
-    }
-}
 
-function _compareEndTimeEarliest(a: GameType, b: GameType) {
-    const dateA = a.endTime;
-    const dateB = b.endTime;
-    if (dateA < dateB) {
-        return -1;
-    } else if (dateA > dateB) {
-        return 1;
-    } else {
-        return 0;
-    }
-}
 
-function _compareEndTimeLatest(a: GameType, b: GameType) {
-    const dateA = a.endTime;
-    const dateB = b.endTime;
-    if (dateA > dateB) {
-        return -1;
-    } else if (dateA < dateB) {
-        return 1;
-    } else {
-        return 0;
-    }
-}
 
-function gameAPI(
-    pageNumber: number,
-    keyword: string = '',
-    sortCriteria: SortCriteriaType) {
 
-    let trueCount = 0;
-    for (let prop in sortCriteria) {
-        if (Object.prototype.hasOwnProperty.call(sortCriteria, prop) && sortCriteria.prop) {
-            trueCount++;
-        }
-    }
-    assert(trueCount <= 1);
 
-    const PAGE_SIZE = 12;
-    let games = _filteredGames(keyword);
-    let totalGames = games.length;
-    if (sortCriteria.titleSmallest) {
-        games = games.slice().sort(_compareTitleSmallest)
-    } else if (sortCriteria.titleLargest) {
-        games = games.slice().sort(_compareTitleLargest)
-    } else if (sortCriteria.endTimeEarliest) {
-        games = games.slice().sort(_compareEndTimeEarliest)
-    } else if (sortCriteria.endTimeLatest) {
-        games = games.slice().sort(_compareEndTimeLatest)
-    }
-    let gamesInCurrentPage = games.slice((pageNumber - 1) * PAGE_SIZE, pageNumber * PAGE_SIZE);
 
-    let resp: ResponseType = {
-        gamesInCurrentPage: gamesInCurrentPage,
-        totalGames: totalGames,
-        pageSize: PAGE_SIZE
-    };
-    return resp;
-}
+
+
+
+
+
+
+
 
