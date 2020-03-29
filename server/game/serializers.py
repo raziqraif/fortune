@@ -27,14 +27,14 @@ class GameCreateRequest(BaseSerializer):
 
 class GetCoinsRequest(BaseSerializer):
     params = fields.Nested({
-        timeSpan = fields.Int(required=True)
-        sortBy = fields.Int(required=True)
+        'timeSpan': fields.Int(required=True),
+        'sortBy': fields.Int(required=True),
         # sortByNameAscending = fields.Boolean()
         # sortByPriceDescending = fields.Boolean()
         # sortByPercentChangeDescending = fields.Boolean()
         # sortByYourAmountDescending = fields.Boolean()
-        numPerPage = fields.Int()
-        pageNum = fields.Int()
+        'numPerPage': fields.Int(),
+        'pageNum': fields.Int()
     })
 
 class GameResponse(BaseSerializer):
@@ -71,3 +71,6 @@ class GetGameResponse(BaseSerializer):
     game = fields.Nested(GameResponse)
     gameProfile = fields.Nested(GameProfileResponse)
     coins = fields.List(fields.Nested(GameCoinsResponse), required=True)
+
+class TestSerializer(BaseSerializer):
+    number = fields.Int(required=True)

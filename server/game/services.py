@@ -123,8 +123,8 @@ def get_pricing_by_coins(coins, start_time):
         if not prices:
             raise BadRequest("Coin's prices not found")
         coins_and_prices.append({
-            coin: currentCoin,
-            prices: prices
+            'coin': currentCoin,
+            'prices': prices
         })
     return coins_and_prices
 
@@ -139,4 +139,4 @@ def get_start_time_from_time_span(time_span_int):
         return datetime.utcnow() - timedelta(months = 1)
     if time_span_int == 4:
         return datetime.utcnow() - timedelta(years = 1)
-    raise BadRequest("Time Span Invalid")
+    raise BadRequest("Time span invalid: {}".format(str(time_span_int)))

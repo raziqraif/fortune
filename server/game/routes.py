@@ -15,7 +15,8 @@ from .serializers import (
     GameResponse,
     CoinsResponse,
     GetGameResponse,
-    GetCoinsResponse
+    GetCoinsResponse,
+    TestSerializer
 )
 from .services import (
     create_game,
@@ -25,7 +26,8 @@ from .services import (
     get_coins_by_game_id,
     get_game_profile_coins_by_game_profile_id,
     get_start_time_from_time_span,
-    get_coins_by_game_id_and_sorting
+    get_coins_by_game_id_and_sorting,
+    get_pricing_by_coins
 )
 
 game_bp = Blueprint('game', __name__, url_prefix='/game')
@@ -92,32 +94,44 @@ def get_coins():
 
 @game_bp.route('/<game_id>/coins', methods=['GET'])
 @require_authentication
-def get_game_coins(profile, game_id, timeSpan, sortBy, pageNum, numPerPage):
+def get_game_coins(profile, game_id):
     try:
         int(game_id)
     except:
         raise BadRequest('Invalid game id')
-    raise BadRequest('wow')
+    time_span = request.args.get('timeSpan')
+    sort_by = request.args.get('sortBy')
+    page_num = request.args.get('pageNum')
+    num_per_page = request.args.get('numPerPage')
+    try:
+        time_span = int(time_span)
+        sort_by = int(sort_by)
+        page_num = int(page_num)
+        num_per_page = int(num_per_page)
+    except:
+        raise BadRequest('Parameters not in correct form')
     gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
-    start_time = get_start_time_from_time_span(timeSpan)
+    start_time = get_start_time_from_time_span(time_span)
     coins = get_coins_by_game_id_and_sorting(
         game_id,
-        sortBy,
-        pageNum,
-        numPerPage
+        sort_by,
+        page_num,
+        num_per_page
     )
     coins_and_prices = get_pricing_by_coins(coins, start_time)
     gameProfileCoins = get_game_profile_coins_by_game_profile_id(gameProfile.id)
     for coin_and_prices in coins_and_prices:
         coinNumber = 0
         for gameProfileCoin in gameProfileCoins:
-            if gameProfileCoin.coin == coin_and_prices.coin.id:
+            if gameProfileCoin.coin == coin_and_prices['coin'].id:
                 coinNumber = gameProfileCoin.number
                 break
-        coin_and_prices.coin.id = coinNumber
+        coin_and_prices['coin'].number = coinNumber
+    breakpoint()
+    return jsonify(TestSerializer.serialize({ 'number': 1 }))
     return jsonify(GetCoinsResponse.serialize({
         'coins_and_prices': coins_and_prices
-    }, many=True))
+    }))
 
 
 @game_bp.route('/<game_id>', methods=['PUT'])
