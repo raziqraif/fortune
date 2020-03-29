@@ -39,6 +39,9 @@ export default (state = initialState, action: Action) => {
             console.log("Get active games failed")
             return {
                 ...state,
+                gamesInPage: [],
+                totalGames: 0,
+                pageSize: 0,
             };
         default:
             return state

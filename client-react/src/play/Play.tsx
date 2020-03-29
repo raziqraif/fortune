@@ -23,6 +23,9 @@ interface PlayProp {
         keyword: string,
         sortCriteria: SortCriteriaType
     ) => {}
+    joinGame: (
+        code: string,
+    ) => {}
     gamesInPage: GameType[],
     pageSize: number,
     totalGames: number,
@@ -62,9 +65,6 @@ class Play extends React.Component<PlayProp, PlayState> {
 
     constructor(props: PlayProp) {
         super(props);
-
-        console.log("CONSTRUCTING:");
-        console.log(this.props.gamesInPage)
 
         this.state = {
             showJoinModal: false,
@@ -120,6 +120,7 @@ class Play extends React.Component<PlayProp, PlayState> {
 
     handleJoinGame = (event: any) => {
         // TODO: Show error if code is invalid/game doesn't exist. Add player to the game if it exists.
+        this.props.joinGame(this.gameCode)
     };
 
     handleKeywordChange = (event: any) => {

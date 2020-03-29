@@ -28,7 +28,10 @@ def play(profile):
     except:
         raise BadRequest('Invalid parameter format')
 
-    game_entries, total_games, page_size = active_games_at_page(profile.id, page_number, keyword, sort_criteria)
+    try:
+        game_entries, total_games, page_size = active_games_at_page(profile.id, page_number, keyword, sort_criteria)
+    except:
+        raise BadRequest("Asynchronous query underway")
     games = []
     for entry in game_entries:
         game = GameResponse()
