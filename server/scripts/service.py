@@ -1,5 +1,5 @@
 from decimal import Decimal
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import random
 import sys
@@ -80,8 +80,10 @@ def begin(cb=None):
 
 
 @db.atomic()
-def get_tickers_from_date(past_date):
-    tickers = Ticker.select().where(Ticker.captured_at > past_date)
+def get_tickers_24hr():
+    yesterday = datetime.utcnow() - timedelta(days=1)
+    print(yesterday)
+    tickers = Ticker.select().where(Ticker.captured_at > yesterday)
     if not tickers:
         return []
     return tickers
