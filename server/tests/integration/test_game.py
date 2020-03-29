@@ -134,14 +134,6 @@ class GameTest(AuthDbTest):
         self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
 
     def test_get_game_with_invalid_pk_fails(self):
-        res = self.client.post('/auth/register/',
-            data=json.dumps({
-                'username': 'theusername',
-                'password': 'thepassword',
-            }),
-            content_type='application/json',
-        )
-        token = res.json['token']
         res = self.client.post('/game/',
             data=json.dumps({
                 'title': 'jfkldsajklfd',
@@ -155,45 +147,29 @@ class GameTest(AuthDbTest):
                 ]
             }),
             headers={
-                'Authorization': 'Bearer ' + token,
+                'Authorization': 'Bearer ' + self.token,
             },
             content_type='application/json',
         )
         self.assertEqual(int(HTTPStatus.OK), res._status_code)
         res = self.client.get('/game/42', headers={
-            'Authorization': 'Bearer ' + token
+            'Authorization': 'Bearer ' + self.token
         })
         self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
 
     def test_get_game_without_join(self):
-        res = self.client.post('/auth/register/',
-            data=json.dumps({
-                'username': 'theusername',
-                'password': 'thepassword',
-            }),
-            content_type='application/json',
-        )
-        token = res.json['token']
         res = self.client.get('/game/1', headers={
-            'Authorization': 'Bearer ' + token
+            'Authorization': 'Bearer ' + self.token
         })
         self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
 
     def test_get_game_without_coins(self):
-        res = self.client.post('/auth/register/',
-            data=json.dumps({
-                'username': 'theusername',
-                'password': 'thepassword',
-            }),
-            content_type='application/json',
-        )
-        token = res.json['token']
         GameProfile.create(
             game=1,
             profile=1,
             cash=10000
         )
         res = self.client.get('/game/1', headers={
-            'Authorization': 'Bearer ' + token
+            'Authorization': 'Bearer ' + self.token
         })
         self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
