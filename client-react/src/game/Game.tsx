@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RootState } from '../redux/reducers';
-import { Container, Row } from 'react-bootstrap';
+import {Button, Container, Row} from 'react-bootstrap';
 import Actions from '../redux/actions';
 import { connect } from 'react-redux';
 import { GameType } from '../redux/actions/Game'
@@ -18,6 +18,7 @@ export interface GameProps {
 		pageNum?: number,
 		numPerPage?: number
 	) => void;
+	coins: any		// TODO: Fix the type
 	gameId?: string;
 	error: string;
 	game: GameType;
@@ -46,9 +47,16 @@ class Game extends React.Component<GameProps> {
 
 		// TODO global game - get global game 
 		else {
+			console.log("Global game mount")
 			this.props.getGame(1);
 			this.props.getCoins(1);
 		}
+
+	}
+
+	handlePrintCoins = (event: any) => {
+		this.props.getCoins(1)
+		console.log("Coins:", this.props.coins)
 	}
 
 	render() {
@@ -70,6 +78,7 @@ class Game extends React.Component<GameProps> {
 						Table will go here
                 </Row>
 				</Container>
+				<Button onClick={this.handlePrintCoins}>Print Coins</Button>
 			</div>
 		)
 	}
@@ -78,6 +87,7 @@ class Game extends React.Component<GameProps> {
 const mapStateToProps = (state: RootState) => ({
 	game: state.game.game,
 	error: state.game.setGameErrorMessage,
+	coins: state.coins.coins,
 })
 
 const mapDispatchToProps = {

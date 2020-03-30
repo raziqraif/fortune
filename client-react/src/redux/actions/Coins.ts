@@ -2,6 +2,8 @@ import { Type } from './Types'
 import axios from 'axios'
 import { Dispatch } from 'redux'
 import { Action } from '../reducers/AuthReducer'
+import {fetchAuthToken} from "./Auth";
+import {handleAxiosError} from "./Utils";
 
 
 export const getAllCoins = () => {
@@ -21,10 +23,17 @@ export const getAllCoinsForGame = (
   pageNum: number = 1,
   numPerPage: number = 25) => {
   return async (dispatch: Dispatch<Action>) => {
-    const res = await axios.get(
-      'http://localhost:5000/game/' + gameId + '/coins',
-      { params: { timeSpan, sortBy, numPerPage, pageNum } }
-    );
-    console.log(res);
+      try {
+          await fetchAuthToken()  // TODO: Remove this if no authentication is required for this API. Eg, if non
+          // logged-in players can still view the global game
+          const res = await axios.get(
+              'http://localhost:5000/game/' + gameId + '/coins',
+              { params: { timeSpan, sortBy, numPerPage, pageNum } }
+          );
+          dispatch({type: Type.SET_COINS, payload: res.data});  // TODO: Is this the correct type?
+          console.log("Coin result:", res);
+    } catch (e) {
+          handleAxiosError(e, dispatch, Type.SET_COINS)   // TODO: Use the correct type
+      }
   }
-}
+};
