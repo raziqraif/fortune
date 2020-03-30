@@ -59,6 +59,17 @@ const noEndDate = {
     },
 }
 
+const longCode = {
+    ...emptyProps,
+    game: {
+        ...emptyProps.game,
+        data: {
+            ...emptyProps.game.data,
+            shareableCode: 'ABCDEFG'
+        },
+    },
+}
+
 test('Truncates too long title', () => {
     const { getByText } = deeplyRenderComponentWithRedux(<HeaderBar
         game={nameTooLong.game.data}
@@ -77,5 +88,17 @@ test('No end date', () => {
         gameId={noEndDate.gameId}
     />);
     expect(queryByText('Hours')).toBeNull()
+});
+
+test('Displays long code', () => {
+    const { queryByText } = deeplyRenderComponentWithRedux(<HeaderBar
+        game={longCode.game.data}
+        global={longCode.global}
+        history={longCode.history}
+        gameId={longCode.gameId}
+    />);
+    
+    fireEvent.click(screen.getByText('Share'))
+    expect(queryByText('ABCDEFG')).toBeInTheDocument()
 });
 
