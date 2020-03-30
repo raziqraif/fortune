@@ -22,7 +22,7 @@ export type GameDataType = {
   startingCash: string;
   shareableLink: string;
   shareableCode: string;
-  endsAt: Date;
+  endsAt?: Date;
 }
 
 export type GameType = {
