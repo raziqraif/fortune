@@ -10,7 +10,15 @@ import pytz
 from auth.decorators import require_authentication
 from db import Game, GameProfile, Coin, GameCoin, db
 from .serializers import GameCreateRequest, GameResponse, CoinsResponse, GetGameResponse
-from .services import create_game, update_game, get_game_by_id, get_game_profile_by_profile_id_and_game_id, get_coins_by_game_id, get_game_profile_coins_by_game_profile_id
+from .services import (
+    create_game,
+    update_game,
+    get_game_by_id,
+    get_game_profile_by_profile_id_and_game_id,
+    get_coins_by_game_id,
+    get_game_profile_coins_by_game_profile_id,
+    sell_coin
+)
 
 game_bp = Blueprint('game', __name__, url_prefix='/game')
 
@@ -77,7 +85,7 @@ def get_coins():
 
 @game_bp.route('/<game_id>/coins', methods=['POST'])
 @require_authentication
-def edit(profile, game_id):
+def buy_or_sell(profile, game_id):
     try:
         int(game_id)
     except:
@@ -90,6 +98,18 @@ def edit(profile, game_id):
         buy_coin(coin_id, coin_amount, gameProfile)
     else:
         sell_coin(coin_id, -1 * coin_amount, gameProfile)
+            
+@game_bp.route('/<game_id>/coins', methods=['DELETE'])
+@require_authentication
+def liquefy(profile, game_id):
+    try:
+        int(game_id)
+    except:
+        raise BadRequest('Invalid game id')
+    gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
+    gameProfileCoins = get_game_profile_coins_by_game_profile_id(gameProfile.id)
+    for gameProfileCoin in gameProfileCoins:
+        sell_coin(gameProfileCoin.coin, gameProfileCoin.coin_amount, gameProfile.id)
 
 @game_bp.route('/<game_id>', methods=['PUT'])
 @require_authentication
