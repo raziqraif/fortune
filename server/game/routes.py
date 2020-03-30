@@ -77,7 +77,7 @@ def get_coins():
 
 @game_bp.route('/<game_id>/coins', methods=['POST'])
 @require_authentication
-def edit(profile, game_id):
+def buy_or_sell(profile, game_id):
     try:
         int(game_id)
     except:
