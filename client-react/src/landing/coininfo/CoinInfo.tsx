@@ -16,9 +16,6 @@ interface CoinInfoProps {
 }
 
 class CoinInfo extends React.Component<CoinInfoProps> {
-  constructor(props: CoinInfoProps) {
-      super(props);
-  }
 
   componentDidMount() {
       this.props.getAllCoins();
@@ -54,6 +51,17 @@ class CoinInfo extends React.Component<CoinInfoProps> {
       return <div>Error displaying price changes</div>
     }
   }
+  private getChange(id:Number) {
+    const { currentPrices } = this.props;
+    if(currentPrices) {
+      for (let i = 0; i < currentPrices.length; i++) {
+        if(currentPrices[i].coin.id === id){
+          return currentPrices[i].price_change_day_pct
+        }
+      }
+    }
+    return 0
+  }
 
   private parseTickers(id:Number) {
     let oneCoinTickers: Array<{tickers: currentPricesType}> = [];
@@ -62,6 +70,7 @@ class CoinInfo extends React.Component<CoinInfoProps> {
         oneCoinTickers.push(ticker)
       }
     });
+
     return oneCoinTickers;
   }
 
@@ -71,7 +80,7 @@ private dynamicRowRender() {
                                          <td>{coin.name} ({coin.symbol})</td>
                                          <td>{this.showPrice(coin.id)}</td>
                                          <td><div align="center"><CoinGraph id={coin.id}
-                                                                            currentPrices={this.props.currentPrices}
+                                                                            change={this.getChange(coin.id)}
                                                                             oneDayTickers={this.parseTickers(coin.id)}/>
                                                                             </div></td>
                                          <td>{this.showChange(coin.id)}</td>

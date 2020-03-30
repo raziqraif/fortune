@@ -3,8 +3,8 @@ import { Sparklines, SparklinesLine } from 'react-sparklines';
 
 interface CoinGraphProps {
   id: Number;
-  currentPrices: currentPricesType;
-  oneDayTickers: Array<{tickers: currentPricesType}>
+  change: Number;
+  oneDayTickers: Array<{tickers: currentPricesType}>;
 }
 
 export default class CoinGraph extends React.Component<CoinGraphProps> {
@@ -19,10 +19,12 @@ export default class CoinGraph extends React.Component<CoinGraphProps> {
   static getDerivedStateFromProps(props,state){
     let nData = state.data
     let nColor = state.color
-    if(props.currentPrices.length > 0) {
-      nData.push(props.currentPrices[Number(props.id)-1].price)
-      nColor = (Number(props.currentPrices[Number(props.id)-1].price_change_day_pct) < 0) ? 'red' : 'green'
+    if(props.oneDayTickers.length > 0 && Number(state.data.length) === 0) {
+      props.oneDayTickers.forEach(ticker => {
+        nData.push(ticker.price)
+      });
     }
+    nColor = (props.change < 0) ? 'red' : 'green'
     return{ data: nData,
             color: nColor }
   }
