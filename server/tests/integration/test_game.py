@@ -24,7 +24,7 @@ class GameTest(AuthDbTest):
     def setUp(self):
         super().setUp()
         with db.atomic() as txn:
-            Coin.create(id=1, name='Bitcoin', symbol='BTC')
+            #Coin.create(id=1, name='Bitcoin', symbol='BTC')
             Game.create(
                 name='Game',
                 starting_cash=10000.00,
