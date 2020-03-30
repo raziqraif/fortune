@@ -4,7 +4,7 @@ from unittest.mock import Mock, patch, MagicMock
 import json
 import pytz
 
-from db import db, Profile, Coin, Game, GameProfile, GameCoin
+from db import db, Profile, Coin, Game, GameProfile, GameCoin, Ticker
 from tests.utils import DbTest, AuthDbTest
 
 
@@ -209,6 +209,139 @@ class GameTest(AuthDbTest):
             cash=10000
         )
         res = self.client.get('/game/1', headers={
+            'Authorization': 'Bearer ' + token
+        })
+        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+
+    def test_buy_coin_without_cash(self):
+        res = self.client.post('/auth/register/',
+            data=json.dumps({
+                'username': 'theusername',
+                'password': 'thepassword',
+            }),
+            content_type='application/json',
+        )
+        token = res.json['token']
+        GameProfile.create(
+            game=1,
+            profile=1,
+            cash=0
+        )
+        GameCoin.create(
+            game=1,
+            coin=1
+        )
+        Ticker.create(
+            coin=1,
+            price=10
+        )
+        res = self.client.post('/game/1/coin',
+        {
+            'coinId': 1,
+            'coinAmount': 1
+        },
+        headers={
+            'Authorization': 'Bearer ' + token
+        })
+        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+    
+    def test_buy_coin_success(self):
+        res = self.client.post('/auth/register/',
+            data=json.dumps({
+                'username': 'theusername',
+                'password': 'thepassword',
+            }),
+            content_type='application/json',
+        )
+        token = res.json['token']
+        GameProfile.create(
+            game=1,
+            profile=1,
+            cash=10000
+        )
+        GameCoin.create(
+            game=1,
+            coin=1
+        )
+        Ticker.create(
+            coin=1,
+            price=10
+        )
+        res = self.client.post('/game/1/coin',
+        {
+            'coinId': 1,
+            'coinAmount': 1
+        },
+        headers={
+            'Authorization': 'Bearer ' + token
+        })
+        self.assertEqual(int(HTTPStatus.OK), res._status_code)
+
+    def test_sell_coin_without_coin(self):
+        res = self.client.post('/auth/register/',
+            data=json.dumps({
+                'username': 'theusername',
+                'password': 'thepassword',
+            }),
+            content_type='application/json',
+        )
+        token = res.json['token']
+        GameProfile.create(
+            game=1,
+            profile=1,
+            cash=0
+        )
+        GameCoin.create(
+            game=1,
+            coin=1
+        )
+        Ticker.create(
+            coin=1,
+            price=10
+        )
+        res = self.client.post('/game/1/coin',
+        {
+            'coinId': 1,
+            'coinAmount': -1
+        },
+        headers={
+            'Authorization': 'Bearer ' + token
+        })
+        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+
+    def test_sell_coin_success(self):
+        res = self.client.post('/auth/register/',
+            data=json.dumps({
+                'username': 'theusername',
+                'password': 'thepassword',
+            }),
+            content_type='application/json',
+        )
+        token = res.json['token']
+        GameProfile.create(
+            game=1,
+            profile=1,
+            cash=0
+        )
+        GameCoin.create(
+            game=1,
+            coin=1
+        )
+        GameProfileCoin.create(
+            game_profile=1,
+            coin=1,
+            coin_amount=2
+        )
+        Ticker.create(
+            coin=1,
+            price=10
+        )
+        res = self.client.post('/game/1/coin',
+        {
+            'coinId': 1,
+            'coinAmount': -1
+        },
+        headers={
             'Authorization': 'Bearer ' + token
         })
         self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
