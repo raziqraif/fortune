@@ -13,6 +13,7 @@ const styles: { [name: string]: CSS.Properties } = {
 interface InfoBarProps {
 	gameProfile: {
 		cash: string,
+		netWorth: string
 	},
 	coins: Array<{
 		id: string;
@@ -74,7 +75,7 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 							Cash: ${gameProfile.cash}
 						</Row>
 						<Row>
-							Net worth: $
+							Net worth: ${gameProfile.netWorth}
 						</Row>
 					</Col>
 
