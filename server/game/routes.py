@@ -87,9 +87,9 @@ def edit(profile, game_id):
     coin_amount = validated_data['coinAmount']
     gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
     if coin_amount > 0:
-        buy_coin(coin_id, coin_amount, gameProfile.id)
+        buy_coin(coin_id, coin_amount, gameProfile)
     else:
-        sell_coin(coin_id, -1 * coin_amount, gameProfile.id)
+        sell_coin(coin_id, -1 * coin_amount, gameProfile)
 
 @game_bp.route('/<game_id>', methods=['PUT'])
 @require_authentication
