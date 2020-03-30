@@ -69,13 +69,13 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 		// format cash values to have 2 numbers past decimal
 		const cashDecimalIndex = cash.indexOf('.');
 		const netWorthDecimalIndex = netWorth.indexOf('.');
-		if (cashDecimalIndex == -1) {
+		if (cashDecimalIndex === -1) {
 			cash = cash + '.00'
 		} else {
 			cash = cash.substring(0, cashDecimalIndex + 3)
 		}
 
-		if (netWorthDecimalIndex == -1) {
+		if (netWorthDecimalIndex === -1) {
 			netWorth = netWorth + '.00'
 		} else {
 			netWorth = netWorth.substring(0, netWorthDecimalIndex + 3)
