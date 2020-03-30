@@ -82,8 +82,8 @@ const mapStateToProps = (state: RootState) => ({
   loggedIn: state.auth.loggedIn,
 })
 const mapDispatchToProps = (dispatch: any) => ({
-  logout: Actions.auth.logout,
+  logout: () => dispatch(Actions.auth.logout()),
   navigateTo: (location: string) => dispatch(push(location)),
-  fetchAuthToken: Actions.auth.fetchAuthToken,
+  fetchAuthToken: () => dispatch(Actions.auth.fetchAuthToken()),
 })
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar)
