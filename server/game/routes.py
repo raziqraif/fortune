@@ -16,7 +16,8 @@ from .serializers import (
     CoinsResponse,
     GetGameResponse,
     GetCoinsResponse,
-    TestSerializer
+    TestSerializer,
+    CoinAndPrices,
 )
 from .services import (
     create_game,
@@ -110,7 +111,8 @@ def get_game_coins(profile, game_id):
         num_per_page = int(num_per_page)
     except:
         raise BadRequest('Parameters not in correct form')
-    gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
+
+    game_profile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
     start_time = get_start_time_from_time_span(time_span)
     coins = get_coins_by_game_id_and_sorting(
         game_id,
@@ -119,14 +121,19 @@ def get_game_coins(profile, game_id):
         num_per_page
     )
     coins_and_prices = get_pricing_by_coins(coins, start_time)
-    gameProfileCoins = get_game_profile_coins_by_game_profile_id(gameProfile.id)
+
+    game_profile_coins = get_game_profile_coins_by_game_profile_id(game_profile.id)
     for coin_and_prices in coins_and_prices:
-        coinNumber = 0
-        for gameProfileCoin in gameProfileCoins:
-            if gameProfileCoin.coin == coin_and_prices['coin'].id:
-                coinNumber = gameProfileCoin.number
+        coin_number = 0
+        for game_profile_coin in game_profile_coins:
+            if game_profile_coin.coin == coin_and_prices['coin'].id:
+                coin_number = game_profile_coin.number
                 break
-        coin_and_prices['coin'].number = coinNumber
+        coin_and_prices['coin'].number = coin_number
+
+    for cnp in coins_and_prices:
+        print(cnp['coin'], cnp['prices'][0:5])
+
     return jsonify(GetCoinsResponse.serialize({
         'coins_and_prices': coins_and_prices
     }))
