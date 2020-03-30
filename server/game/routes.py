@@ -127,8 +127,6 @@ def get_game_coins(profile, game_id):
                 coinNumber = gameProfileCoin.number
                 break
         coin_and_prices['coin'].number = coinNumber
-    breakpoint()
-    return jsonify(TestSerializer.serialize({ 'number': 1 }))
     return jsonify(GetCoinsResponse.serialize({
         'coins_and_prices': coins_and_prices
     }))
