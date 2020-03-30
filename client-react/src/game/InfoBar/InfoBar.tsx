@@ -65,17 +65,20 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 	}
 
 	render() {
-		const { gameProfile } = this.props;
+		let { cash, netWorth } = this.props.gameProfile;
+		// format cash values to have 2 numbers past decimal
+		cash = cash.substring(0, cash.indexOf('.') + 3)
+		netWorth = netWorth.substring(0, netWorth.indexOf('.') + 3)
 		return (
 			<div className="InfoBar" style={styles.main}>
 				{/* Game info row */}
 				<Row>
 					<Col>
 						<Row>
-							Cash: ${gameProfile.cash}
+							Cash: ${cash}
 						</Row>
 						<Row>
-							Net worth: ${gameProfile.netWorth}
+							Net worth: ${netWorth}
 						</Row>
 					</Col>
 
