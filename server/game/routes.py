@@ -75,6 +75,22 @@ def get_coins():
     return jsonify(CoinsResponse.serialize(Coin.select(), many=True))
 
 
+@game_bp.route('/<game_id>/coins', methods=['POST'])
+@require_authentication
+def edit(profile, game_id):
+    try:
+        int(game_id)
+    except:
+        raise BadRequest('Invalid game id')
+    validated_data: dict = TradeRequest.deserialize(request.json)
+    coin_id = validated_data['coinId']
+    coin_amount = validated_data['coinAmount']
+    gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
+    if coin_amount > 0:
+        buy_coin(coin_id, coin_amount, gameProfile)
+    else:
+        sell_coin(coin_id, -1 * coin_amount, gameProfile)
+
 @game_bp.route('/<game_id>', methods=['PUT'])
 @require_authentication
 def edit(profile, game_id):
