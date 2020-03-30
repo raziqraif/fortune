@@ -24,10 +24,7 @@ class GameTest(AuthDbTest):
     def setUp(self):
         super().setUp()
         with db.atomic() as txn:
-<<<<<<< HEAD
-=======
             #don't need to create a game, migrations/v1.py gets run before every test
->>>>>>> 40eb9578f285282b6e3b9f2e805f5895eb897750
             #Coin.create(id=1, name='Bitcoin', symbol='BTC')
             Game.create(
                 name='Game',
