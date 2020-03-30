@@ -1,8 +1,10 @@
 import { Type } from '../actions/Types'
+import { CoinsAndPrices } from '../actions/Coins';
 
 export type CoinState = typeof initialState;
 const initialState = {
-  coins: [] as Array<{ id: string, name: string }>,
+  simpleCoins: [] as Array<{id: string, name: string}>,
+  coins: [] as CoinsAndPrices,
 }
 
 export type Action = {
@@ -12,6 +14,11 @@ export type Action = {
 
 export default (state = initialState, action: Action) => {
   switch (action.type) {
+    case Type.SET_SIMPLE_COINS:
+      return {
+        ...state,
+        simpleCoins: action.payload,
+      }
     case Type.SET_COINS:
       return {
         ...state,

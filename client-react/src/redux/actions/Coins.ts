@@ -5,6 +5,24 @@ import { Action } from '../reducers/AuthReducer'
 import {fetchAuthToken} from "./Auth";
 import {handleAxiosError} from "./Utils";
 
+type Coin = {
+  id: string;
+  name: string;
+  symbol: string;
+  number: number;
+}
+
+type Ticker = {
+  price: number;
+  captured_at: Date;
+}
+
+type CoinAndPrices = {
+  coin: Array<Coin>;
+  prices: Array<Ticker>
+}
+
+export type CoinsAndPrices = Array<CoinAndPrices>;
 
 export const getAllCoins = () => {
   return async (dispatch: Dispatch<Action>) => {
@@ -12,7 +30,7 @@ export const getAllCoins = () => {
     // const res = await axios.post('/api/login', {email, password})
     // just an example
     const res = await axios.get('http://localhost:5000/game/coins')
-    dispatch({type: Type.SET_COINS, payload: res.data})
+    dispatch({type: Type.SET_SIMPLE_COINS, payload: res.data})
   }
 }
 

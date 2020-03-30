@@ -116,8 +116,6 @@ def get_coins_by_game_id_and_sorting(game_id, sorting_int, page_num, num_per_pag
     coins_query = Coin.select().join(GameCoin).where(GameCoin.game == game_id)
     if coins_query.count() == 0:
         raise BadRequest('Incorrect Sorting')
-    # if sorting_int == 0:  # TODO: Uncomment this if 0 is associated to a type of sorting
-    #     coins_query = coins_query.paginate(page_num, num_per_page)
     if sorting_int == 1:
         coins_query = coins_query.order_by(+Coin.name)
     if sorting_int == 2:
@@ -127,8 +125,7 @@ def get_coins_by_game_id_and_sorting(game_id, sorting_int, page_num, num_per_pag
     if sorting_int == 4:
         coins_query = coins_query.order_by(+Coin.price)  # TODO: Double check if this should +/-
 
-    coins_query = coins_query.paginate(page_num, num_per_page)  # FIXME: I assume the result should be paginated
-    # regardless of sorting_int. Fix this if I was wrong
+    coins_query = coins_query.paginate(page_num, num_per_page)
     coins = []
     for coin in coins_query:
         coins.append(coin)
@@ -162,10 +159,9 @@ def get_start_time_from_time_span(time_span_int):
     if time_span_int == 1:
         return datetime.utcnow() - timedelta(days=1)
     if time_span_int == 2:
-        return datetime.utcnow() - timedelta(days=7)
+        return datetime.utcnow() - timedelta(weeks=1)
     if time_span_int == 3:
-        return datetime.utcnow() - timedelta(months=1)  # FIXME: timedelta doesn't accept months
-    # TODO: Refer https://docs.python.org/3/library/datetime.html
+        return datetime.utcnow() - timedelta(weeks=4)
     if time_span_int == 4:
-        return datetime.utcnow() - timedelta(years=1)  # FIXME: timedelta doesn't accept years
+        return datetime.utcnow() - timedelta(weeks=52)
     raise BadRequest("Time span invalid: {}".format(str(time_span_int)))

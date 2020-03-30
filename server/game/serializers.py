@@ -64,14 +64,14 @@ class GameCoinsResponse(CoinsResponse):
     number = fields.Decimal(required=True, as_string=True)
 
 
-class TicketResponse(BaseSerializer):
+class TickerResponse(BaseSerializer):
     price = fields.Decimal(as_string=True)
     captured_at = fields.DateTime()
 
 
 class CoinAndPrices(BaseSerializer):
     coin = fields.Nested(GameCoinsResponse)
-    prices = fields.List(fields.Nested(TicketResponse))
+    prices = fields.List(fields.Nested(TickerResponse))
 
 
 class GetCoinsResponse(BaseSerializer):
@@ -81,7 +81,6 @@ class GetCoinsResponse(BaseSerializer):
 class GetGameResponse(BaseSerializer):
     game = fields.Nested(GameResponse)
     gameProfile = fields.Nested(GameProfileResponse)
-    coins = fields.List(fields.Nested(GameCoinsResponse), required=True)
 
 
 class TestSerializer(BaseSerializer):

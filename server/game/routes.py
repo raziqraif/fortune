@@ -70,22 +70,12 @@ def get(profile, game_id):
         raise BadRequest('Invalid game id')
     game = get_game_by_id(game_id)
     gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
-    gameProfileCoins = get_game_profile_coins_by_game_profile_id(gameProfile.id)
-    coins = get_coins_by_game_id(game_id)
-    for coin in coins:
-        coinNumber = 0
-        for gameProfileCoin in gameProfileCoins:
-            if gameProfileCoin.coin == coin.id:
-                coinNumber = gameProfileCoin.number
-                break
-        coin.number = coinNumber
     
     return jsonify(GetGameResponse.serialize({
         'game': game,
         'gameProfile': {
             'cash': gameProfile.cash 
-        },
-        'coins': coins
+        }
     }))
 
 
@@ -130,9 +120,6 @@ def get_game_coins(profile, game_id):
                 coin_number = game_profile_coin.number
                 break
         coin_and_prices['coin'].number = coin_number
-
-    for cnp in coins_and_prices:
-        print(cnp['coin'], cnp['prices'][0:5])
 
     return jsonify(GetCoinsResponse.serialize({
         'coins_and_prices': coins_and_prices

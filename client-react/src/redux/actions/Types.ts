@@ -9,6 +9,7 @@ export enum Type {
     LOGOUT,
 
     // coin types
+    SET_SIMPLE_COINS,
     SET_COINS,
 
     // game types
