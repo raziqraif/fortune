@@ -99,3 +99,34 @@ def get_game_profile_coins_by_game_profile_id(game_profile_id):
     if not gameProfileCoins:
         return []
     return gameProfileCoins
+
+@db.atomic()
+def buy_coin(coin_id, coin_amount, game_profile):
+    ticker = Ticker.select().where(Ticker.coin == coin_id).order_by(Ticker.captured_at.desc()).get()
+    new_cash = game_profile.cash - (ticker.price * coin_amount)
+    if new_cash < 0:
+        raise BadRequest('Not enough cash to buy this coin amount')
+    gameProfileCoin = GameProfileCoin.get_or_none(GameProfileCoin.game_profile == game_profile.id, GameProfileCoin.coin == coin_id)
+    if gameProfileCoin is None:
+        GameProfileCoin.create(
+            game_profile = game_profile.id,
+            coin = coin_id,
+            coin_amount = coin_amount
+        )
+        GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id)
+    else:
+        new_coin_amount = gameProfileCoin.coin_amount + coin_amount
+        GameProfileCoin.update(coin_amount=new_coin_amount).where(GameProfileCoin.id == gameProfileCoin.id)
+        GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id)
+
+@db.atomic()
+def sell_coin(coin_id, coin_amount, game_profile):
+    gameProfileCoin = GameProfileCoin.get_or_none(GameProfileCoin.game_profile == game_profile.id, GameProfileCoin.coin == coin_id)
+    if gameProfileCoin is None or gameProfileCoin.coin_amount < coin_amount:
+        raise BadRequest('Not enough of these coins to sell')
+    ticker = Ticker.select().where(Ticker.coin == coin_id).order_by(Ticker.captured_at.desc()).get()
+    new_cash = game_profile.cash + (ticker.price * coin_amount)
+    new_coin_amount = gameProfileCoin.coin_amount - coin_amount
+    GameProfileCoin.update(coin_amount=new_coin_amount).where(GameProfileCoin.id == gameProfileCoin.id)
+    GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id)
+
