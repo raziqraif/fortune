@@ -4,7 +4,7 @@ from decimal import Decimal
 import pytz
 from werkzeug.exceptions import BadRequest
 
-from db import db, Game, GameCoin, Coin, GameProfile, GameProfileCoin
+from db import db, Game, GameCoin, Coin, GameProfile, GameProfileCoin, Ticker
 
 
 @db.atomic()
@@ -130,10 +130,12 @@ def buy_coin(coin_id, coin_amount, game_profile):
             coin_amount = coin_amount
         )
         GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id)
+        return coin_amount
     else:
         new_coin_amount = gameProfileCoin.coin_amount + coin_amount
         GameProfileCoin.update(coin_amount=new_coin_amount).where(GameProfileCoin.id == gameProfileCoin.id)
         GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id)
+        return new_coin_amount
 
 @db.atomic()
 def sell_coin(coin_id, coin_amount, game_profile):
@@ -145,4 +147,4 @@ def sell_coin(coin_id, coin_amount, game_profile):
     new_coin_amount = gameProfileCoin.coin_amount - coin_amount
     GameProfileCoin.update(coin_amount=new_coin_amount).where(GameProfileCoin.id == gameProfileCoin.id)
     GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id)
-
+    return new_coin_amount
