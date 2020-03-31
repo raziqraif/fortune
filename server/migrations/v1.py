@@ -23,6 +23,7 @@ def up(db):
                             shareable_link='INDEF',
                             shareable_code='INDEF',
                             ends_at=None)
+            print("ID = ", global_indef.id)
             GameCoin.create(game=global_indef, coin=Coin.get())
         # FIXME: After merge, make sure that Global games are created first before calling this function
         for_demo(db)
