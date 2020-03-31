@@ -1,5 +1,5 @@
 import React from 'react';
-import {render, fireEvent, screen} from '@testing-library/react';
+import {render, fireEvent, screen, getByPlaceholderText} from '@testing-library/react';
 
 import Play from './Play';
 import assert from "assert";
@@ -24,11 +24,8 @@ test('Should redirect to Create', () => {
 
 test('Should display modal', () => {
   const {getByText} = deeplyRenderComponentWithRedux(<Play />);
-  expect(getByText('Play')).toBeInTheDocument();
-  expect(getByText('Search')).toBeInTheDocument();
-  expect(getByText('Sort by')).toBeInTheDocument();
-  expect(getByText('Create')).toBeInTheDocument()
-  expect(getByText('Join')).toBeInTheDocument()
+  fireEvent.click(getByText("Join"));
+  expect(getByText('Code')).toBeInTheDocument();
 });
 
 //

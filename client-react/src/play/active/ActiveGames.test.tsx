@@ -11,7 +11,8 @@ let ACTIVE_GAMES: GameType[] = [];
 ACTIVE_GAMES.push({title: "Global Game", link: "/global", endTime: new Date()});
 ACTIVE_GAMES.push({title: "Global Timed Game", link: "/global_timed", endTime: new Date()});
 ACTIVE_GAMES.push({title: "Boilermaker", link: "boilermaker", endTime: new Date()});
-// ACTIVE_GAMES.push({title: "A Really Long Game Name Because Why Not", link: "boilermaker", endTime: new Date()});
+let LONG_TITLE = {title: "A Really Long Game Title Because Why Not", link: "boilermaker", endTime: new Date()}
+
 for (let i = 5; i <= 10; i++) {
   ACTIVE_GAMES.push({title: "Game " + i, link: "/my_game" + i, endTime: new Date()})
 }
@@ -22,3 +23,10 @@ test('Should render all active game cards', () => {
         expect(getByText(ACTIVE_GAMES[i].title)).toBeInTheDocument();
     }
 });
+
+test('Should truncate', () => {
+    const {getByText} = render(<ActiveGames games={[LONG_TITLE]}/>);
+    // fireEvent.click(getByText("A Really Long Game Title Because Why Not"))
+    expect(getByText("A Really Long Game Titl...")).toBeInTheDocument()
+});
+
