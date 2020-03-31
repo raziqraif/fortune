@@ -61,6 +61,7 @@ def get(profile, game_id):
     game = get_game_by_id(game_id)
     gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
     gameProfileCoins = get_game_profile_coins_by_game_profile_id(gameProfile.id)
+    netWorth = get_net_worth_by_game_profile_id(gameProfile.id)
     coins = get_coins_by_game_id(game_id)
     for coin in coins:
         coinNumber = 0
@@ -73,7 +74,8 @@ def get(profile, game_id):
     return jsonify(GetGameResponse.serialize({
         'game': game,
         'gameProfile': {
-            'cash': gameProfile.cash 
+            'cash': gameProfile.cash,
+            'netWorth': netWorth
         },
         'coins': coins
     }))
