@@ -8,6 +8,7 @@ import { RootState } from '../../redux/reducers';
 import { priceOrder } from '../Game';
 
 interface CointableProps {
+	gameId: string;
 	coins: Array<{
 		id: string;
 		name: string;
@@ -56,6 +57,7 @@ class Cointable extends React.Component<CointableProps> {
 		coinsWithPrices.forEach(coin => {
 			rows.push(
 				<CointableCoin
+					gameId={this.props.gameId}
 					coin={coin}
 					key={coin.id}
 					number={coin.number}

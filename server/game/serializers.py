@@ -58,4 +58,4 @@ class Cash(BaseSerializer):
 
 class TradeResponse(BaseSerializer):
     new_amount = fields.Decimal(required=True, as_string=True)
-    new_cash = fields.Nested(Cash)
+    new_cash = fields.Decimal(required=True, as_string=True)

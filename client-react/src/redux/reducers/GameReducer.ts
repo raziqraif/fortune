@@ -17,7 +17,12 @@ const initialState = {
       cash: '',
       netWorth: '',
     },
-    coins: [],
+    coins: [] as Array<{
+      id: string;
+      name: string;
+      symbol: string;
+      number: string;
+    }>,
   },
   setGameErrorMessage: '',
   transactionErrorMessage: '',
@@ -32,24 +37,40 @@ export type GameState = {
   game: GameType;
   createGameErrorMessage: string;
   createGameLoading: boolean;
-  game: {
-    data: GameType,
-    gameProfile: {
-      cash: string;
-    }
-    coins: Array<{
-      id: string;
-      name: string;
-      symbol: string;
-      number: string;
-    }>
-  };
   setGameErrorMessage: string;
   transactionErrorMessage: string;
 }
 
 export default (state = initialState, action: Action) => {
   switch (action.type) {
+    case Type.SET_COIN_AMOUNT:
+      var id = action.payload.id;
+      var amount = action.payload.newAmount;
+      state.game.coins.map((coin) => {
+        if (coin.id == id) {
+          return {
+            id: coin.id,
+            name: coin.name,
+            symbol: coin.symbol,
+            number: amount,
+          }
+        }
+        return coin;
+      })
+      return {
+        ...state,
+      }
+    case Type.SET_CASH:
+      return {
+        ...state,
+        game: {
+          ...state.game,
+          gameProfile: {
+            ...state.game.gameProfile,
+            cash: action.payload.cash,
+          }
+        }
+      }
     case Type.CREATE_GAME:
       return {
         ...state,

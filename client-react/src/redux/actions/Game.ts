@@ -50,7 +50,7 @@ export type GameType = {
     id: string;
     name: string;
     symbol: string;
-    number: number;
+    number: string;
   }>
 }
 
@@ -98,8 +98,8 @@ export const liquify = () => {
       const res = await axios.get(`http://localhost:5000/game/liquify`);
 
       // I'm thinking this method's response will contain a player's new gameProfile and gameCoins after liquifying
-      dispatch({type: Type.SET_GAME_COINS, payload: res.data.coins});
       dispatch({type: Type.SET_GAME_PROFILE, payload: res.data.gameProfile});
+
     } catch (e) {
       handleAxiosError(e, dispatch, Type.LIQUIFY_FAILED);
     }
@@ -108,19 +108,18 @@ export const liquify = () => {
 
 // transaction type will either be "buy" or "sell"
 export const transaction = (
+  gameId: string,
+  id: string,
   amount: string,
-  type: string,
 ) => {
   return async (dispatch: Dispatch<Action>) => {
     console.log(amount)
-    console.log(type)
     try {
       await fetchAuthToken();
-      const res = await axios.post(`http://localhost:5000/game/${type}`, {amount});
+      const res = await axios.post(`http://localhost:5000/game/${gameId}/coin`, {coinId: id, coinAmount: amount});
 
-      dispatch({type: Type.TRANSACTION});
-      dispatch({type: Type.SET_GAME_COINS, payload: res.data.coins});
-      dispatch({type: Type.SET_GAME_PROFILE, payload: res.data.gameProfile});
+      dispatch({type: Type.SET_COIN_AMOUNT, payload: { id: id, newAmount: res.data.new_amount }})
+      dispatch({type: Type.SET_CASH, payload: { cash: res.data.new_cash }})
     } catch (e) {
       handleAxiosError(e, dispatch, Type.TRANSACTION_FAILED);
     }

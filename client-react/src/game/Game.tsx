@@ -12,19 +12,8 @@ interface GameProps {
 	getGame: (
 		id: number
 	) => void;
-	gameId?: string;
-	game: {
-		data: GameType,
-		gameProfile: {
-			cash: string,
-		},
-		coins: Array<{
-			id: string;
-			name: string;
-			symbol: string;
-			number: string;
-		}>
-	}
+	gameId: string;
+	game: GameType;
 	error: string;
 	history: any;
 }
@@ -85,6 +74,7 @@ class Game extends React.Component<GameProps, GameState> {
 						changePriceOrder={this.changePriceOrder}
 					/>
 					<Cointable
+						gameId={this.props.gameId!}
 						coins={game.coins}
 						priceOrder={priceOrder}
 					/>

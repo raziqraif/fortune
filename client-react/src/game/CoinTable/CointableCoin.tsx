@@ -6,11 +6,12 @@ import { RootState } from "../../redux/reducers";
 import Actions from '../../redux/actions';
 
 interface CointableCoinProps {
+	gameId: string;
 	coin: { id: string, name: string };
 	price: string;
 	number: string;
 	error: string;
-	transaction: (amount: string, type: string) => void;
+	transaction: (gameId: string, coinId: string, amount: string) => void;
 	clearErrorMessages: () => void;
 }
 
@@ -87,7 +88,8 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 
 	private transaction = () => {
 		const { amount, type } = this.state;
-		this.props.transaction(amount, type);
+		var sentAmount = type == 'buy' ? amount : (-1 * parseInt(amount)).toString();
+		this.props.transaction(this.props.gameId, this.props.coin.id, sentAmount);
 	}
 
 	render() {

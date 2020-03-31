@@ -88,7 +88,7 @@ def get_coins_by_game_id(game_id):
 
 @db.atomic()
 def get_game_profile_by_profile_id_and_game_id(profile_id, game_id):
-    gameProfile = GameProfile.get_or_none(GameProfile.game == game_id and GameProfile.profile == profile_id)
+    gameProfile = GameProfile.get_or_none(GameProfile.game == game_id, GameProfile.profile == profile_id)
     if not gameProfile:
         raise BadRequest('User not in game')
     return gameProfile
@@ -113,12 +113,16 @@ def buy_coin(coin_id, coin_amount, game_profile):
             coin = coin_id,
             coin_amount = coin_amount
         )
-        GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id)
+        rows = GameProfile.update(cash=new_cash).where(GameProfile == game_profile).execute()
+        if rows == 0:
+            raise BadRequest('Money could not be removed from your account')
         return coin_amount
     else:
         new_coin_amount = gameProfileCoin.coin_amount + coin_amount
-        GameProfileCoin.update(coin_amount=new_coin_amount).where(GameProfileCoin.id == gameProfileCoin.id)
-        GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id)
+        rows = GameProfile.update(cash=new_cash).where(GameProfile == game_profile).execute()
+        if rows == 0:
+            raise BadRequest('Money could not be removed from your account')
+        GameProfileCoin.update(coin_amount=new_coin_amount).where(GameProfileCoin.id == gameProfileCoin.id).execute()
         return new_coin_amount
 
 @db.atomic()
