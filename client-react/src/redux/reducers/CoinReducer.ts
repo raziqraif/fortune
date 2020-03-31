@@ -38,7 +38,7 @@ export default (state = initialState, action: Action) => {
     case Type.SET_COINS:
       return {
         ...state,
-        coins: action.payload,
+        coins: action.payload.coins_and_prices,
       }
     case Type.SET_CURRENT_PRICES:
       return {

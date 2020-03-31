@@ -17,6 +17,7 @@ type Ticker = {
   price: number;
   captured_at: Date;
   price_change_day_pct: string;
+  id: string;
 }
 
 type CoinAndPrices = {
