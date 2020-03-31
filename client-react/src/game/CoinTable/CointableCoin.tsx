@@ -88,8 +88,15 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 
 	private transaction = () => {
 		const { amount, type } = this.state;
-		var sentAmount = type == 'buy' ? amount : (-1 * parseInt(amount)).toString();
+		var sentAmount: string;
+		if (type === 'buy') {
+			sentAmount = amount;
+		}
+		else {
+			sentAmount = (-1 * Number(amount)).toString();
+		}
 		this.props.transaction(this.props.gameId, this.props.coin.id, sentAmount);
+		this.toggleConfirm();
 	}
 
 	render() {

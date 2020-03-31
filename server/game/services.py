@@ -133,6 +133,6 @@ def sell_coin(coin_id, coin_amount, game_profile):
     ticker = Ticker.select().where(Ticker.coin == coin_id).order_by(Ticker.captured_at.desc()).get()
     new_cash = game_profile.cash + (ticker.price * coin_amount)
     new_coin_amount = gameProfileCoin.coin_amount - coin_amount
-    GameProfileCoin.update(coin_amount=new_coin_amount).where(GameProfileCoin.id == gameProfileCoin.id)
-    GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id)
+    GameProfileCoin.update(coin_amount=new_coin_amount).where(GameProfileCoin.id == gameProfileCoin.id).execute()
+    GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id).execute()
     return new_coin_amount
