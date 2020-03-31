@@ -39,7 +39,6 @@ class GameResponse(BaseSerializer):
 
 class GameProfileResponse(BaseSerializer):
     cash = fields.Decimal(required=True, as_string=True)
-    netWorth = fields.Decimal(required=True, as_string=True)
 
 class CoinsResponse(BaseSerializer):
     id = fields.Int(required=True)
@@ -54,6 +53,9 @@ class GetGameResponse(BaseSerializer):
     gameProfile = fields.Nested(GameProfileResponse)
     coins = fields.List(fields.Nested(GameCoinsResponse), required=True)
 
+class Cash(BaseSerializer):
+    cash = fields.Decimal(required=True, as_string=True)
+
 class TradeResponse(BaseSerializer):
     new_amount = fields.Decimal(required=True, as_string=True)
-    new_cash = fields.Decimal(required=True, as_string=True)
+    new_cash = fields.Nested(Cash)

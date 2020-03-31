@@ -6,24 +6,45 @@ import { connect } from 'react-redux';
 import { GameType } from '../redux/actions/Game';
 import HeaderBar from './HeaderBar/HeaderBar';
 import InfoBar from './InfoBar/InfoBar';
+import Cointable from './CoinTable/Cointable';
 
-export interface GameProps {
+interface GameProps {
 	getGame: (
 		id: number
 	) => void;
 	gameId?: string;
-	game: GameType;
+	game: {
+		data: GameType,
+		gameProfile: {
+			cash: string,
+		},
+		coins: Array<{
+			id: string;
+			name: string;
+			symbol: string;
+			number: string;
+		}>
+	}
 	error: string;
 	history: any;
 }
 
-class Game extends React.Component<GameProps> {
+interface GameState {
+	priceOrder: priceOrder;
+}
+
+export enum priceOrder {
+	MINIMUM,
+	MAXIMUM,
+}
+
+class Game extends React.Component<GameProps, GameState> {
 
 	constructor(props: GameProps) {
 		super(props);
 
 		this.state = {
-
+			priceOrder: priceOrder.MINIMUM,
 		}
 	}
 
@@ -31,16 +52,20 @@ class Game extends React.Component<GameProps> {
 		const { gameId } = this.props;
 		if (!gameId) { // global game
 			this.props.getGame(1);
-			return;
-		} 
+		} else {
+			const id = parseInt(gameId);
+			if (isNaN(id)) this.props.history.push('/'); // non-numerical ID
+			else this.props.getGame(id); // private game
+		}
+	}
 
-		const id = parseInt(gameId);
-		if (!id) this.props.history.push('/'); // non-numerical ID
-		else this.props.getGame(id); // private game 
+	private changePriceOrder = (priceOrder: priceOrder) => {
+		this.setState({ priceOrder });
 	}
 
 	render() {
 		const { gameId, error, game } = this.props;
+		const { priceOrder } = this.state;
 		const global = gameId ? false : true;
 		if (error) {
 			return <p style={{ color: 'red' }}>{error}</p>
@@ -56,8 +81,12 @@ class Game extends React.Component<GameProps> {
 						gameId={gameId}
 					/>
 					<InfoBar
-						gameProfile={game.gameProfile}
 						coins={game.coins}
+						changePriceOrder={this.changePriceOrder}
+					/>
+					<Cointable
+						coins={game.coins}
+						priceOrder={priceOrder}
 					/>
 				</Container>
 			</div>

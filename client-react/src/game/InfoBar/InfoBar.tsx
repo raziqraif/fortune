@@ -3,6 +3,8 @@ import Actions from '../../redux/actions';
 import { Row, Col, Button, ButtonGroup } from 'react-bootstrap';
 import CSS from 'csstype';
 import { connect } from 'react-redux';
+import { priceOrder } from '../Game';
+import { RootState } from '../../redux/reducers';
 
 const styles: { [name: string]: CSS.Properties } = {
 	main: {
@@ -11,22 +13,20 @@ const styles: { [name: string]: CSS.Properties } = {
 };
 
 interface InfoBarProps {
-	gameProfile: {
-		cash: string,
-		netWorth: string
-	},
+	cash: string,
+	netWorth: string
 	coins: Array<{
 		id: string;
 		name: string;
 		symbol: string;
-		number: number;
+		number: string;
 	}>,
 	liquify: () => void,
+	changePriceOrder: (priceOrder: priceOrder) => void,
 }
 
 interface InfoBarState {
 	timeSpan: timeSpan,
-	price: price,
 }
 
 enum timeSpan {
@@ -37,18 +37,12 @@ enum timeSpan {
 	YEAR,
 }
 
-enum price {
-	MINIMUM,
-	MAXIMUM,
-}
-
 class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 
 	constructor(props: InfoBarProps) {
 		super(props);
 		this.state = {
 			timeSpan: timeSpan.HOUR,
-			price: price.MINIMUM,
 		}
 	}
 
@@ -56,31 +50,29 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 		this.setState({ timeSpan });
 	}
 
-	private changePrice = (price: price) => {
-		this.setState({ price });
+	private changePriceOrder = (priceOrder: priceOrder) => {
+		this.props.changePriceOrder(priceOrder);
 	}
 
 	private liquify = () => {
 		this.props.liquify();
 	}
 
-	render() {
-		let { cash, netWorth } = this.props.gameProfile;
-		// format cash values to have 2 numbers past decimal
-		const cashDecimalIndex = cash.indexOf('.');
-		const netWorthDecimalIndex = netWorth.indexOf('.');
-		if (cashDecimalIndex === -1) {
-			cash = cash + '.00'
-		} else {
-			cash = cash.substring(0, cashDecimalIndex + 3)
-		}
+	// TODO - get price of coins to calculate current net worth
+	// also will probably have to worry about casting
+	private getNetWorth = () => {
+		let cash_d: number = Number(this.props.gameProfile.cash) ? Number(this.props.gameProfile.cash) : 0.0
+		this.props.coins.forEach(coin => {
+			cash_d = cash_d + 1 + Number(coin.number);
+		})
+		return cash_d;
+	}
 
-		if (netWorthDecimalIndex === -1) {
-			netWorth = netWorth + '.00'
-		} else {
-			netWorth = netWorth.substring(0, netWorthDecimalIndex + 3)
-		}
-		
+	render() {
+		let { cash, netWorth } = this.props;
+		// format cash values to have 2 numbers past decimal
+		cash = Number(cash).toFixed(2);
+		netWorth = Number(netWorth).toFixed(2);
 		return (
 			<div className="InfoBar" style={styles.main}>
 				{/* Game info row */}
@@ -112,8 +104,8 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 					<Col>
 						<div style={{ alignSelf: 'center' }}>Price:  </div>
 						<ButtonGroup aria-label="Price">
-							<Button variant="secondary" onClick={() => this.changePrice(price.MINIMUM)}>Minimum</Button>
-							<Button variant="secondary" onClick={() => this.changePrice(price.MAXIMUM)}>Maximum</Button>
+							<Button variant="secondary" onClick={() => this.changePriceOrder(priceOrder.MINIMUM)}>Minimum</Button>
+							<Button variant="secondary" onClick={() => this.changePriceOrder(priceOrder.MAXIMUM)}>Maximum</Button>
 						</ButtonGroup>
 					</Col>
 				</Row>
@@ -122,9 +114,13 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 	}
 }
 
+const mapStateToProps = (state: RootState) => ({
+	netWorth: state.game.game.gameProfile.netWorth,
+	cash: state.game.game.gameProfile.cash,
+})
 const mapDispatchToProps = {
-    liquify: Actions.game.liquify,
+	liquify: Actions.game.liquify,
 };
 
 // no mapStateToProps, so pass null as first arg
-export default connect(null, mapDispatchToProps)(InfoBar);
+export default connect(mapStateToProps, mapDispatchToProps)(InfoBar);

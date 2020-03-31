@@ -25,4 +25,3 @@ class TickersResponse(BaseSerializer):
     price = fields.Decimal(as_string=True)
     captured_at = fields.DateTime()
     price_change_day_pct = fields.Decimal(as_string=True)
-
