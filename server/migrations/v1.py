@@ -29,10 +29,6 @@ def up(db):
         # FIXME: After merge, make sure that Global games are created first before calling this function
         for_demo(db)
 
-            GameCoin.create(game=1, coin=1)
-            GameCoin.create(game=1, coin=2)
-            GameCoin.create(game=1, coin=3)
-
 def for_demo(db):
     from datetime import datetime, timedelta
     import pytz
