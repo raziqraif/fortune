@@ -31,12 +31,11 @@ class Game extends React.Component<GameProps> {
 		const { gameId } = this.props;
 		if (!gameId) { // global game
 			this.props.getGame(1);
-			return;
-		} 
-
-		const id = parseInt(gameId);
-		if (isNaN(id)) this.props.history.push('/'); // non-numerical ID
-		else this.props.getGame(id); // private game 
+		} else {
+			const id = parseInt(gameId);
+			if (isNaN(id)) this.props.history.push('/'); // non-numerical ID
+			else this.props.getGame(id); // private game 
+		}
 	}
 
 	render() {
