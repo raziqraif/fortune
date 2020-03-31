@@ -5,19 +5,26 @@ import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import {connect} from 'react-redux'
 import Actions from '../redux/actions'
 import { RootState } from '../redux/reducers';
-import { push } from 'connected-react-router';
+import { Redirect } from 'react-router-dom';
+import { currentPricesType } from '../redux/reducers/CoinReducer'
 
 interface MenuBarProps {
     loggedIn: boolean;
     logout: () => void;
-    navigateTo: (location: string) => void;
     fetchAuthToken: () => void;
     setCurrentPrices: (payload: currentPricesType) => void;
 }
 
-class MenuBar extends React.Component<MenuBarProps> {
+interface MenuBarState {
+    navigateTo?: string;
+}
+
+class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
     constructor(props: MenuBarProps) {
         super(props);
+        this.state = {
+            navigateTo: undefined
+        }
     }
 
     componentDidMount() {
@@ -29,8 +36,8 @@ class MenuBar extends React.Component<MenuBarProps> {
       });
     }
 
-    private navigateTo = (location: string) => () => {
-        this.props.navigateTo(location);
+    private navigateTo = (navigateTo: string) => () => {
+        this.setState({ navigateTo })
     }
 
     private logout = () => {
@@ -43,6 +50,11 @@ class MenuBar extends React.Component<MenuBarProps> {
     }
 
     render() {
+        if (this.state.navigateTo) {
+            this.setState({ navigateTo: undefined })
+            return <Redirect to={this.state.navigateTo} />
+        }
+        
         return (
             <Navbar collapseOnSelect expand="md" bg="dark" variant="dark">
                 <Navbar.Brand href="/">
@@ -86,9 +98,9 @@ class MenuBar extends React.Component<MenuBarProps> {
 const mapStateToProps = (state: RootState) => ({
   loggedIn: state.auth.loggedIn,
 })
-const mapDispatchToProps = (dispatch: any) => ({
-  logout: () => dispatch(Actions.auth.logout()),
-  navigateTo: (location: string) => dispatch(push(location)),
-  fetchAuthToken: () => dispatch(Actions.auth.fetchAuthToken()),
-})
+const mapDispatchToProps = {
+  logout: Actions.auth.logout,
+  fetchAuthToken: Actions.auth.fetchAuthToken,
+  setCurrentPrices: Actions.coins.setCurrentPrices,
+}
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar)

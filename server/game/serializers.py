@@ -35,7 +35,6 @@ class GameResponse(BaseSerializer):
 
 class GameProfileResponse(BaseSerializer):
     cash = fields.Decimal(required=True, as_string=True)
-    netWorth = fields.Decimal(required=True, as_string=True)
 
 class CoinsResponse(BaseSerializer):
     id = fields.Int(required=True)
