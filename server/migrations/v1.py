@@ -31,15 +31,14 @@ def for_demo(db):
         superadmin = register("superadmin", "superadmin").profile
         admin = register("admin", "admin").profile
 
-        seed_coin = {"id": 1}  # Should correspond to Bitcoin
-
+        active_coins = [{"id": i} for i in range(1, 4)]
         create_game("DEMO",
                     Decimal(10000),
                     "DEMO",
                     "DEMO",
                     datetime(year=2022, month=1, day=1, hour=1, minute=1, second=0).replace(tzinfo=pytz.utc)
                     + timedelta(days=0),
-                    [seed_coin],
+                    active_coins,
                     superadmin
                     )
         # To demonstrate title truncating
@@ -49,7 +48,7 @@ def for_demo(db):
                     "LongGameCode",
                     datetime(year=2022, month=1, day=1, hour=1, minute=1, second=0).replace(tzinfo=pytz.utc)
                     + timedelta(days=1),
-                    [seed_coin],
+                    active_coins,
                     admin
                     )
         for i in range(1, 131):
@@ -59,7 +58,7 @@ def for_demo(db):
                         "JOIN_" + str(i),
                         datetime(year=2022, month=1, day=1, hour=1, minute=1, second=0).replace(tzinfo=pytz.utc)
                         + timedelta(weeks=i),
-                        [seed_coin],
+                        active_coins,
                         admin
                         )
 
