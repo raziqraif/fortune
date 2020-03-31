@@ -101,22 +101,6 @@ def get_game_profile_by_profile_id_and_game_id(profile_id, game_id):
 
 
 @db.atomic()
-def get_net_worth_by_game_profile_id(game_profile_id):
-    gameProfile = GameProfile.get_or_none(GameProfile.id == game_profile_id)
-    if not gameProfile:
-        raise BadRequest('User not in game')
-
-    netWorth = gameProfile.cash
-    
-    gameProfileCoins = get_game_profile_coins_by_game_profile_id(game_profile_id)
-    for gameProfileCoin in gameProfileCoins:
-        ticker = Ticker.select().where(gameProfileCoin.coin == Ticker.coin).order_by(Ticker.captured_at.desc()).get()
-        if not ticker:
-            raise BadRequest('One coin did not exist')
-        netWorth += ticker.price * gameProfileCoin.coin_amount
-    return netWorth
-        
-@db.atomic()
 def get_game_profile_coins_by_game_profile_id(game_profile_id):
     game_profile_coins_query = GameProfileCoin.select().where(GameProfileCoin.game_profile == game_profile_id)
     if game_profile_coins_query.count() == 0:
@@ -181,3 +165,36 @@ def get_start_time_from_time_span(time_span_int):
     if time_span_int == 4:
         return datetime.utcnow() - timedelta(weeks=52)
     raise BadRequest("Time span invalid: {}".format(str(time_span_int)))
+
+@db.atomic()
+def buy_coin(coin_id, coin_amount, game_profile):
+    ticker = Ticker.select().where(Ticker.coin == coin_id).order_by(Ticker.captured_at.desc()).get()
+    new_cash = game_profile.cash - (ticker.price * coin_amount)
+    if new_cash < 0:
+        raise BadRequest('Not enough cash to buy this coin amount')
+    gameProfileCoin = GameProfileCoin.get_or_none(GameProfileCoin.game_profile == game_profile.id, GameProfileCoin.coin == coin_id)
+    if gameProfileCoin is None:
+        GameProfileCoin.create(
+            game_profile = game_profile.id,
+            coin = coin_id,
+            coin_amount = coin_amount
+        )
+        GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id)
+        return coin_amount
+    else:
+        new_coin_amount = gameProfileCoin.coin_amount + coin_amount
+        GameProfileCoin.update(coin_amount=new_coin_amount).where(GameProfileCoin.id == gameProfileCoin.id)
+        GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id)
+        return new_coin_amount
+
+@db.atomic()
+def sell_coin(coin_id, coin_amount, game_profile):
+    gameProfileCoin = GameProfileCoin.get_or_none(GameProfileCoin.game_profile == game_profile.id, GameProfileCoin.coin == coin_id)
+    if gameProfileCoin is None or gameProfileCoin.coin_amount < coin_amount:
+        raise BadRequest('Not enough of these coins to sell')
+    ticker = Ticker.select().where(Ticker.coin == coin_id).order_by(Ticker.captured_at.desc()).get()
+    new_cash = game_profile.cash + (ticker.price * coin_amount)
+    new_coin_amount = gameProfileCoin.coin_amount - coin_amount
+    GameProfileCoin.update(coin_amount=new_coin_amount).where(GameProfileCoin.id == gameProfileCoin.id)
+    GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id)
+    return new_coin_amount

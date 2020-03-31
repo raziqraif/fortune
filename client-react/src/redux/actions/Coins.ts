@@ -4,6 +4,7 @@ import { Dispatch } from 'redux'
 import { Action } from '../reducers/AuthReducer'
 import {fetchAuthToken} from "./Auth";
 import {handleAxiosError} from "./Utils";
+import { currentPricesType } from '../reducers/CoinReducer'
 
 type Coin = {
   id: string;
@@ -55,3 +56,16 @@ export const getAllCoinsForGame = (
       }
   }
 };
+
+export const get24hrTickers = () => {
+  return async (dispatch: Dispatch<Action>) => {
+    const res = await axios.get('http://localhost:5000/tickers/1d')
+    dispatch({type: Type.SET_ONEDAY_TICKERS, payload: res.data})
+  }
+}
+
+export const setCurrentPrices = (payload: currentPricesType) => {
+  return async (dispatch: Dispatch<Action>) => {
+    dispatch({type: Type.SET_CURRENT_PRICES, payload });
+  }
+}

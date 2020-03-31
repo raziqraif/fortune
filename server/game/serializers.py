@@ -27,19 +27,9 @@ class GameCreateRequest(BaseSerializer):
     startingCash = fields.Decimal(required=True, as_string=True)
     title = fields.Str(required=True, validate=title_length_validator)
 
-
-class GetCoinsRequest(BaseSerializer):
-    params = fields.Nested({
-        'timeSpan': fields.Int(required=True),
-        'sortBy': fields.Int(required=True),
-        # sortByNameAscending = fields.Boolean()
-        # sortByPriceDescending = fields.Boolean()
-        # sortByPercentChangeDescending = fields.Boolean()
-        # sortByYourAmountDescending = fields.Boolean()
-        'numPerPage': fields.Int(),
-        'pageNum': fields.Int()
-    })
-
+class TradeRequest(BaseSerializer):
+    coinId = fields.Int(required=True, as_string=True)
+    coinAmount = fields.Decimal(required=True, as_string=True)
 
 class GameResponse(BaseSerializer):
     id = fields.Int(required=True)
@@ -52,7 +42,6 @@ class GameResponse(BaseSerializer):
 
 class GameProfileResponse(BaseSerializer):
     cash = fields.Decimal(required=True, as_string=True)
-    netWorth = fields.Decimal(required=True, as_string=True)
 
 
 class CoinsResponse(BaseSerializer):
@@ -83,6 +72,9 @@ class GetGameResponse(BaseSerializer):
     game = fields.Nested(GameResponse)
     gameProfile = fields.Nested(GameProfileResponse)
 
+class Cash(BaseSerializer):
+    cash = fields.Decimal(required=True, as_string=True)
 
-class TestSerializer(BaseSerializer):
-    number = fields.Int(required=True)
+class TradeResponse(BaseSerializer):
+    new_amount = fields.Decimal(required=True, as_string=True)
+    new_cash = fields.Nested(Cash)
