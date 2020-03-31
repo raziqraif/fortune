@@ -21,7 +21,10 @@ interface ActiveGamesProps {
 export default class ActiveGames extends React.Component<ActiveGamesProps> {
 
     endTimeToString = (game: GameType) => {
-        return game.endTime.toLocaleString();
+        if (game.title == "Global") {
+            return "N/A"
+        }
+        return game.endTime.toLocaleString()
     };
 
     gameCardTitle(title: string) {
