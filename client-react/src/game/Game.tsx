@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { RootState } from '../redux/reducers';
-import { Container, Row } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import Actions from '../redux/actions';
 import { connect } from 'react-redux';
-import { GameType } from '../redux/actions/Game'
+import { GameType } from '../redux/actions/Game';
 import HeaderBar from './HeaderBar/HeaderBar';
 import InfoBar from './InfoBar/InfoBar';
 
@@ -12,8 +12,9 @@ export interface GameProps {
 		id: number
 	) => void;
 	gameId?: string;
-	error: string;
 	game: GameType;
+	error: string;
+	history: any;
 }
 
 class Game extends React.Component<GameProps> {
@@ -22,24 +23,20 @@ class Game extends React.Component<GameProps> {
 		super(props);
 
 		this.state = {
-			
+
 		}
 	}
 
 	componentDidMount() {
 		const { gameId } = this.props;
-		// private game - get game
-		// LOOKATME - getGame and the backend expect gameId to be a number,
-		// but since gameId comes from match.params, it is a string.
-		// not sure how we should unify this discrepency
-		if (gameId) {
-			this.props.getGame(parseInt(gameId));
-		}
-
-		// TODO global game - get global game 
-		else {
+		if (!gameId) { // global game
 			this.props.getGame(1);
-		}
+			return;
+		} 
+
+		const id = parseInt(gameId);
+		if (!id) this.props.history.push('/'); // non-numerical ID
+		else this.props.getGame(id); // private game 
 	}
 
 	render() {
@@ -51,15 +48,17 @@ class Game extends React.Component<GameProps> {
 
 		return (
 			<div className="Game">
-				<Container>
+				<Container fluid>
 					<HeaderBar
-						game={game}
+						game={game.data}
 						global={global}
+						history={this.props.history}
+						gameId={gameId}
 					/>
-					<InfoBar/>
-					<Row>
-						Table will go here
-                </Row>
+					<InfoBar
+						gameProfile={game.gameProfile}
+						coins={game.coins}
+					/>
 				</Container>
 			</div>
 		)

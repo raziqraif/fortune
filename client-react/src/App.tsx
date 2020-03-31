@@ -24,14 +24,14 @@ function App() {
         <MenuBar />
         <div className="container">
           <Switch>
-            <Route path="/global" render={({match}) => {
-              return <Game gameId={match.params.gameId} />
+            <Route path="/global" render={({match, history}) => {
+              return <Game gameId={match.params.gameId} history={history}/>
             }} />
-            <Route path="/game/:gameId" render={({match}) => {
-              return <Game gameId={match.params.gameId} />
+            <Route path="/game/:gameId" render={({match, history}) => {
+              return <Game gameId={match.params.gameId} history={history}/>
             }} />
-            <Route exact path="/" render={({match}) => {
-              return <Game gameId={match.params.gameId} />
+            <Route exact path="/" render={({match, history}) => {
+              return <Game gameId={match.params.gameId} history={history}/>
             }} />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />

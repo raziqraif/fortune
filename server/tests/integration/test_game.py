@@ -4,7 +4,7 @@ from unittest.mock import Mock, patch, MagicMock
 import json
 import pytz
 
-from db import db, Profile, Coin, Game, GameProfile, GameCoin, Ticker
+from db import db, Profile, Coin, Game, GameProfile, GameCoin, Ticker, GameProfileCoin
 from tests.utils import DbTest, AuthDbTest
 
 
@@ -24,7 +24,6 @@ class GameTest(AuthDbTest):
     def setUp(self):
         super().setUp()
         with db.atomic() as txn:
-            Coin.create(id=1, name='Bitcoin', symbol='BTC')
             Game.create(
                 name='Game',
                 starting_cash=10000.00,
@@ -222,9 +221,10 @@ class GameTest(AuthDbTest):
             content_type='application/json',
         )
         token = res.json['token']
+        profile = Profile.get_or_none(Profile.username=='theusername')
         GameProfile.create(
             game=1,
-            profile=1,
+            profile=profile,
             cash=0
         )
         GameCoin.create(
@@ -233,13 +233,15 @@ class GameTest(AuthDbTest):
         )
         Ticker.create(
             coin=1,
-            price=10
+            price=10,
+            price_change_day_pct=1.1
         )
         res = self.client.post('/game/1/coin',
-        {
-            'coinId': 1,
-            'coinAmount': 1
-        },
+        data=json.dumps({
+            'coinId': '1',
+            'coinAmount': '1',
+        }),
+        content_type='application/json',
         headers={
             'Authorization': 'Bearer ' + token
         })
@@ -254,9 +256,10 @@ class GameTest(AuthDbTest):
             content_type='application/json',
         )
         token = res.json['token']
+        profile = Profile.get_or_none(Profile.username=='theusername')
         GameProfile.create(
             game=1,
-            profile=1,
+            profile=profile,
             cash=10000
         )
         GameCoin.create(
@@ -265,13 +268,15 @@ class GameTest(AuthDbTest):
         )
         Ticker.create(
             coin=1,
-            price=10
+            price=10,
+            price_change_day_pct=1.1,
         )
         res = self.client.post('/game/1/coin',
-        {
-            'coinId': 1,
-            'coinAmount': 1
-        },
+        data=json.dumps({
+            'coinId': '1',
+            'coinAmount': '1',
+        }),
+        content_type='application/json',
         headers={
             'Authorization': 'Bearer ' + token
         })
@@ -286,9 +291,10 @@ class GameTest(AuthDbTest):
             content_type='application/json',
         )
         token = res.json['token']
+        profile = Profile.get_or_none(Profile.username=='theusername')
         GameProfile.create(
             game=1,
-            profile=1,
+            profile=profile,
             cash=0
         )
         GameCoin.create(
@@ -297,13 +303,16 @@ class GameTest(AuthDbTest):
         )
         Ticker.create(
             coin=1,
-            price=10
+            price=10,
+            captured_at=(datetime.utcnow()).isoformat(),
+            price_change_day_pct=1.1,
         )
         res = self.client.post('/game/1/coin',
-        {
-            'coinId': 1,
-            'coinAmount': -1
-        },
+        data=json.dumps({
+            'coinId': '1',
+            'coinAmount': '-1',
+        }),
+        content_type='application/json',
         headers={
             'Authorization': 'Bearer ' + token
         })
@@ -318,9 +327,10 @@ class GameTest(AuthDbTest):
             content_type='application/json',
         )
         token = res.json['token']
-        GameProfile.create(
+        profile = Profile.get_or_none(Profile.username=='theusername')
+        game_profile = GameProfile.create(
             game=1,
-            profile=1,
+            profile=profile,
             cash=0
         )
         GameCoin.create(
@@ -328,20 +338,23 @@ class GameTest(AuthDbTest):
             coin=1
         )
         GameProfileCoin.create(
-            game_profile=1,
+            game_profile=game_profile,
             coin=1,
             coin_amount=2
         )
         Ticker.create(
             coin=1,
-            price=10
+            price=10,
+            captured_at=(datetime.utcnow()).isoformat(),
+            price_change_day_pct=1.1,
         )
         res = self.client.post('/game/1/coin',
-        {
-            'coinId': 1,
-            'coinAmount': -1
-        },
+        data=json.dumps({
+            'coinId': '1',
+            'coinAmount': '-1',
+        }),
+        content_type='application/json',
         headers={
             'Authorization': 'Bearer ' + token
         })
-        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+        self.assertEqual(int(HTTPStatus.OK), res._status_code)
