@@ -35,7 +35,7 @@ class Game extends React.Component<GameProps> {
 		} 
 
 		const id = parseInt(gameId);
-		if (!id) this.props.history.push('/'); // non-numerical ID
+		if (isNaN(id)) this.props.history.push('/'); // non-numerical ID
 		else this.props.getGame(id); // private game 
 	}
 
