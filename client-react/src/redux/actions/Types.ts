@@ -16,4 +16,7 @@ export enum Type {
     CREATE_GAME_FAILED,
     GET_ACTIVE_GAMES,
     GET_ACTIVE_GAMES_FAILED,
+    JOIN_GAME,
+    JOIN_GAME_FAILED,
+
 }

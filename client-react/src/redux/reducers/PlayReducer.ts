@@ -5,6 +5,8 @@ const initialState = {
     gamesInPage: [],
     totalGames: 0,
     pageSize: 0,
+    redirectLink: "",
+    showGameNotFound: false,
 };
 
 export type Action = {
@@ -16,6 +18,8 @@ export type PlayState = {
     gamesInPage: GameType[],
     totalGames: number,
     pageSize: number,
+    redirectLink: string,
+    showGameNotFound: boolean,
 };
 
 export type GameType = {
@@ -42,6 +46,18 @@ export default (state = initialState, action: Action) => {
                 gamesInPage: [],
                 totalGames: 0,
                 pageSize: 0,
+            };
+        case Type.JOIN_GAME:
+            console.log("Join game")
+            return {
+                ...state,
+                redirectLink: action.payload.redirectLink,
+                showGameNotFound: action.payload.showGameNotFound,
+            };
+        case Type.JOIN_GAME_FAILED:
+            console.log("Join game failed")
+            return {
+               ...state,
             };
         default:
             return state
