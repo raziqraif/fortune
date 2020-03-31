@@ -28,6 +28,8 @@ def play(profile):
     except:
         raise BadRequest('Invalid parameter format')
 
+    print("page number arg: ", page_number)
+
     try:
         game_entries, total_games, page_size = active_games_at_page(profile.id, page_number, keyword, sort_criteria)
     except:
@@ -36,7 +38,7 @@ def play(profile):
     for entry in game_entries:
         game = GameResponse()
         game.title = entry.name
-        game.link = "/games/" + str(entry.id)
+        game.link = "/game/" + str(entry.id)
         game.endTime = entry.ends_at
         games.append(game)
 

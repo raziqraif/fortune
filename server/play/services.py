@@ -23,10 +23,11 @@ def active_games_at_page(profile_id, page_number, keyword, criteria):
                & Game.name.contains(keyword)
                & (Game.ends_at > datetime.utcnow()))
     total_games = games_query.count()
+    max_page = int(ceil(total_games / PAGE_SIZE))
 
     # Verify page is within range
     page_number = max(1, page_number)
-    page_number = page_number if page_number > (ceil(total_games / PAGE_SIZE)) else 1
+    page_number = max_page if page_number > max_page else page_number
 
     if criteria['titleAscending']:
         games_query = games_query.order_by(+Game.name)
