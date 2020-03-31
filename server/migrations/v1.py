@@ -43,7 +43,7 @@ def for_demo(db):
                     superadmin
                     )
         # To demonstrate title truncating
-        create_game("A Really Long Game Because Why Not",
+        create_game("A Really Long Game Title Because Why Not",
                     Decimal(10000),
                     "LongGameLink",
                     "LongGameCode",
