@@ -25,7 +25,6 @@ interface InfoBarProps {
 
 interface InfoBarState {
 	timeSpan: timeSpan,
-	price: price,
 }
 
 enum timeSpan {
@@ -36,27 +35,17 @@ enum timeSpan {
 	YEAR,
 }
 
-enum price {
-	MINIMUM,
-	MAXIMUM,
-}
-
 class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 
 	constructor(props: InfoBarProps) {
 		super(props);
 		this.state = {
 			timeSpan: timeSpan.HOUR,
-			price: price.MINIMUM,
 		}
 	}
 
 	private changeTimeSpan = (timeSpan: timeSpan) => {
 		this.setState({ timeSpan });
-	}
-
-	private changePrice = (price: price) => {
-		this.setState({ price });
 	}
 
 	private liquify = () => {
@@ -93,14 +82,6 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 							<Button variant="secondary" onClick={() => this.changeTimeSpan(timeSpan.WEEK)}>Week</Button>
 							<Button variant="secondary" onClick={() => this.changeTimeSpan(timeSpan.MONTH)}>Month</Button>
 							<Button variant="secondary" onClick={() => this.changeTimeSpan(timeSpan.YEAR)}>Year</Button>
-						</ButtonGroup>
-					</Col>
-
-					<Col>
-						<div style={{ alignSelf: 'center' }}>Price:  </div>
-						<ButtonGroup aria-label="Price">
-							<Button variant="secondary" onClick={() => this.changePrice(price.MINIMUM)}>Minimum</Button>
-							<Button variant="secondary" onClick={() => this.changePrice(price.MAXIMUM)}>Maximum</Button>
 						</ButtonGroup>
 					</Col>
 				</Row>
