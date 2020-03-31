@@ -17,6 +17,7 @@ from .services import (
     get_game_profile_by_profile_id_and_game_id,
     get_coins_by_game_id,
     get_game_profile_coins_by_game_profile_id,
+    get_net_worth_by_game_profile_id,
     buy_coin,
     sell_coin
 )
