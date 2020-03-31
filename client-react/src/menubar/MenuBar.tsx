@@ -5,26 +5,19 @@ import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import {connect} from 'react-redux'
 import Actions from '../redux/actions'
 import { RootState } from '../redux/reducers';
-import { Redirect } from 'react-router-dom';
-import { currentPricesType } from '../redux/reducers/CoinReducer'
+import { push } from 'connected-react-router';
 
 interface MenuBarProps {
     loggedIn: boolean;
     logout: () => void;
+    navigateTo: (location: string) => void;
     fetchAuthToken: () => void;
     setCurrentPrices: (payload: currentPricesType) => void;
 }
 
-interface MenuBarState {
-    navigateTo?: string;
-}
-
-class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
+class MenuBar extends React.Component<MenuBarProps> {
     constructor(props: MenuBarProps) {
         super(props);
-        this.state = {
-            navigateTo: undefined
-        }
     }
 
     componentDidMount() {
@@ -36,8 +29,8 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
       });
     }
 
-    private navigateTo = (navigateTo: string) => () => {
-        this.setState({ navigateTo })
+    private navigateTo = (location: string) => () => {
+        this.props.navigateTo(location);
     }
 
     private logout = () => {
@@ -50,11 +43,6 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
     }
 
     render() {
-        if (this.state.navigateTo) {
-            this.setState({ navigateTo: undefined })
-            return <Redirect to={this.state.navigateTo} />
-        }
-        
         return (
             <Navbar collapseOnSelect expand="md" bg="dark" variant="dark">
                 <Navbar.Brand href="/">
@@ -98,9 +86,9 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
 const mapStateToProps = (state: RootState) => ({
   loggedIn: state.auth.loggedIn,
 })
-const mapDispatchToProps = {
-  logout: Actions.auth.logout,
-  fetchAuthToken: Actions.auth.fetchAuthToken,
-  setCurrentPrices: Actions.coins.setCurrentPrices,
-}
+const mapDispatchToProps = (dispatch: any) => ({
+  logout: () => dispatch(Actions.auth.logout()),
+  navigateTo: (location: string) => dispatch(push(location)),
+  fetchAuthToken: () => dispatch(Actions.auth.fetchAuthToken()),
+})
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar)
