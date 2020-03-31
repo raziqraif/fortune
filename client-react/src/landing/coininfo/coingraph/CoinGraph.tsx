@@ -19,12 +19,15 @@ export default class CoinGraph extends React.Component<CoinGraphProps> {
   static getDerivedStateFromProps(props,state){
     let nData = state.data
     let nColor = state.color
+    let erroneous = false;
     if(props.oneDayTickers.length > 0 && Number(state.data.length) === 0) {
       props.oneDayTickers.forEach(ticker => {
-        nData.push(ticker.price)
+        if(!ticker.price || ticker.price === 0 || ticker.coin.symbol === "CO3") { erroneous = true }
+          nData.push(ticker.price)
       });
     }
     nColor = (props.change < 0) ? 'red' : 'green'
+    if (erroneous) { nData = [] }
     return{ data: nData,
             color: nColor }
   }
