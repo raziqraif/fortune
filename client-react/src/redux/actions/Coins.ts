@@ -10,16 +10,17 @@ type Coin = {
   id: string;
   name: string;
   symbol: string;
-  number: number;
+  number: string;
 }
 
 type Ticker = {
   price: number;
   captured_at: Date;
+  price_change_day_pct: string;
 }
 
 type CoinAndPrices = {
-  coin: Array<Coin>;
+  coin: Coin;
   prices: Array<Ticker>
 }
 

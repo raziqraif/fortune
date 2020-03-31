@@ -10,7 +10,6 @@ import pytz
 from auth.decorators import require_authentication
 from db import Game, GameProfile, Coin, GameCoin, db
 from .serializers import (
-    GetCoinsRequest,
     GameCreateRequest,
     GameResponse,
     CoinsResponse,
@@ -31,7 +30,7 @@ from .services import (
     get_start_time_from_time_span,
     get_coins_by_game_id_and_sorting,
     get_net_worth_by_game_profile_id,
-    get_pricing_by_coins
+    get_pricing_by_coins,
     buy_coin,
     sell_coin
 )

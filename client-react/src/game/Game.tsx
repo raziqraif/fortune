@@ -22,18 +22,7 @@ interface GameProps {
 	) => void;
 	coinsAndPrices: CoinsAndPrices;
 	gameId?: string;
-	game: {
-		data: GameType,
-		gameProfile: {
-			cash: string,
-		},
-		coins: Array<{
-			id: string;
-			name: string;
-			symbol: string;
-			number: string;
-		}>
-	}
+	game: GameType
 	error: string;
 	history: any;
 }
@@ -78,7 +67,7 @@ class Game extends React.Component<GameProps, GameState> {
 	}
 
 	render() {
-		const { gameId, error, game } = this.props;
+		const { gameId, error, game, coinsAndPrices } = this.props;
 		const { priceOrder } = this.state;
 		const global = gameId ? false : true;
 		if (error) {
@@ -95,11 +84,12 @@ class Game extends React.Component<GameProps, GameState> {
 						gameId={gameId}
 					/>
 					<InfoBar
-						coins={game.coins}
+						gameProfile={game.gameProfile}
+						coins={coinsAndPrices}
 						changePriceOrder={this.changePriceOrder}
 					/>
 					<Cointable
-						coins={game.coins}
+						coins={coinsAndPrices}
 						priceOrder={priceOrder}
 					/>
 				</Container>

@@ -6,11 +6,11 @@ import { currentPricesType } from '../../redux/reducers/CoinReducer';
 import { connect } from 'react-redux';
 
 import CoinGraph from './coingraph/CoinGraph'
+import { CoinsAndPrices } from '../../redux/actions/Coins';
 
 interface CoinInfoProps {
-  allCoins: Array<{ id: string, name: string, symbol:string}>;
+  allCoins: CoinsAndPrices;
   getAllCoins: () => {};
-  currentPrices: currentPricesType;
   oneDayTickers: Array<{tickers: currentPricesType}>;
   get24hrTickers: () => {};
 }
@@ -23,12 +23,11 @@ class CoinInfo extends React.Component<CoinInfoProps> {
   }
 
   private showPrice(id:number) {
-    const { currentPrices } = this.props;
-    if(currentPrices) {
-      for (let i = 0; i < currentPrices.length; i++) {
-        if(currentPrices[i].coin.id === id) {
-          return <div> ${Number(currentPrices[i].price).toFixed(2)}</div>
-        }
+    const { allCoins } = this.props;
+    if(allCoins) {
+      for (let i = 0; i < allCoins.length; i++) {
+        if (allCoins[i].coin.id == id.toString())
+          return <div> ${Number(allCoins[i].prices[0].price).toFixed(2)}</div>
       }
       return <div>Retrieving...</div>
     } else {
@@ -36,12 +35,12 @@ class CoinInfo extends React.Component<CoinInfoProps> {
     }
   }
   private showChange(id:number) {
-    const { currentPrices } = this.props;
-    if(currentPrices) {
-      for (let i = 0; i < currentPrices.length; i++) {
-        if(currentPrices[i].coin.id === id){
+    const { allCoins } = this.props;
+    if(allCoins) {
+      for (let i = 0; i < allCoins.length; i++) {
+        if (allCoins[i].coin.id == id.toString()) {
           var style = {color:'green'}
-          var change = Number(currentPrices[i].price_change_day_pct) * 100
+          var change = Number(allCoins[i].prices[0].price_change_day_pct) * 100
           if (change < 0) { style = {color:'red'} }
           return <div style={style}>{Number(change).toFixed(2)}%</div>
         }
@@ -52,11 +51,11 @@ class CoinInfo extends React.Component<CoinInfoProps> {
     }
   }
   private getChange(id:Number) {
-    const { currentPrices } = this.props;
-    if(currentPrices) {
-      for (let i = 0; i < currentPrices.length; i++) {
-        if(currentPrices[i].coin.id === id){
-          return currentPrices[i].price_change_day_pct
+    const { allCoins } = this.props;
+    if(allCoins) {
+      for (let i = 0; i < allCoins.length; i++) {
+        if(allCoins[i].coin.id == id.toString()){
+          return parseInt(allCoins[i].prices[0].price_change_day_pct)
         }
       }
     }
@@ -64,11 +63,11 @@ class CoinInfo extends React.Component<CoinInfoProps> {
   }
 
   private getPrice(id:Number) {
-    const { currentPrices } = this.props;
-    if(currentPrices.length > 0) {
-      for (let i = 0; i < currentPrices.length; i++) {
-        if(Number(currentPrices[i].coin.id) === id){
-          return currentPrices[i].price
+    const { allCoins } = this.props;
+    if(allCoins.length > 0) {
+      for (let i = 0; i < allCoins.length; i++) {
+        if(Number(allCoins[i].coin.id) === id){
+          return allCoins[i].prices[0].price;
         }
       }
     }
@@ -78,7 +77,7 @@ class CoinInfo extends React.Component<CoinInfoProps> {
   private parseTickers(id:Number) {
     let oneCoinTickers: Array<{tickers: currentPricesType}> = [];
     this.props.oneDayTickers.forEach(ticker => {
-      if(Number(ticker.coin.id) === id){
+      if(Number(ticker.tickers[0].coin.id) === id){
         oneCoinTickers.push(ticker)
       }
     });
@@ -87,7 +86,7 @@ class CoinInfo extends React.Component<CoinInfoProps> {
   }
 
 
-  private compareCoinPrices(coin1, coin2) {
+  private compareCoinPrices(coin1: any, coin2: any) {
     return this.getPrice(coin2.id) - this.getPrice(coin1.id);
   }
 
@@ -95,14 +94,14 @@ private dynamicRowRender() {
   let rows = [];
   let sortedCoins = this.props.allCoins
   sortedCoins.sort(this.compareCoinPrices.bind(this))
-  rows = sortedCoins.map(coin => <tr key={coin.id}>
-                                         <td>{coin.name} ({coin.symbol})</td>
-                                         <td>{this.showPrice(coin.id)}</td>
-                                         <td><div align="center"><CoinGraph id={coin.id}
-                                                                            change={this.getChange(coin.id)}
-                                                                            oneDayTickers={this.parseTickers(coin.id)}/>
+  rows = sortedCoins.map(coin => <tr key={coin.coin.id}>
+                                         <td>{coin.coin.name} ({coin.coin.symbol})</td>
+                                         <td>{this.showPrice(parseInt(coin.coin.id))}</td>
+                                         <td><div><CoinGraph id={parseInt(coin.coin.id)}
+                                                                            change={this.getChange(parseInt(coin.coin.id))}
+                                                                            oneDayTickers={this.parseTickers(parseInt(coin.coin.id))}/>
                                                                             </div></td>
-                                         <td>{this.showChange(coin.id)}</td>
+                                         <td>{this.showChange(parseInt(coin.coin.id))}</td>
                                          </tr> );
   rows = rows.slice(0,10) //only show first 10 coins - in reality need to filter through rows for certain coins
   return rows
@@ -115,7 +114,7 @@ private dynamicRowRender() {
                 <tr>
                   <th>Coin</th>
                   <th>Price</th>
-                  <th><div align="center">History</div></th>
+                  <th><div>History</div></th>
                   <th>24hr % Change</th>
                 </tr>
               </thead>
