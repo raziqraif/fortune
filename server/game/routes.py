@@ -16,6 +16,7 @@ from .serializers import (
     GetGameResponse,
     TradeRequest,
     TradeResponse,
+    Cash,
 )
 from .services import (
     create_game,
@@ -125,7 +126,11 @@ def liquefy(profile, game_id):
     gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
     gameProfileCoins = get_game_profile_coins_by_game_profile_id(gameProfile.id)
     for gameProfileCoin in gameProfileCoins:
-        sell_coin(gameProfileCoin.coin, gameProfileCoin.coin_amount, gameProfile.id)
+        sell_coin(gameProfileCoin.coin, gameProfileCoin.coin_amount, gameProfile)
+    gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
+    return jsonify(Cash.serialize({
+        'cash': gameProfile.cash,
+    }))
 
 @game_bp.route('/<game_id>', methods=['PUT'])
 @require_authentication

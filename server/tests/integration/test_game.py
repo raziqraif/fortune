@@ -358,3 +358,39 @@ class GameTest(AuthDbTest):
             'Authorization': 'Bearer ' + token
         })
         self.assertEqual(int(HTTPStatus.OK), res._status_code)
+
+    def test_liquefy_success(self):
+        res = self.client.post('/auth/register/',
+            data=json.dumps({
+                'username': 'theusername',
+                'password': 'thepassword',
+            }),
+            content_type='application/json',
+        )
+        token = res.json['token']
+        profile = Profile.get_or_none(Profile.username=='theusername')
+        game_profile = GameProfile.create(
+            game=1,
+            profile=profile,
+            cash=0
+        )
+        GameCoin.create(
+            game=1,
+            coin=1
+        )
+        GameProfileCoin.create(
+            game_profile=game_profile,
+            coin=1,
+            coin_amount=2
+        )
+        Ticker.create(
+            coin=1,
+            price=10,
+            captured_at=(datetime.utcnow()).isoformat(),
+            price_change_day_pct=1.1,
+        )
+        res = self.client.delete('/game/1/coins',
+        headers={
+            'Authorization': 'Bearer ' + token
+        })
+        self.assertEqual(int(HTTPStatus.OK), res._status_code)
