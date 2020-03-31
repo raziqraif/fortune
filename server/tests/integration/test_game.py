@@ -24,7 +24,6 @@ class GameTest(AuthDbTest):
     def setUp(self):
         super().setUp()
         with db.atomic() as txn:
-            Coin.create(id=1, name='Bitcoin', symbol='BTC')
             Game.create(
                 name='Game',
                 starting_cash=10000.00,
@@ -211,4 +210,60 @@ class GameTest(AuthDbTest):
         res = self.client.get('/game/1', headers={
             'Authorization': 'Bearer ' + token
         })
+        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+
+    def test_get_coins_with_non_num_params(self):
+        res = self.client.post('/auth/register/',
+            data=json.dumps({
+                'username': 'theusername',
+                'password': 'thepassword',
+            }),
+            content_type='application/json',
+        )
+        token = res.json['token']
+        GameProfile.create(
+            game=1,
+            profile=1,
+            cash=10000
+        )
+        res = self.client.get(
+            '/game/1/coins',
+            headers={
+                'Authorization': 'Bearer ' + token
+            },
+            parameters={
+                'timeSpan': 'not',
+                'sortBy': 'a',
+                'numPerPage': 'number',
+                'pageNum': 'buddy'
+            }
+        )
+        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+
+    def test_get_coins_with_invalid_time_span(self):
+        res = self.client.post('/auth/register/',
+            data=json.dumps({
+                'username': 'theusername',
+                'password': 'thepassword',
+            }),
+            content_type='application/json',
+        )
+        token = res.json['token']
+        GameProfile.create(
+            game=1,
+            profile=1,
+            cash=10000
+        )
+        res = self.client.get(
+            '/game/1/coins',
+            headers={
+                'Authorization': 'Bearer ' + token
+            },
+            parameters={
+                'timeSpan': '6',
+                'sortBy': '0',
+                'numPerPage': '10',
+                'pageNum': '1'
+            }
+        )
         self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
