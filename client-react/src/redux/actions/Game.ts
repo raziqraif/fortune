@@ -17,14 +17,12 @@ type CreateGameResponse = {
   }
 }
 
-// I'm taking ID out of here for now because if I understand right
-// the global game won't have an ID. - SAM
-export type GameType = {
+export type GameDataType = {
   name: string;
   startingCash: string;
   shareableLink: string;
   shareableCode: string;
-  endsAt: Date;
+  endsAt?: Date;
 }
 
 export type GetGameResponse = {
@@ -42,6 +40,20 @@ export type GetGameResponse = {
   }
 }
 
+export type GameType = {
+  data: GameDataType,
+  gameProfile: {
+    cash: string,
+    netWorth: string,
+  },
+  coins: Array<{
+    id: string;
+    name: string;
+    symbol: string;
+    number: number;
+  }>
+}
+
 export const createGame = (
     activeCoins: Array<{ id: string, name: string }>,
     endsOn: Date,
@@ -50,6 +62,7 @@ export const createGame = (
 ) => {
   return async (dispatch: Dispatch<Action>) => {
     try {
+      await fetchAuthToken();
       const res: CreateGameResponse = await axios.post('http://localhost:5000/game/', {activeCoins, endsOn, startingCash, title});
       const action: any = push(`/game/${res.data.id}`);
       dispatch(action);

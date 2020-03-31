@@ -14,7 +14,8 @@ const initialState = {
       endsAt: new Date()
     },
     gameProfile: {
-      cash: ''
+      cash: '',
+      netWorth: '',
     },
     coins: [],
   },
@@ -28,6 +29,7 @@ export type Action = {
 }
 
 export type GameState = {
+  game: GameType;
   createGameErrorMessage: string;
   createGameLoading: boolean;
   game: {
