@@ -55,7 +55,6 @@ class Game extends React.Component<GameProps> {
 						gameId={gameId}
 					/>
 					<InfoBar
-						gameProfile={game.gameProfile}
 						coins={game.coins}
 					/>
 				</Container>

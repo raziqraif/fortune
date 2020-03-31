@@ -3,6 +3,7 @@ import Actions from '../../redux/actions';
 import { Row, Col, Button, ButtonGroup } from 'react-bootstrap';
 import CSS from 'csstype';
 import { connect } from 'react-redux';
+import { RootState } from '../../redux/reducers';
 
 const styles: { [name: string]: CSS.Properties } = {
 	main: {
@@ -11,10 +12,8 @@ const styles: { [name: string]: CSS.Properties } = {
 };
 
 interface InfoBarProps {
-	gameProfile: {
-		cash: string,
-		netWorth: string
-	},
+	cash: string,
+	netWorth: string
 	coins: Array<{
 		id: string;
 		name: string;
@@ -65,10 +64,10 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 	}
 
 	render() {
-		let { cash, netWorth } = this.props.gameProfile;
+		let { cash, netWorth } = this.props;
 		// format cash values to have 2 numbers past decimal
 		cash = Number(cash).toFixed(2);
-		netWorth = Number(cash).toFixed(2);
+		netWorth = Number(netWorth).toFixed(2);
 		return (
 			<div className="InfoBar" style={styles.main}>
 				{/* Game info row */}
@@ -110,9 +109,13 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 	}
 }
 
+const mapStateToProps = (state: RootState) => ({
+	netWorth: state.game.game.gameProfile.netWorth,
+	cash: state.game.game.gameProfile.cash,
+})
 const mapDispatchToProps = {
-    liquify: Actions.game.liquify,
+	liquify: Actions.game.liquify,
 };
 
 // no mapStateToProps, so pass null as first arg
-export default connect(null, mapDispatchToProps)(InfoBar);
+export default connect(mapStateToProps, mapDispatchToProps)(InfoBar);
