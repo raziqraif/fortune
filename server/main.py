@@ -2,6 +2,7 @@ from auth.routes import auth_bp
 from errors.handlers import errors_bp
 from game.routes import game_bp
 from play.routes import play_bp
+from join.routes import join_bp
 from db import *  # FIXME get rid of * when you have db migrations
 from scripts.service import begin
 from flask import Flask
@@ -36,6 +37,7 @@ def create_app():
     app.register_blueprint(errors_bp)
     app.register_blueprint(game_bp)
     app.register_blueprint(play_bp)
+    app.register_blueprint(join_bp)
 
     @app.route('/')
     def hello():
