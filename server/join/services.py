@@ -14,12 +14,12 @@ def get_game_with_code(code: str):
 
 
 @db.atomic()
-def add_to_game(profile_id, game_id):
+def add_to_game(profile_id, game):
     game_profile = GameProfile.select().where(GameProfile.profile == profile_id,
-                                              GameProfile.game == game_id)
+                                              GameProfile.game == game.id)
     if game_profile.count() == 0:
         GameProfile.create(
-            game=game_id,
+            game=game.id,
             profile=profile_id,
-            cash=game_id.starting_cash
+            cash=game.starting_cash
         )

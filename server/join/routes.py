@@ -21,8 +21,8 @@ def join(profile):
     link = ""
     game = get_game_with_code(code)
     if game:
-        add_to_game(profile.id, game.id)
-        link = "/games/" + str(game.id)
+        add_to_game(profile.id, game)
+        link = "/game/" + str(game.id)
 
     resp = JoinResponse()
     resp.showGameNotFound = game is None
