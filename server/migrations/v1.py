@@ -17,6 +17,13 @@ def up(db):
         Coin.create(name='Coin 4', symbol='CO4')
         Coin.create(name='Coin 5', symbol='CO5')
 
+        global_indef = Game.create(name='Global Indefinite',
+                        starting_cash=10000.00,
+                        shareable_link='INDEF',
+                        shareable_code='INDEF',
+                        ends_at=None)
+        print("ID = ", global_indef.id)
+        GameCoin.create(game=global_indef, coin=Coin.get())
         # FIXME: After merge, make sure that Global games are created first before calling this function
         for_demo(db)
 
