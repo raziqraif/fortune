@@ -4,7 +4,7 @@ from unittest.mock import Mock, patch, MagicMock
 import json
 import pytz
 
-from db import db, Profile, Coin, Game, GameProfile, GameCoin
+from db import db, Profile, Coin, Game, GameProfile, GameCoin, Ticker
 from tests.utils import DbTest, AuthDbTest
 
 
@@ -221,21 +221,16 @@ class GameTest(AuthDbTest):
             content_type='application/json',
         )
         token = res.json['token']
+        profile = Profile.get_or_none(Profile.username == 'theusername')
         GameProfile.create(
             game=1,
-            profile=1,
+            profile=profile,
             cash=10000
         )
         res = self.client.get(
-            '/game/1/coins',
+            '/game/1/coins?timeSpan=not&sortBy=a&numPerPage=&pageNum=1',
             headers={
                 'Authorization': 'Bearer ' + token
-            },
-            parameters={
-                'timeSpan': 'not',
-                'sortBy': 'a',
-                'numPerPage': 'number',
-                'pageNum': 'buddy'
             }
         )
         self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
@@ -249,21 +244,50 @@ class GameTest(AuthDbTest):
             content_type='application/json',
         )
         token = res.json['token']
+        profile = Profile.get_or_none(Profile.username == 'theusername')
         GameProfile.create(
             game=1,
-            profile=1,
+            profile=profile,
             cash=10000
         )
         res = self.client.get(
-            '/game/1/coins',
+            '/game/1/coins?timeSpan=6&sortBy=0&numPerPage=10&pageNum=1',
             headers={
                 'Authorization': 'Bearer ' + token
-            },
-            parameters={
-                'timeSpan': '6',
-                'sortBy': '0',
-                'numPerPage': '10',
-                'pageNum': '1'
             }
         )
         self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+    
+    def test_get_coins_success(self):
+        res = self.client.post('/auth/register/',
+            data=json.dumps({
+                'username': 'theusername',
+                'password': 'thepassword',
+            }),
+            content_type='application/json',
+        )
+        token = res.json['token']
+        profile = Profile.get_or_none(Profile.username == 'theusername')
+        GameProfile.create(
+            game=1,
+            profile=profile,
+            cash=10000
+        )
+        GameCoin.create(
+            game=1,
+            coin=1,
+        )
+        for coin in Coin.select():
+            Ticker.create(
+                coin=coin,
+                price=30.0,
+                captured_at=(datetime.utcnow()).isoformat(),
+                price_change_day_pct=1.1,
+            )
+        res = self.client.get(
+            '/game/1/coins?timeSpan=1&sortBy=0&numPerPage=10&pageNum=1',
+            headers={
+                'Authorization': 'Bearer ' + token
+            }
+        )
+        self.assertEqual(int(HTTPStatus.OK), res._status_code)
