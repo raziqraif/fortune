@@ -28,6 +28,7 @@ from .services import (
     get_game_profile_coins_by_game_profile_id,
     get_start_time_from_time_span,
     get_coins_by_game_id_and_sorting,
+    get_net_worth_by_game_profile_id,
     get_pricing_by_coins
 )
 
@@ -70,12 +71,14 @@ def get(profile, game_id):
         raise BadRequest('Invalid game id')
     game = get_game_by_id(game_id)
     gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
+    netWorth = get_net_worth_by_game_profile_id(gameProfile.id)
     
     return jsonify(GetGameResponse.serialize({
         'game': game,
         'gameProfile': {
-            'cash': gameProfile.cash 
-        }
+            'cash': gameProfile.cash,
+            'netWorth': netWorth
+        },
     }))
 
 
