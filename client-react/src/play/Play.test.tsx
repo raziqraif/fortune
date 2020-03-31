@@ -3,16 +3,34 @@ import {render, fireEvent, screen} from '@testing-library/react';
 
 import Play from './Play';
 import assert from "assert";
+import {deeplyRenderComponentWithRedux} from "../test-utils";
+import CreateGame from "../game/create/CreateGame";
 
 
-// test('Should render Play page', () => {
-//   const {getByText} = render(<Play/>);
-//   expect(getByText('Play')).toBeInTheDocument();
-//   expect(getByText('Global Game')).toBeInTheDocument()
-//   expect(getByText('Global Timed Game')).toBeInTheDocument()
-//   expect(getByText('Create A Game')).toBeInTheDocument()
-//   expect(getByText('Join A Game')).toBeInTheDocument()
-// });
+test('Should render Play page', () => {
+  const {getByText} = deeplyRenderComponentWithRedux(<Play />);
+  expect(getByText('Play')).toBeInTheDocument();
+  expect(getByText('Search')).toBeInTheDocument();
+  expect(getByText('Sort by')).toBeInTheDocument();
+  expect(getByText('Create')).toBeInTheDocument()
+  expect(getByText('Join')).toBeInTheDocument()
+});
+
+test('Should redirect to Create', () => {
+  const {getByText} = deeplyRenderComponentWithRedux(<Play />);
+  fireEvent.click(getByText("Create"));
+  expect(getByText('Create')).toBeInTheDocument()
+});
+
+test('Should display modal', () => {
+  const {getByText} = deeplyRenderComponentWithRedux(<Play />);
+  expect(getByText('Play')).toBeInTheDocument();
+  expect(getByText('Search')).toBeInTheDocument();
+  expect(getByText('Sort by')).toBeInTheDocument();
+  expect(getByText('Create')).toBeInTheDocument()
+  expect(getByText('Join')).toBeInTheDocument()
+});
+
 //
 // test('Redirect to the global game page', ()=> {
 //   const {getByText} = render(<Play/>);

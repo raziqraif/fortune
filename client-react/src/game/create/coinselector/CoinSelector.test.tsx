@@ -75,7 +75,7 @@ test('Filter all valid coins', ()=>{
     let txtFilter = getByPlaceholderText('Filter coins');
     for (let i = 0; i < allCoins.length; i++) {
         userEvent.type(txtFilter, allCoins[i].name);
-        expect(queryByText("Select All")).toBeNull(); // TODO: Ideally, the button should only be disabled
+        expect(queryByText("Select All")).toBeDisabled(); // TODO: Ideally, the button should only be disabled
         expect(txtFilter).toHaveAttribute('value', allCoins[i].name);
         allCoins.forEach((coin) => {
             if (coin.name != allCoins[i].name) {
