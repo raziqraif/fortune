@@ -107,6 +107,22 @@ def get_game_profile_coins_by_game_profile_id(game_profile_id):
 
 
 @db.atomic()
+def get_net_worth_by_game_profile_id(game_profile_id):
+    gameProfile = GameProfile.get_or_none(GameProfile.id == game_profile_id)
+    if not gameProfile:
+        raise BadRequest('User not in game')
+
+    netWorth = gameProfile.cash
+    
+    gameProfileCoins = get_game_profile_coins_by_game_profile_id(game_profile_id)
+    for gameProfileCoin in gameProfileCoins:
+        ticker = Ticker.select().where(gameProfileCoin.id == Ticker.coin).order_by(Ticker.captured_at.desc()).get()
+        if not ticker:
+            raise BadRequest('One coin did not exist')
+        netWorth += ticker.price * gameProfileCoin.coin_amount
+    return netWorth
+
+@db.atomic()
 def buy_coin(coin_id, coin_amount, game_profile):
     ticker = Ticker.select().where(Ticker.coin == coin_id).order_by(Ticker.captured_at.desc()).get()
     new_cash = game_profile.cash - (ticker.price * coin_amount)

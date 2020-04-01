@@ -107,7 +107,10 @@ export default (state = initialState, action: Action) => {
         ...state,
         game: {
           ...state.game,
-          gameProfile: action.payload,
+          gameProfile: {
+            cash: action.payload.cash,
+            netWorth: action.payload.net_worth,
+          }
         },
       }
     case Type.SET_GAME_COINS:
