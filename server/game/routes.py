@@ -34,7 +34,8 @@ game_bp = Blueprint('game', __name__, url_prefix='/game')
 
 UTC = pytz.UTC
 
-#TODO
+
+# TODO
 # We probably need a better way to generate shareable link, code, and ID.
 @game_bp.route('/', methods=['POST'])
 @require_authentication
@@ -69,12 +70,13 @@ def get(profile, game_id):
     game = get_game_by_id(game_id)
     gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
     gameProfileCoins = get_game_profile_coins_by_game_profile_id(gameProfile.id)
+
     coins = get_coins_by_game_id(game_id)
     for coin in coins:
         coinNumber = 0
         for gameProfileCoin in gameProfileCoins:
-            if gameProfileCoin.coin == coin.id:
-                coinNumber = gameProfileCoin.number
+            if int(gameProfileCoin.coin.id) == int(coin.id):
+                coinNumber = gameProfileCoin.coin_amount
                 break
         coin.number = coinNumber
 
@@ -102,7 +104,9 @@ def buy_or_sell(profile, game_id):
     validated_data: dict = TradeRequest.deserialize(request.json)
     coin_id = validated_data['coinId']
     coin_amount = validated_data['coinAmount']
+
     game_profile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
+
     if coin_amount > 0:
         new_coin_amount = buy_coin(coin_id, coin_amount, game_profile)
     else:
@@ -112,6 +116,7 @@ def buy_or_sell(profile, game_id):
         'new_amount': new_coin_amount,
         'new_cash': game_profile.cash,
     }))
+
 
 @game_bp.route('/<game_id>/coins', methods=['DELETE'])
 @require_authentication
@@ -128,6 +133,7 @@ def liquefy(profile, game_id):
     return jsonify(Cash.serialize({
         'cash': gameProfile.cash,
     }))
+
 
 @game_bp.route('/<game_id>', methods=['PUT'])
 @require_authentication
@@ -153,6 +159,7 @@ def edit(profile, game_id):
         return "Failure to edit Game: {}".format(str(e))
 
     return "Game id={} formatted".format(request.args.get('id'))
+
 
 def randomString(length):
     options = string.ascii_uppercase.join(string.digits)
