@@ -46,19 +46,18 @@ export default (state = initialState, action: Action) => {
     case Type.SET_COIN_AMOUNT:
       var id = action.payload.id;
       var amount = action.payload.newAmount;
-      state.game.coins.map((coin) => {
+      var newCoins = state.game.coins.map((coin) => {
         if (coin.id == id) {
-          return {
-            id: coin.id,
-            name: coin.name,
-            symbol: coin.symbol,
-            number: amount,
-          }
+          coin.number = amount;
         }
         return coin;
       })
       return {
         ...state,
+        game: {
+          ...state.game,
+          coins: newCoins,
+        }
       }
     case Type.SET_CASH:
       return {
