@@ -37,6 +37,20 @@ export const getAllCoins = () => {
   }
 }
 
+/* usage:
+timeSpan:
+0 - 1 hr
+1 - 1 day
+2 - 1 week
+3 - 4 weeks
+4 - 1 year
+sortBy:
+0 - default
+1 - coin name ascending (a-z)
+2 - coin name descending (z-a)
+3 - price descending (high-low)
+4 - price ascending (low-high)
+*/
 export const getAllCoinsForGame = (
   gameId: number,
   timeSpan: number = 1,
