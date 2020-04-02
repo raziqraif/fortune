@@ -12,7 +12,7 @@ export default class Landing extends React.Component {
 
             </Jumbotron>
 
-            <CoinInfo/>
+            {/* <CoinInfo/> */}
             </div>
 
         )

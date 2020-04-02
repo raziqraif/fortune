@@ -13,7 +13,6 @@ export enum Type {
     SET_COINS,
     SET_GAME_COINS,
     SET_CURRENT_PRICES,
-    SET_ONEDAY_TICKERS,
 
     // game types
     CREATE_GAME,

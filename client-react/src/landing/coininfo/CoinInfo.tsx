@@ -2,11 +2,10 @@ import * as React from 'react';
 import { Table } from 'react-bootstrap';
 import Actions from '../../redux/actions';
 import { RootState } from '../../redux/reducers';
-import { currentPricesType } from '../../redux/reducers/CoinReducer';
 import { connect } from 'react-redux';
 
 import CoinGraph from './coingraph/CoinGraph'
-import { CoinsAndPrices } from '../../redux/actions/Coins';
+import { CoinsAndPrices, Ticker } from '../../redux/actions/Coins';
 
 interface CoinInfoProps {
   allCoins: CoinsAndPrices;
@@ -17,15 +16,12 @@ interface CoinInfoProps {
 		pageNum?: number,
 		numPerPage?: number
 	) => void;
-  oneDayTickers: Array<{tickers: currentPricesType}>;
-  get24hrTickers: () => {};
 }
 
 class CoinInfo extends React.Component<CoinInfoProps> {
 
   componentDidMount() {
       this.props.getCoins(1, 1, 1, 1, 10);
-      this.props.get24hrTickers();
   }
 
   private showPrice(id:number) {
@@ -81,7 +77,7 @@ class CoinInfo extends React.Component<CoinInfoProps> {
   }
 
   private parseTickers(id:Number) {
-    let oneCoinTickers: Array<{tickers: currentPricesType}> = [];
+    let oneCoinTickers: Array<{ticker: Ticker}> = [];
     this.props.allCoins.forEach(coinAndPrices => {
       if(Number(coinAndPrices.coin.id) === id){
         oneCoinTickers.push({ 
@@ -143,12 +139,9 @@ private dynamicRowRender() {
 
 const mapStateToProps = (state: RootState) => ({
     allCoins: state.coins.coins,
-    currentPrices: state.coins.currentPrices,
-    oneDayTickers: state.coins.oneDayTickers,
 
 });
 const mapDispatchToProps = {
     getCoins: Actions.coins.getAllCoinsForGame,
-    get24hrTickers: Actions.coins.get24hrTickers,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(CoinInfo);
