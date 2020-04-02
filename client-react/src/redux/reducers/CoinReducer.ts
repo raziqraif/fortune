@@ -50,6 +50,9 @@ export default (state = initialState, action: Action) => {
 
 const setCurrentPrices = (state = initialState, currentPrices: currentPricesType) => {
   let previousCoins = state.coins;
+  if (!previousCoins) {
+    previousCoins = [];
+  }
   const newCoins = previousCoins.map(coinAndPrices => {
     const newPrice = currentPrices.find(
       (currentPrice: currentPrice) => {
@@ -64,6 +67,7 @@ const setCurrentPrices = (state = initialState, currentPrices: currentPricesType
         id: newPrice.id.toString()
       })
     }
+    return coinAndPrices;
   })
   return {
     ...state,
