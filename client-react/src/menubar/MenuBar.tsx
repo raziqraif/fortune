@@ -1,6 +1,8 @@
 import * as React from 'react';
 import io from 'socket.io-client'
 import logo from '../logo.svg';
+ import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import {connect} from 'react-redux'
 import Actions from '../redux/actions'
@@ -21,12 +23,16 @@ class MenuBar extends React.Component<MenuBarProps> {
     }
 
     async componentDidMount() {
+      toast.configure()
       await this.props.fetchAuthToken()
       // TODO reestablish connection on login/register
       const socket = io('http://localhost:5000', {query: {token: this.props.authToken}}).connect();
       socket.on('message', function(data: any){
         console.log('event received:', data)
         // TODO dispatch
+      });
+      socket.on('notification', function(data: string){
+        toast(data)
       });
     }
 

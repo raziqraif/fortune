@@ -7,6 +7,8 @@ import {
 } from "react-router-dom";
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import MenuBar from './menubar';
 import Game, { CreateGame } from './game';
 import Login from './login';
@@ -21,6 +23,7 @@ interface MatchParams {
 function App() {
   return (
     <div className="App">
+        <ToastContainer/>
         <MenuBar />
         <div className="container">
           <Switch>
