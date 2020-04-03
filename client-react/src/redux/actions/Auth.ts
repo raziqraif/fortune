@@ -37,7 +37,7 @@ export const login = (username: string, password: string) => {
       // docker
       res = await axios.post('http://localhost:5000/auth/login', {username, password})
       persistToken(res.data.token)
-      dispatch({type: Type.LOGIN_SUCCEEDED, payload: true})
+      dispatch({type: Type.LOGIN_SUCCEEDED, payload: res.data.token})
       const pushAction: any = push('/')
       dispatch(pushAction)
     } catch (e) {
@@ -63,7 +63,7 @@ export const register = (username: string, password: string) => {
     try {
       res = await axios.post('http://localhost:5000/auth/register', {username, password})
       persistToken(res.data.token)
-      dispatch({type: Type.REGISTER_SUCCEEDED, payload: true})
+      dispatch({type: Type.REGISTER_SUCCEEDED, payload: res.data.token})
       const pushAction: any = push('/')
       dispatch(pushAction)
     } catch (e) {
@@ -78,7 +78,7 @@ export const fetchAuthToken = () => {
   return async (dispatch: Dispatch<Action>) => {
     const token = await fetchToken()
     if (token) {
-      dispatch({type: Type.LOGIN_SUCCEEDED, payload: true})
+      dispatch({type: Type.LOGIN_SUCCEEDED, payload: token})
     }
   }
 }

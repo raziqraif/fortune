@@ -34,6 +34,7 @@ class Profile(BaseModel):
     joined_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
     username = peewee.TextField(unique=True)
     hashed_password = peewee.TextField()
+    socket_id = peewee.TextField(unique=True, null=True)
 
 
 class AuthToken(BaseModel):

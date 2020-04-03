@@ -1,6 +1,7 @@
 import eventlet
 eventlet.monkey_patch()
 import flask
+from flask import request
 from threading import Thread
 import time
 import traceback
@@ -9,6 +10,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 
+from auth.decorators import get_auth_token
 from auth.routes import auth_bp
 from errors.handlers import errors_bp
 from game.routes import game_bp
@@ -41,6 +43,13 @@ def create_app():
 
     socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins='*')
     #socketio = SocketIO(app, async_mode='threading', cors_allowed_origins='*')
+
+    @socketio.on('connect')
+    def on_connect():
+        tok = get_auth_token(request.args.get('token'))
+        if tok:
+            tok.profile.socket_id = request.sid
+            tok.save()
 
     def cb(tickers):
         from scripts.serializers import TickersResponse

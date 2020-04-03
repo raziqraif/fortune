@@ -3,6 +3,7 @@ import { Type } from '../actions/Types'
 export type State = typeof initialState;
 const initialState = {
   loggedIn: false,
+  authToken: '',
   registrationErrorMessage: '',
   registrationLoading: false,
   loginErrorMessage: '',
@@ -16,6 +17,7 @@ export type Action = {
 
 export type Auth = {
   loggedIn: boolean;
+  authToken: string;
   registrationErrorMessage: string;
   registrationLoading: boolean;
   loginErrorMessage: string;
@@ -33,12 +35,14 @@ export default (state = initialState, action: Action) => {
     case Type.LOGIN_FAILED:
       return {
         ...state,
+        authToken: '',
         loginErrorMessage: action.payload,
         loginLoading: false,
       }
     case Type.LOGIN_SUCCEEDED:
       return {
         ...state,
+        authToken: action.payload,
         loginErrorMessage: '',
         loginLoading: false,
         loggedIn: true,
@@ -46,6 +50,7 @@ export default (state = initialState, action: Action) => {
     case Type.LOGOUT:
       return {
         ...state,
+        authToken: '',
         loggedIn: false,
       }
     case Type.REGISTER:
@@ -57,12 +62,14 @@ export default (state = initialState, action: Action) => {
     case Type.REGISTER_FAILED:
       return {
         ...state,
+        authToken: '',
         registrationErrorMessage: action.payload,
         registrationLoading: false,
       }
     case Type.REGISTER_SUCCEEDED:
       return {
         ...state,
+        authToken: action.payload,
         registrationErrorMessage: '',
         registrationLoading: false,
         loggedIn: true,

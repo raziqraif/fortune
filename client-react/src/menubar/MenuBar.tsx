@@ -9,6 +9,7 @@ import { push } from 'connected-react-router';
 
 interface MenuBarProps {
     loggedIn: boolean;
+    authToken: string;
     logout: () => void;
     navigateTo: (location: string) => void;
     fetchAuthToken: () => void;
@@ -19,9 +20,10 @@ class MenuBar extends React.Component<MenuBarProps> {
         super(props);
     }
 
-    componentDidMount() {
-      this.props.fetchAuthToken()
-      const socket = io('http://localhost:5000').connect();
+    async componentDidMount() {
+      await this.props.fetchAuthToken()
+      // TODO reestablish connection on login/register
+      const socket = io('http://localhost:5000', {query: {token: this.props.authToken}}).connect();
       socket.on('message', function(data: any){
         console.log('event received:', data)
         // TODO dispatch
@@ -80,6 +82,7 @@ class MenuBar extends React.Component<MenuBarProps> {
 
 const mapStateToProps = (state: RootState) => ({
   loggedIn: state.auth.loggedIn,
+  authToken: state.auth.authToken,
 })
 const mapDispatchToProps = (dispatch: any) => ({
   logout: () => dispatch(Actions.auth.logout()),
