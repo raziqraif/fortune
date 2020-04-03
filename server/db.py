@@ -102,5 +102,11 @@ class GameProfileCoin(BaseModel):
     coin_amount = peewee.DecimalField(max_digits=20, decimal_places=8)
 
 
+class Notification(BaseModel):
+    profile = peewee.ForeignKeyField(Profile)
+    content = peewee.TextField()
+    created_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
+
+
 MODELS = [Profile, AuthToken, Game, GameProfile, Coin,
-    GameCoin, Ticker, Trade, GameProfileCoin]
+    GameCoin, Ticker, Trade, GameProfileCoin, Notification]

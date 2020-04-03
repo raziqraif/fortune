@@ -15,6 +15,7 @@ from auth.routes import auth_bp
 from errors.handlers import errors_bp
 from game.routes import game_bp
 from db import * # FIXME get rid of * when you have db migrations
+from notifications.services import register_socketio
 from scripts.service import begin
 
 def create_app():
@@ -55,6 +56,7 @@ def create_app():
         from scripts.serializers import TickersResponse
         socketio.emit('message', TickersResponse.serialize(tickers, many=True))
 
+    register_socketio(socketio)
     socketio.start_background_task(begin, cb=cb)
 
     return app, socketio
