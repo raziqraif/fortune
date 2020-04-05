@@ -108,5 +108,14 @@ class Notification(BaseModel):
     created_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
 
 
+class PriceAlert(BaseModel):
+    profile = peewee.ForeignKeyField(Profile)
+    above = peewee.BooleanField()
+    created_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
+    coin = peewee.ForeignKeyField(Coin)
+    strike_price = peewee.DecimalField(max_digits=20, decimal_places=8)
+    hit = peewee.BooleanField(default=False)
+
+
 MODELS = [Profile, AuthToken, Game, GameProfile, Coin,
-    GameCoin, Ticker, Trade, GameProfileCoin, Notification]
+    GameCoin, Ticker, Trade, GameProfileCoin, Notification, PriceAlert]

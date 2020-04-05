@@ -54,6 +54,7 @@ def create_app():
 
     def cb(tickers):
         from scripts.serializers import TickersResponse
+        #socketio.emit('message', 'message only to one user', room=only_one)
         socketio.emit('message', TickersResponse.serialize(tickers, many=True))
 
     register_socketio(socketio)

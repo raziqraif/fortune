@@ -25,7 +25,7 @@ class MenuBar extends React.Component<MenuBarProps> {
     async componentDidMount() {
       toast.configure()
       await this.props.fetchAuthToken()
-      // TODO reestablish connection on login/register
+      // TODO reestablish connection on login/register? Or just send the user's socketid when logging in/registering?
       const socket = io('http://localhost:5000', {query: {token: this.props.authToken}}).connect();
       socket.on('message', function(data: any){
         console.log('event received:', data)
