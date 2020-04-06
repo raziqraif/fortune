@@ -12,9 +12,9 @@ from .serializers import NotificationSerializer, CreatePriceAlertRequestSerializ
 notification_bp = Blueprint('notification', __name__, url_prefix='/notification')
 
 
-@auth_bp.route('/', methods=['GET'])
+@notification_bp.route('/', methods=['GET'])
 @require_authentication
-def get_notifications(profile):
+def get_notifications_route(profile):
     page_str = request.args.get('page')
     try:
         page = int(request.args.get('page'))
@@ -24,8 +24,9 @@ def get_notifications(profile):
     return jsonify(NotificationSerializer.serialize(notifications, many=True))
 
 
-@auth_bp.route('/', methods=['POST'])
-def send_notification():
+@notification_bp.route('/', methods=['POST'])
+@require_authentication
+def send_notification_route():
     raise NotImplementedError
 
 
@@ -33,17 +34,19 @@ alert_bp = Blueprint('alert', __name__, url_prefix='/alert')
 
 
 @alert_bp.route('/', methods=['GET'])
-def get_price_alerts(profile):
+@require_authentication
+def get_price_alerts_route(profile):
     return jsonify(PriceAlertSerializer.serialize(get_price_alerts(profile), many=True))
 
 
 @alert_bp.route('/', methods=['POST'])
-def create_price_alert(profile):
+@require_authentication
+def create_price_alert_route(profile):
     validated_data: dict = CreatePriceAlertRequestSerializer.deserialize(request.json)
     try:
         strike_price = Decimal(validated_data['strike_price'])
     except:
-        raise BadRequest('Invalid decmal number for strike price')
+        raise BadRequest('Invalid decimal number for strike price')
     coin_id = validated_data['coin_id']
     type = validated_data['type']
     coin = Coin.get_or_none(Coin.id == coin_id)

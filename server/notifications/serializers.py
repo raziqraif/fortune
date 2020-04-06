@@ -46,6 +46,7 @@ class NotificationSerializer(CamelCaseSerializer):
 class CreatePriceAlertRequestSerializer(CamelCaseSerializer):
     strike_price = fields.Decimal(required=True, as_string=True)
     coin_id = fields.Int(required=True)
+    type = fields.Str(required=True)
 
 
 class PriceAlertSerializer(CamelCaseSerializer):

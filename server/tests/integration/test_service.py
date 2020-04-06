@@ -37,3 +37,14 @@ class TestService(DbTest):
         self.assertEqual(eth_ticker.price, Decimal('42.98765432'))
         self.assertEqual(eth_ticker.price_change_day_pct, Decimal('-8.98765432'))
 
+    @patch('requests.get', MagicMock(return_value=Mock(json=lambda: [
+        # NOTE these must be actual coins defined in the migrations!
+        {'symbol': 'BTC', 'price': '56.12345678', '1d': {'price_change_pct': '-2.33334567'}},
+    ])))
+    def test_price_alerts(self):
+        os.environ['NOMICS_BASE_URL'] = 'foo'
+        ping('BTC')
+        btc = Coin.get(Coin.symbol == 'BTC')
+        btc_ticker = Ticker.get(Ticker.coin == btc)
+        self.assertEqual(btc_ticker.price, Decimal('56.12345678'))
+        self.assertEqual(btc_ticker.price_change_day_pct, Decimal('-2.33334567'))

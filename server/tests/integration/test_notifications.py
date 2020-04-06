@@ -1,3 +1,4 @@
+import json
 from http import HTTPStatus
 import secrets
 
@@ -16,7 +17,7 @@ class NotificationsTest(AuthDbTest):
                 hashed_password='th3p455w0rd'
             )
             tok = 'correct-token'
-            AuthToken.create(profile=self.profile, token=tok)
+            self.token = AuthToken.create(profile=self.profile, token=tok)
             profile = Profile.create(
                 username='someotherusername',
                 hashed_password='th3p455w0rd'
@@ -28,3 +29,80 @@ class NotificationsTest(AuthDbTest):
         msg = 'This is a notification'
         send_notification(self.profile, msg)
         Notification.get((Notification.content == msg) & (Notification.profile == self.profile))
+    
+    def test_create_price_alert(self):
+        res = self.client.post('/alert',
+            headers={
+                'Authorization': f'Bearer {self.token.token}',
+            },
+            data=json.dumps({
+                'strikePrice': '0.000',
+                'coinId': 1,
+                'type': 'above',
+            }),
+            content_type='application/json'
+        )
+        self.assertEqual(200, res._status_code)
+
+    def test_create_and_get_price_alerts(self):
+        res = self.client.post('/alert',
+            headers={
+                'Authorization': f'Bearer {self.token.token}',
+            },
+            data=json.dumps({
+                'strikePrice': '0.000',
+                'coinId': 1,
+                'type': 'above',
+            }),
+            content_type='application/json'
+        )
+        self.assertEqual(200, res._status_code)
+        res = self.client.get('/alert',
+            headers={
+                'Authorization': f'Bearer {self.token.token}',
+            }
+        )
+        self.assertEqual(200, res._status_code)
+        self.assertEqual(1, len(res.json))
+
+    def test_create_price_alert_with_invalid_coin_id(self):
+        res = self.client.post('/alert',
+            headers={
+                'Authorization': f'Bearer {self.token.token}',
+            },
+            data=json.dumps({
+                'strikePrice': '0.000',
+                'coinId': 42,
+                'type': 'above',
+            }),
+            content_type='application/json'
+        )
+        self.assertEqual(400, res._status_code)
+
+    def test_create_price_alert_with_invalid_type(self):
+        res = self.client.post('/alert',
+            headers={
+                'Authorization': f'Bearer {self.token.token}',
+            },
+            data=json.dumps({
+                'strikePrice': '0.000',
+                'coinId': 1,
+                'type': 'bla',
+            }),
+            content_type='application/json'
+        )
+        self.assertEqual(400, res._status_code)
+
+    def test_create_price_alert_with_invalid_strike_price(self):
+        res = self.client.post('/alert',
+            headers={
+                'Authorization': f'Bearer {self.token.token}',
+            },
+            data=json.dumps({
+                'strikePrice': 'bla',
+                'coinId': 1,
+                'type': 'above',
+            }),
+            content_type='application/json'
+        )
+        self.assertEqual(400, res._status_code)
