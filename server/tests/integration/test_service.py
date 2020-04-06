@@ -2,7 +2,7 @@ from decimal import Decimal
 import os
 from unittest.mock import patch, Mock, MagicMock
 
-from db import Ticker, Coin
+from db import Ticker, Coin, PriceAlert, Profile, Notification
 from scripts.service import ping
 from tests.utils import DbTest
 
@@ -39,12 +39,26 @@ class TestService(DbTest):
 
     @patch('requests.get', MagicMock(return_value=Mock(json=lambda: [
         # NOTE these must be actual coins defined in the migrations!
-        {'symbol': 'BTC', 'price': '56.12345678', '1d': {'price_change_pct': '-2.33334567'}},
+        {'symbol': 'FOO', 'price': '56.12345678', '1d': {'price_change_pct': '-2.33334567'}},
     ])))
     def test_price_alerts(self):
         os.environ['NOMICS_BASE_URL'] = 'foo'
-        ping('BTC')
-        btc = Coin.get(Coin.symbol == 'BTC')
-        btc_ticker = Ticker.get(Ticker.coin == btc)
-        self.assertEqual(btc_ticker.price, Decimal('56.12345678'))
-        self.assertEqual(btc_ticker.price_change_day_pct, Decimal('-2.33334567'))
+        profile = Profile.create(username='theusername', hashed_password='thehashedpassword')
+        coin = Coin.create(name='foocoin', symbol='FOO')
+        alert = PriceAlert.create(
+            profile=profile,
+            above=True,
+            coin=coin,
+            strike_price=Decimal(0.1),
+        )
+        alert = PriceAlert.create(
+            profile=profile,
+            above=False,
+            coin=coin,
+            strike_price=Decimal(0.1),
+        )
+        ping('FOO')
+        self.assertLess(0, Notification.select().count())
+        # ok, the line below throws an exception which causes all other tests to fail
+        # as tearDown is not called and because db is in inconsistent state
+        notif = Notification.get(Notification.profile == profile)

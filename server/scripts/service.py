@@ -23,14 +23,16 @@ def check_price_alerts(latest_ticker: Ticker):
     # only get non-hit alerts
     alerts = PriceAlert.select().where((PriceAlert.hit == False) & (PriceAlert.coin == latest_ticker.coin))
     for alert in alerts:
-        if alert.type == 'above':
+        if alert.above:
             if alert.strike_price < latest_ticker.price:
-                # send notif
                 send_notification(alert.profile, f'{latest_ticker.coin.name} is now above {alert.strike_price}!')
-        if alert.type == 'below':
+                alert.hit = True
+                alert.save()
+        else:
             if alert.strike_price > latest_ticker.price:
-                # send notif
                 send_notification(alert.profile, f'{latest_ticker.coin.name} is now below {alert.strike_price}!')
+                alert.hit = True
+                alert.save()
 
 
 @db.atomic()
