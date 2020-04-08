@@ -11,20 +11,21 @@ import {
 } from 'react-bootstrap';
 import { Coin } from '../redux/reducers/CoinReducer';
 import { RootState } from '../redux/reducers';
+import { PriceAlertType } from '../redux/actions/Notifications';
 
 interface CreatePriceAlertFormState {
     coin: Coin;
     strikePrice: string;
-    type: string;
+    type: PriceAlertType;
 }
 
 interface CreatePriceAlertProps {
     getAllCoins: () => void;
     coins: Array<Coin>;
-    onClose: () => void;
+    submit: (coinId: string, strikePrice: string, type: PriceAlertType) => void;
 }
 
-class CreatePriceAlertModal extends React.Component<CreatePriceAlertProps, CreatePriceAlertFormState> {
+class CreatePriceAlertForm extends React.Component<CreatePriceAlertProps, CreatePriceAlertFormState> {
     constructor(props: CreatePriceAlertProps) {
         super(props);
         this.state = {
@@ -33,7 +34,7 @@ class CreatePriceAlertModal extends React.Component<CreatePriceAlertProps, Creat
                 name: '',
             },
             strikePrice: '',
-            type: 'above',
+            type: PriceAlertType.ABOVE,
         }
     }
 
@@ -49,23 +50,19 @@ class CreatePriceAlertModal extends React.Component<CreatePriceAlertProps, Creat
     }
 
     submit() {
-        if (!this.state.coin.name || this.state.coin.id === '-1') {
-            alert('Please select a coin');
-            return;
-        }
         if (isNaN(parseFloat(this.state.strikePrice))) {
-            alert('Please enter a valid number');
+            alert('Please enter a valid number for strike price');
             return;
         }
-        console.log(this.state.coin)
-        console.log(this.state.strikePrice)
-        console.log(this.state.type)
-        this.props.onClose();
+        this.props.submit(
+            this.state.coin.id,
+            this.state.strikePrice,
+            this.state.type,
+        )
     }
 
     render() {
         return (
-            <>
             <Form onSubmit={() => this.submit()}>
                 <Form.Group>
                     <Form.Label>Strike Price</Form.Label>
@@ -84,16 +81,26 @@ class CreatePriceAlertModal extends React.Component<CreatePriceAlertProps, Creat
                 </Form.Group>
                 <Form.Group>
                     <Form.Label style={{paddingRight: 10}}>Notify me when the price of {this.state.coin.name} is:</Form.Label>
-                    <ToggleButtonGroup type='radio' defaultValue='above' name='hi'>
-                        <ToggleButton type='radio' name='radio' defaultChecked value='above' onSelect={() => this.setState({type: 'above'})}>above this price</ToggleButton>
-                        <ToggleButton type='radio' name='radio' value='below' onSelect={() => this.setState({type: 'below'})}>below this price</ToggleButton>
+                    <ToggleButtonGroup type='radio' defaultValue={this.state.type} name='hi'>
+                        <ToggleButton
+                            type='radio'
+                            name='radio'
+                            defaultChecked
+                            value={PriceAlertType.ABOVE}
+                            onSelect={() => this.setState({type: PriceAlertType.ABOVE})}
+                        >above this price</ToggleButton>
+                        <ToggleButton
+                            type='radio'
+                            name='radio'
+                            value={PriceAlertType.BELOW}
+                            onSelect={() => this.setState({type: PriceAlertType.BELOW})}
+                        >below this price</ToggleButton>
                     </ToggleButtonGroup>
                 </Form.Group>
                 <Form.Group>
                     <Button onClick={() => this.submit()}>Submit</Button>
                 </Form.Group>
             </Form>
-            </>
         )
     }
 }
@@ -102,4 +109,4 @@ export default connect((state: RootState) => ({
     coins: state.coins.coins,
 }), {
     getAllCoins: Actions.coins.getAllCoins,
-})(CreatePriceAlertModal);
+})(CreatePriceAlertForm);

@@ -2,13 +2,12 @@ import React from 'react'
 import {
     Button,
     ListGroup,
-    Modal,
 } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { RootState } from '../redux/reducers';
 import Actions from '../redux/actions'
 import { Notification } from '../redux/reducers/NotificationsReducer'
-import CreatePriceAlertForm from './CreatePriceAlertForm';
+import CreatePriceAlertModal from './CreatePriceAlertModal';
 
 interface NotificationsState {
     modalOpen: boolean;
@@ -44,15 +43,7 @@ class Notifications extends React.Component<NotificationsProps, NotificationsSta
     render() {
         return (
             <>
-                <Modal centered size='lg' show={this.state.modalOpen} onHide={() => this.setState({modalOpen: false})}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Create Price Alert</Modal.Title>
-                    </Modal.Header>
-                    {/* <MSFIDOCredentialAssertion */}
-                    <Modal.Body>
-                        <CreatePriceAlertForm onClose={() => this.setState({modalOpen: false})}/>
-                    </Modal.Body>
-                </Modal>
+                <CreatePriceAlertModal open={this.state.modalOpen} close={() => this.setState({modalOpen: false})}/>
                 <Button variant='success' onClick={() => this.setState({modalOpen: true})}>Create price alert</Button>
                 <ListGroup>
                     The notifications:
