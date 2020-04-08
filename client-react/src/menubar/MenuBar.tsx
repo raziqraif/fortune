@@ -32,6 +32,7 @@ class MenuBar extends React.Component<MenuBarProps> {
         // TODO dispatch
       });
       socket.on('notification', function(data: string){
+        console.log('notification received:', data)
         toast(data)
       });
     }

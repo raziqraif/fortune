@@ -39,7 +39,8 @@ class CamelCaseSerializer(BaseSerializer):
 ####
 
 class NotificationSerializer(CamelCaseSerializer):
-    message = fields.Str()
+    id = fields.Int()
+    content = fields.Str()
     created_at = fields.DateTime()
 
 

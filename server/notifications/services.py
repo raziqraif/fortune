@@ -17,7 +17,7 @@ def send_notification(to: Profile, text: str):
     Notification.create(profile=to, content=text)
     if not to.socket_id:
         return
-    socketio.emit('notification', 'This is a notification', room=to.socket_id)
+    socketio.emit('notification', text, room=to.socket_id)
 
 
 @db.atomic()

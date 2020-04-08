@@ -15,9 +15,12 @@ notification_bp = Blueprint('notification', __name__, url_prefix='/notification'
 @notification_bp.route('/', methods=['GET'])
 @require_authentication
 def get_notifications_route(profile):
-    page_str = request.args.get('page')
     try:
-        page = int(request.args.get('page'))
+        page_str = request.args.get('page')
+        if page_str:
+            page = int(page_str)
+        else:
+            page = 0
     except:
         raise BadRequest('Invalid page number')
     notifications = get_notifications(profile, 16, page)

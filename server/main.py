@@ -53,6 +53,7 @@ def create_app():
         tok = get_auth_token(request.args.get('token'))
         if tok:
             tok.profile.socket_id = request.sid
+            tok.profile.save()
             tok.save()
 
     def cb(tickers):
