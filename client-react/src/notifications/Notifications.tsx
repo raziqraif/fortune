@@ -1,20 +1,35 @@
 import React from 'react'
 import {
+    Button,
     ListGroup,
+    Modal,
 } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { RootState } from '../redux/reducers';
 import Actions from '../redux/actions'
 import { Notification } from '../redux/reducers/NotificationsReducer'
+import CreatePriceAlertForm from './CreatePriceAlertForm';
 
-export interface NotificationsProps {
+interface NotificationsState {
+    modalOpen: boolean;
+}
+
+interface NotificationsProps {
     notifications: Array<Notification>;
-    getNotifications: () => void;
     authToken: string;
+    getNotifications: () => void;
     fetchAuthToken: () => void;
 }
 
-class Notifications extends React.Component<NotificationsProps> {
+class Notifications extends React.Component<NotificationsProps, NotificationsState> {
+
+    constructor(props: NotificationsProps) {
+        super(props);
+        this.state = {
+            modalOpen: false,
+        }
+    }
+
     async componentDidMount() {
         await this.props.fetchAuthToken();
         this.props.getNotifications();
@@ -28,10 +43,22 @@ class Notifications extends React.Component<NotificationsProps> {
 
     render() {
         return (
-            <ListGroup>
-                The notifications:
-                {this.renderNotifications()}
-            </ListGroup>
+            <>
+                <Modal centered size='lg' show={this.state.modalOpen} onHide={() => this.setState({modalOpen: false})}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Create Price Alert</Modal.Title>
+                    </Modal.Header>
+                    {/* <MSFIDOCredentialAssertion */}
+                    <Modal.Body>
+                        <CreatePriceAlertForm onClose={() => this.setState({modalOpen: false})}/>
+                    </Modal.Body>
+                </Modal>
+                <Button variant='success' onClick={() => this.setState({modalOpen: true})}>Create price alert</Button>
+                <ListGroup>
+                    The notifications:
+                    {this.renderNotifications()}
+                </ListGroup>
+            </>
         )
     }
 }
