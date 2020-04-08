@@ -58,7 +58,7 @@ class TestService(DbTest):
             strike_price=Decimal(0.1),
         )
         ping('FOO')
-        self.assertLess(0, Notification.select().count())
+        self.assertEqual(1, Notification.select().count())
         # ok, the line below throws an exception which causes all other tests to fail
         # as tearDown is not called and because db is in inconsistent state
         notif = Notification.get(Notification.profile == profile)

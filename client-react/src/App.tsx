@@ -14,6 +14,7 @@ import Game, { CreateGame } from './game';
 import Login from './login';
 import Play from './play';
 import Register from './register';
+import Notifications from './notifications';
 
 
 interface MatchParams {
@@ -40,6 +41,7 @@ function App() {
             <Route path="/register" component={Register} />
             <Route path="/play" component={Play} />
             <Route path="/create" component={CreateGame} />
+            <Route path="/notifications" component={Notifications} />
             <Route render={({match}) => {
               return <Redirect to="/"/>
             }} />
