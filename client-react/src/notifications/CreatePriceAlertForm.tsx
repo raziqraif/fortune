@@ -6,19 +6,16 @@ import {
     Dropdown,
     ToggleButton,
     ToggleButtonGroup,
+    Button,
+    DropdownButton,
 } from 'react-bootstrap';
 import { Coin } from '../redux/reducers/CoinReducer';
 import { RootState } from '../redux/reducers';
 
-enum PriceAlertType {
-    ABOVE,
-    BELOW,
-}
-
 interface CreatePriceAlertFormState {
     coin: Coin;
     strikePrice: string;
-    type: PriceAlertType;
+    type: string;
 }
 
 interface CreatePriceAlertProps {
@@ -32,25 +29,34 @@ class CreatePriceAlertModal extends React.Component<CreatePriceAlertProps, Creat
         super(props);
         this.state = {
             coin: {
-                id: '0',
-                name: 'Blacoin'
+                id: '-1',
+                name: '',
             },
             strikePrice: '',
-            type: PriceAlertType.ABOVE,
+            type: 'above',
         }
     }
 
     async componentDidMount() {
         await this.props.getAllCoins();
+        this.setState({coin: this.props.coins[0]});
     }
 
     renderDropdownCoins() {
         return this.props.coins.map(coin => {
-            return <Dropdown.Item id={coin.id} onSelect={() => this.setState({coin: coin})}>{coin.name}</Dropdown.Item>
+            return <Dropdown.Item eventKey={coin.id} key={coin.id} onSelect={() => this.setState({coin})}>{coin.name}</Dropdown.Item>
         })
     }
 
     submit() {
+        if (!this.state.coin.name || this.state.coin.id === '-1') {
+            alert('Please select a coin');
+            return;
+        }
+        if (isNaN(parseFloat(this.state.strikePrice))) {
+            alert('Please enter a valid number');
+            return;
+        }
         console.log(this.state.coin)
         console.log(this.state.strikePrice)
         console.log(this.state.type)
@@ -59,30 +65,35 @@ class CreatePriceAlertModal extends React.Component<CreatePriceAlertProps, Creat
 
     render() {
         return (
+            <>
             <Form onSubmit={() => this.submit()}>
                 <Form.Group>
                     <Form.Label>Strike Price</Form.Label>
-                    <Form.Control onChange={(strikePrice: any) => this.setState({strikePrice})}/>
+                    <Form.Control
+                        value={this.state.strikePrice}
+                        onChange={(event: React.FormEvent<HTMLInputElement>) => this.setState({strikePrice: event.currentTarget.value})}
+                    />
                 </Form.Group>
                 <Form.Group>
                     <Dropdown>
                         {/* Why does this need an id? */}
-                        <Dropdown.Toggle id='coin-dropdown'>
-                            Select coin
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
+                        <DropdownButton id='hi' title={this.state.coin.name}>
                             {this.renderDropdownCoins()}
-                        </Dropdown.Menu>
+                        </DropdownButton>
                     </Dropdown>
                 </Form.Group>
                 <Form.Group>
-                    <ToggleButtonGroup type='radio' name='above-below'>
-                        <p>Notify me when the price of {this.state.coin.name} is:</p>
-                        <ToggleButton value='hi' onSelect={() => this.setState({type: PriceAlertType.ABOVE})}>above this price</ToggleButton>
-                        <ToggleButton value='hi' onSelect={() => this.setState({type: PriceAlertType.ABOVE})}>below this price</ToggleButton>
+                    <Form.Label style={{paddingRight: 10}}>Notify me when the price of {this.state.coin.name} is:</Form.Label>
+                    <ToggleButtonGroup type='radio' defaultValue='above' name='hi'>
+                        <ToggleButton type='radio' name='radio' defaultChecked value='above' onSelect={() => this.setState({type: 'above'})}>above this price</ToggleButton>
+                        <ToggleButton type='radio' name='radio' value='below' onSelect={() => this.setState({type: 'below'})}>below this price</ToggleButton>
                     </ToggleButtonGroup>
                 </Form.Group>
+                <Form.Group>
+                    <Button onClick={() => this.submit()}>Submit</Button>
+                </Form.Group>
             </Form>
+            </>
         )
     }
 }
