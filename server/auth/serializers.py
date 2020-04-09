@@ -29,3 +29,6 @@ class AuthTokenSerializer(BaseSerializer):
     issued_at = fields.DateTime(required=True)
     token = fields.Str(required=True)
 
+class VerifyResponseSerializer(BaseSerializer):
+    id = fields.Int()
+    username = fields.Str()
