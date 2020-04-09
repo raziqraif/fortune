@@ -61,7 +61,7 @@ const setCurrentPrices = (state = initialState, currentPrices: currentPricesType
     );
     if (newPrice) {
       coinAndPrices.prices.unshift({
-        price: parseInt(newPrice.price),
+        price: parseFloat(newPrice.price),
         captured_at: new Date(newPrice.captured_at),
         price_change_day_pct: newPrice.price_change_day_pct,
         id: newPrice.id.toString()
