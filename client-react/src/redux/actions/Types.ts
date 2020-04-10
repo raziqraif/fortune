@@ -15,6 +15,10 @@ export enum Type {
     // game types
     CREATE_GAME,
     CREATE_GAME_FAILED,
+    GET_ACTIVE_GAMES,
+    GET_ACTIVE_GAMES_FAILED,
+    JOIN_GAME,
+    JOIN_GAME_FAILED,
     SET_GAME,
     SET_GAME_FAILED,
     SET_GAME_PROFILE,
@@ -22,5 +26,4 @@ export enum Type {
 
     SET_REGISTRATION_ERROR,
     SET_LOGIN_ERROR,
-    
 }
