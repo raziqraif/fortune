@@ -19,9 +19,10 @@ def active_games_at_page(profile_id, page_number, keyword, criteria):
 
     games_query = Game.select()\
         .join(GameProfile)\
-        .where((GameProfile.profile == profile_id)
-               & Game.name.contains(keyword)
-               & (Game.ends_at > datetime.utcnow()))
+        .where((Game.name == "Global Indefinite")
+               | ((GameProfile.profile == profile_id)
+                  & Game.name.contains(keyword)
+                  & (Game.ends_at > datetime.utcnow())))
     total_games = games_query.count()
     max_page = int(ceil(total_games / PAGE_SIZE))
 
