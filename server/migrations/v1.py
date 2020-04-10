@@ -1,6 +1,8 @@
+from decimal import Decimal
+
 from playhouse.migrate import PostgresqlMigrator, migrate
 
-from db import MODELS, Coin
+from db import MODELS, Coin, Game, GameProfile, Profile, GameCoin
 
 
 def up(db):
@@ -15,6 +17,12 @@ def up(db):
         Coin.create(name='Coin 4', symbol='CO4')
         Coin.create(name='Coin 5', symbol='CO5')
 
+        global_indef = Game.create(name='Global Indefinite',
+                        starting_cash=10000.00,
+                        shareable_link='INDEF',
+                        shareable_code='INDEF',
+                        ends_at=None)
+        GameCoin.create(game=global_indef, coin=Coin.get())
 
 
 def down(db):
