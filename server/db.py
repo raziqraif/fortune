@@ -17,13 +17,14 @@ DATABASE = {
 }
 
 db = PooledPostgresqlDatabase(
-	DATABASE['NAME'],
-	max_connections=None,
-	stale_timeout=300,
-	timeout=None,
-	user=DATABASE['USER'],
-	password=DATABASE['PASSWORD'],
-	host = DATABASE['HOST'])
+    DATABASE['NAME'],
+    max_connections=None,
+    stale_timeout=300,
+    timeout=None,
+    user=DATABASE['USER'],
+    password=DATABASE['PASSWORD'],
+    host=DATABASE['HOST'])
+
 
 class BaseModel(peewee.Model):
     class Meta:
@@ -52,10 +53,10 @@ class Game(BaseModel):
     @property
     def coins(self):
         return list(Coin
-            .select()
-            .join(GameCoin)
-            .join(Game)
-            .where(GameCoin.game_id == self.id))
+                    .select()
+                    .join(GameCoin)
+                    .join(Game)
+                    .where(GameCoin.game_id == self.id))
 
 
 class GameProfile(BaseModel):
@@ -83,7 +84,7 @@ class Ticker(BaseModel):
     price = peewee.DecimalField(max_digits=20, decimal_places=8)
     captured_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
     # don't want to take up precious db space?, just making a float
-    price_change_day_pct =  peewee.DecimalField(max_digits=20, decimal_places=8, null=True)
+    price_change_day_pct = peewee.DecimalField(max_digits=20, decimal_places=8, null=True)
 
 
 class Trade(BaseModel):
@@ -101,5 +102,12 @@ class GameProfileCoin(BaseModel):
     coin_amount = peewee.DecimalField(max_digits=20, decimal_places=8)
 
 
+class Message(BaseModel):
+    game = peewee.ForeignKeyField(Game)
+    profile = peewee.ForeignKeyField(Profile)
+    created_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
+    content = peewee.TextField()
+
+
 MODELS = [Profile, AuthToken, Game, GameProfile, Coin,
-    GameCoin, Ticker, Trade, GameProfileCoin]
+          GameCoin, Ticker, Trade, GameProfileCoin, Message]
