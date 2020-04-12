@@ -128,7 +128,9 @@ def buy_coin(coin_id, coin_amount, game_profile):
     new_cash = game_profile.cash - (ticker.price * coin_amount)
     if new_cash < 0:
         raise BadRequest('Not enough cash to buy this coin amount')
-
+    game_coin = GameCoin.get_or_none(GameCoin.game == game_profile.game, GameCoin.coin == coin_id)
+    if game_coin is None:
+        raise BadRequest('Coin does not exist in this game')
     gameProfileCoin = GameProfileCoin.get_or_none(GameProfileCoin.game_profile == game_profile.id,
                                                   GameProfileCoin.coin == coin_id)
 
