@@ -75,7 +75,7 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 			return;
 		}
 		const diff = moment.duration(endsAt.diff(now));
-		const days = diff.days().toString();
+		const days = diff.asDays().toFixed(0);
 		const hours = diff.hours().toString();
 		const minutes = diff.minutes().toString();
 		const seconds = diff.seconds().toString();
