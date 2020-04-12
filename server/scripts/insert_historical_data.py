@@ -21,6 +21,8 @@ def get_coin_from_symbol(symbol):
         return 'Monero'
     if symbol == 'NEO':
         return 'Neo'
+    if symbol == 'ETC':
+        return 'Ethereum Classic'
 
 
 def get_bitfinex_time(split):
@@ -34,12 +36,8 @@ def get_bitfinex_data(line) -> tuple:
     currency_pair = split[1]
     open, high, low, close, volume = tuple(split[2:7])
 
-    # TODO watch this! Not all currencies are 3 characters!!!
     coin_symbol = currency_pair.split('USD')[0]
-    #coin_symbol = currency_pair[:3]
-    #fiat_symbol = currency_pair[3:]
     fiat_symbol = 'USD'
-    #assert fiat_symbol == 'USD'
     coin = Coin.get_or_none(Coin.symbol == coin_symbol)
     if coin is None:
         coin = Coin.create(
@@ -65,10 +63,8 @@ def get_gemini_data(line) -> tuple:
     currency_pair = split[2]
     open, high, low, close, volume = tuple(split[3:])
 
-    # TODO watch this! Not all currencies are 3 characters!!!
-    coin_symbol = currency_pair[:3]
-    fiat_symbol = currency_pair[3:]
-    assert fiat_symbol == 'USD'
+    coin_symbol = currency_pair.split('USD')[0]
+    fiat_symbol = 'USD'
     coin = Coin.get_or_none(Coin.symbol == coin_symbol)
     if coin is None:
         coin = Coin.create(
