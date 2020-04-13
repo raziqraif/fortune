@@ -21,7 +21,7 @@ class NotificationsPagingList extends React.Component<NotificationsPagingListPro
     constructor(props: NotificationsPagingListProps) {
         super(props);
         this.state = {
-            page: 0,
+            page: 1,
         }
     }
 
@@ -30,10 +30,15 @@ class NotificationsPagingList extends React.Component<NotificationsPagingListPro
         await this.getNotifications()
     }
 
+    changePage(pageNum: number) {
+        this.props.getNotifications(pageNum)
+        this.setState({page: pageNum})
+    }
+
     renderPaginationItems() {
         const res = [];
-        for (let i = 0; i < this.props.pages; i++) {
-            res.push(<Pagination.Item key={i} active={this.state.page === i}>{i+1}</Pagination.Item>)
+        for (let i = 1; i <= this.props.pages; i++) {
+            res.push(<Pagination.Item onClick={() => this.changePage(i)} key={i} active={this.state.page === i}>{i}</Pagination.Item>)
         }
         return res
     }

@@ -1,4 +1,5 @@
 from decimal import Decimal
+import math
 
 from flask import Blueprint, request, jsonify
 from werkzeug.exceptions import BadRequest
@@ -24,7 +25,7 @@ def get_notifications_route(profile):
     except:
         raise BadRequest('Invalid page number')
     notifications = get_notifications(profile, 16, page)
-    notifications_count = get_notifications_count(profile)
+    notifications_count = math.ceil(get_notifications_count(profile) / 16)
     return jsonify(PagedNotificationResponse.serialize({
         'page': page,
         'pages': notifications_count,

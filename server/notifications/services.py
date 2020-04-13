@@ -33,7 +33,7 @@ def get_notifications_count(profile: Profile):
     return (Notification
         .select()
         .where(Notification.profile == profile)
-        .count()) / 16
+        .count())
 
 @db.atomic()
 def get_price_alerts(profile: Profile):
