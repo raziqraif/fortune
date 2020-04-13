@@ -105,4 +105,4 @@ class Achievement(BaseModel):
     description = peewee.TextField(unique=True)
 
 MODELS = [Profile, AuthToken, Game, GameProfile, Coin,
-    GameCoin, Ticker, Trade, GameProfileCoin]
+    GameCoin, Ticker, Trade, GameProfileCoin, Achievement]
