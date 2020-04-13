@@ -31,9 +31,21 @@ export const getNotifications = () => {
 export const createPriceAlert = (coinId: string, strikePrice: string, type: PriceAlertType) => {
     return async (dispatch: Dispatch<Action>) => {
         let res: GetNotificationsResponse
+        dispatch({type: Type.CREATE_PRICE_ALERT})
+        let stringType;
+        if (type == PriceAlertType.ABOVE) {
+            stringType = 'above'
+        } else {
+            stringType = 'below'
+        }
         try {
+            res = await axios.post('http://localhost:5000/alert', {coinId, strikePrice, type: stringType})
         } catch (e) {
+            handleAxiosError(e, dispatch, Type.CREATE_PRICE_ALERT_FAILED);
             return
         }
+        await dispatch({type: Type.CREATE_PRICE_ALERT_SUCCEEDED, payload: res.data})
+        const b: any = getNotifications()
+        await dispatch(b)
     }
 }
