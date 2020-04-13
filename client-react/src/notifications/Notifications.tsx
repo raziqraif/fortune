@@ -1,20 +1,19 @@
 import React from 'react'
 import {
     Button,
-    ListGroup,
 } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { RootState } from '../redux/reducers';
 import Actions from '../redux/actions'
-import { Notification } from '../redux/reducers/NotificationsReducer'
 import CreatePriceAlertModal from './CreatePriceAlertModal';
+import NotificationsPagingList from './NotificationsPagingList';
 
 interface NotificationsState {
     modalOpen: boolean;
+    page: number;
 }
 
 interface NotificationsProps {
-    notifications: Array<Notification>;
     authToken: string;
     getNotifications: () => void;
     fetchAuthToken: () => void;
@@ -26,6 +25,7 @@ class Notifications extends React.Component<NotificationsProps, NotificationsSta
         super(props);
         this.state = {
             modalOpen: false,
+            page: 0,
         }
     }
 
@@ -34,21 +34,13 @@ class Notifications extends React.Component<NotificationsProps, NotificationsSta
         this.props.getNotifications();
     }
 
-    renderNotifications() {
-        return this.props.notifications.map(notif => {
-            return <div key={notif.id}>{notif.content}</div>
-        })
-    }
-
     render() {
         return (
             <>
                 <CreatePriceAlertModal open={this.state.modalOpen} close={() => this.setState({modalOpen: false})}/>
-                <Button variant='success' onClick={() => this.setState({modalOpen: true})}>Create price alert</Button>
-                <ListGroup>
-                    The notifications:
-                    {this.renderNotifications()}
-                </ListGroup>
+                <Button style={{margin: '30px 0 30px 0'}} onClick={() => this.setState({modalOpen: true})}>Create price alert</Button>
+                <h1>Notifications</h1>
+                <NotificationsPagingList/>
             </>
         )
     }
