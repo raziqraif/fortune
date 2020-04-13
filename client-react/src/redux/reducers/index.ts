@@ -5,12 +5,14 @@ import * as H from 'history';
 import AuthReducer, { Auth } from './AuthReducer';
 import CoinReducer, { CoinState } from './CoinReducer';
 import GameReducer, { GameState } from './GameReducer';
+import PlayReducer, { PlayState } from "./PlayReducer";
 
 export type RootState = {
   router: any;
   auth: Auth;
   coins: CoinState;
   game: GameState;
+  play: PlayState;
 }
 
 const rootReducer = (history: H.History) => combineReducers({
@@ -18,7 +20,8 @@ const rootReducer = (history: H.History) => combineReducers({
   auth: AuthReducer,
   coins: CoinReducer,
   game: GameReducer,
-})
+  play: PlayReducer,
+});
 
 export default rootReducer;
 
