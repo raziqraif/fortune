@@ -26,9 +26,8 @@ def up(db):
         GameCoin.create(game=global_indef, coin=Coin.get())
 
         # insert achievements into database
-        Achievement.create("win", "finish in first place in a private game")
-        Achievement.create("double net worth", "achieved by doubling your net worth in a game")
-
+        Achievement.create(name="win", description="finish in first place in a private game")
+        Achievement.create(name="double net worth", description="achieved by doubling your net worth in a game")
 
 def down(db):
     with db.atomic():
