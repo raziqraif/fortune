@@ -18,7 +18,7 @@ class IntegrationTest(TestCase):
 class AuthTest(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.app, _ = create_app()
+        cls.app, cls.socketio = create_app()
 
         @cls.app.route('/testauth')
         @require_authentication
