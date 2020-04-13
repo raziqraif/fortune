@@ -19,7 +19,7 @@ class CoinInfo extends React.Component<CoinInfoProps> {
 
   componentDidMount() {
       this.props.getAllCoins();
-      this.props.get24hrTickers();
+      //this.props.get24hrTickers();
   }
 
   private showPrice(id:number) {
