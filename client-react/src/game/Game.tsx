@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { GameType } from '../redux/actions/Game'
 import HeaderBar from './HeaderBar/HeaderBar';
 import InfoBar from './InfoBar/InfoBar';
+import GameChat from "./chat";
 
 export interface GameProps {
 	getGame: (
@@ -61,6 +62,7 @@ class Game extends React.Component<GameProps> {
 						Table will go here
                 </Row>
 				</Container>
+				<GameChat/>
 			</div>
 		)
 	}
