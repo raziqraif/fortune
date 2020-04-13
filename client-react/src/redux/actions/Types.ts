@@ -7,6 +7,9 @@ export enum Type {
     REGISTER_FAILED,
     REGISTER_SUCCEEDED,
     LOGOUT,
+    VERIFY_AUTH_TOKEN,
+    VERIFY_AUTH_TOKEN_SUCCEEDED,
+    SET_VERIFY_FAILED,
 
     // coin types
     SET_COINS,
