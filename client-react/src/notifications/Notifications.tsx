@@ -1,10 +1,13 @@
 import React from 'react'
 import {
     Button,
+    ListGroup,
+    Pagination,
 } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { RootState } from '../redux/reducers';
 import Actions from '../redux/actions'
+import { Notification } from '../redux/reducers/NotificationsReducer'
 import CreatePriceAlertModal from './CreatePriceAlertModal';
 import NotificationsPagingList from './NotificationsPagingList';
 
@@ -14,8 +17,8 @@ interface NotificationsState {
 }
 
 interface NotificationsProps {
+    notifications: Array<Notification>;
     authToken: string;
-    getNotifications: () => void;
     fetchAuthToken: () => void;
 }
 
@@ -29,17 +32,12 @@ class Notifications extends React.Component<NotificationsProps, NotificationsSta
         }
     }
 
-    async componentDidMount() {
-        await this.props.fetchAuthToken();
-        this.props.getNotifications();
-    }
-
     render() {
         return (
             <>
                 <CreatePriceAlertModal open={this.state.modalOpen} close={() => this.setState({modalOpen: false})}/>
-                <Button style={{margin: '30px 0 30px 0'}} onClick={() => this.setState({modalOpen: true})}>Create price alert</Button>
                 <h1>Notifications</h1>
+                <Button style={{margin: '30px 0 30px 0'}} onClick={() => this.setState({modalOpen: true})}>Create price alert</Button>
                 <NotificationsPagingList/>
             </>
         )
@@ -51,7 +49,6 @@ const mapStateToProps = (state: RootState) => ({
     authToken: state.auth.authToken,
 });
 const mapDispatchToProps = {
-    getNotifications: Actions.notifications.getNotifications,
     fetchAuthToken: Actions.auth.fetchAuthToken,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Notifications);

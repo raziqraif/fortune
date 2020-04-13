@@ -12,14 +12,18 @@ export enum PriceAlertType {
 
 
 type GetNotificationsResponse = {
-    data: Array<Notification>,
+    data: {
+        page: number,
+        pages: number,
+        notifications: Array<Notification>,
+    },
 }
 
-export const getNotifications = () => {
+export const getNotifications = (page: number) => {
     return async (dispatch: Dispatch<Action>) => {
         let res: GetNotificationsResponse
         try {
-            res = await axios.get('http://localhost:5000/notification?page=0')
+            res = await axios.get(`http://localhost:5000/notification?page=${page}`)
         } catch (e) {
             handleAxiosError(e, dispatch, Type.GET_NOTIFICATIONS_FAILED);
             return
@@ -45,7 +49,7 @@ export const createPriceAlert = (coinId: string, strikePrice: string, type: Pric
             return
         }
         await dispatch({type: Type.CREATE_PRICE_ALERT_SUCCEEDED, payload: res.data})
-        const b: any = getNotifications()
+        const b: any = getNotifications(0)
         await dispatch(b)
     }
 }

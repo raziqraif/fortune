@@ -7,6 +7,9 @@ import { RootState } from '../redux/reducers';
 
 interface NotificationsPagingListProps {
     notifications: Array<Notification>;
+    getNotifications: (page: number) => void;
+    fetchAuthToken: () => void;
+    pages: number
 }
 
 interface NotificationsPagingListState {
@@ -18,40 +21,51 @@ class NotificationsPagingList extends React.Component<NotificationsPagingListPro
     constructor(props: NotificationsPagingListProps) {
         super(props);
         this.state = {
-            page: 0
+            page: 0,
         }
     }
 
+    async componentDidMount() {
+        await this.props.fetchAuthToken();
+        await this.getNotifications()
+    }
+
     renderPaginationItems() {
-        const paginationItems = [];
-        for (let i = 0; i < this.props.notifications.length / 16; i++) {
-            paginationItems.push(<Pagination.Item key={i} active={this.state.page === i}>{i+1}</Pagination.Item>)
+        const res = [];
+        for (let i = 0; i < this.props.pages; i++) {
+            res.push(<Pagination.Item key={i} active={this.state.page === i}>{i+1}</Pagination.Item>)
         }
-        return paginationItems;
+        return res
     }
 
     renderNotifications() {
         return this.props.notifications.map((notif) => {
-            return <ListGroup.Item><div key={notif.id}>{notif.content}</div></ListGroup.Item>
+            return <ListGroup.Item key={notif.id}><div>{notif.content}</div></ListGroup.Item>
         })
+    }
+
+    getNotifications() {
+        this.props.getNotifications(this.state.page)
     }
 
     render() {
         return (
-            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+            <>
                 <ListGroup>
                     {this.renderNotifications()}
                 </ListGroup>
                 <Pagination style={{margin: '30px 0 30px 0'}}>
                     {this.renderPaginationItems()}
                 </Pagination>
-            </div>
+            </>
         )
     }
 }
 
 export default connect((state: RootState) => ({
     notifications: state.notifications.notifications,
+    pages: state.notifications.pages,
 }), {
     getNotifications: Actions.notifications.getNotifications,
+    fetchAuthToken: Actions.auth.fetchAuthToken,
 })(NotificationsPagingList)

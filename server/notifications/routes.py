@@ -5,8 +5,8 @@ from werkzeug.exceptions import BadRequest
 
 from auth.decorators import require_authentication
 from db import AuthToken, Profile, Coin
-from .services import get_notifications, get_price_alerts, create_price_alert
-from .serializers import NotificationSerializer, CreatePriceAlertRequestSerializer, PriceAlertSerializer
+from .services import get_notifications, get_price_alerts, create_price_alert, get_notifications_count
+from .serializers import NotificationSerializer, CreatePriceAlertRequestSerializer, PriceAlertSerializer, PagedNotificationResponse
 
 
 notification_bp = Blueprint('notification', __name__, url_prefix='/notification')
@@ -24,7 +24,12 @@ def get_notifications_route(profile):
     except:
         raise BadRequest('Invalid page number')
     notifications = get_notifications(profile, 16, page)
-    return jsonify(NotificationSerializer.serialize(notifications, many=True))
+    notifications_count = get_notifications_count(profile)
+    return jsonify(PagedNotificationResponse.serialize({
+        'page': page,
+        'pages': notifications_count,
+        'notifications': NotificationSerializer.serialize(notifications, many=True),
+    }))
 
 
 @notification_bp.route('/', methods=['POST'])

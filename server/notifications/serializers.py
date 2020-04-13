@@ -43,6 +43,11 @@ class NotificationSerializer(CamelCaseSerializer):
     content = fields.Str()
     created_at = fields.DateTime()
 
+class PagedNotificationResponse(CamelCaseSerializer):
+    page = fields.Int()
+    pages = fields.Int()
+    notifications = fields.List(fields.Nested(NotificationSerializer))
+
 
 class CreatePriceAlertRequestSerializer(CamelCaseSerializer):
     strike_price = fields.Decimal(required=True, as_string=True)

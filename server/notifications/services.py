@@ -28,6 +28,12 @@ def get_notifications(profile: Profile, page_size=0, offset=0):
         .order_by(Notification.created_at.desc())
         .paginate(offset, page_size))
 
+@db.atomic()
+def get_notifications_count(profile: Profile):
+    return (Notification
+        .select()
+        .where(Notification.profile == profile)
+        .count()) / 16
 
 @db.atomic()
 def get_price_alerts(profile: Profile):
