@@ -100,6 +100,9 @@ class GameProfileCoin(BaseModel):
     coin = peewee.ForeignKeyField(Coin)
     coin_amount = peewee.DecimalField(max_digits=20, decimal_places=8)
 
+class Achievement(BaseModel):
+    name = peewee.TextField(unique=True)
+    description = peewee.TextField(unique=True)
 
 MODELS = [Profile, AuthToken, Game, GameProfile, Coin,
     GameCoin, Ticker, Trade, GameProfileCoin]
