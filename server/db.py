@@ -104,5 +104,10 @@ class Achievement(BaseModel):
     name = peewee.TextField(unique=True)
     description = peewee.TextField(unique=True)
 
+class AchievementProfile(BaseModel):
+    achievement = peewee.ForeignKeyField(Achievement)
+    profile = peewee.ForeignKeyField(Profile, backref='achievement_profiles')
+    achieved_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
+
 MODELS = [Profile, AuthToken, Game, GameProfile, Coin,
     GameCoin, Ticker, Trade, GameProfileCoin, Achievement]
