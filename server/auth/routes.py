@@ -4,6 +4,7 @@ from db import AuthToken, Profile
 from .serializers import LoginRequestSerializer, AuthTokenSerializer, VerifyResponseSerializer
 from .services import register, login
 from .decorators import get_auth_token
+from werkzeug.exceptions import BadRequest, Unauthorized
 
 import datetime
 
@@ -40,7 +41,7 @@ def verify_route():
     tok = split[1]
     auth_token = get_auth_token(tok)
     if auth_token is None:
-        raise Unauthorized('Invalid token')
+        return jsonify(VerifyResponseSerializer.serialize({}))
     profile = auth_token.profile
     return jsonify(VerifyResponseSerializer.serialize({
         'id': profile.id,
