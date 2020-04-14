@@ -110,4 +110,4 @@ class AchievementProfile(BaseModel):
     achieved_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
 
 MODELS = [Profile, AuthToken, Game, GameProfile, Coin,
-    GameCoin, Ticker, Trade, GameProfileCoin, Achievement]
+    GameCoin, Ticker, Trade, GameProfileCoin, Achievement, AchievementProfile]
