@@ -14,8 +14,10 @@ from .serializers import (
     GameResponse,
     CoinsResponse,
     GetGameResponse,
+    GetCoinsResponse,
     TradeRequest,
     TradeResponse,
+    CoinAndPrices,
     Cash,
 )
 from .services import (
@@ -25,7 +27,10 @@ from .services import (
     get_game_profile_by_profile_id_and_game_id,
     get_coins_by_game_id,
     get_game_profile_coins_by_game_profile_id,
+    get_start_time_from_time_span,
+    get_coins_by_game_id_and_sorting,
     get_net_worth_by_game_profile_id,
+    get_pricing_by_coins,
     buy_coin,
     sell_coin
 )
@@ -70,30 +75,62 @@ def get(profile, game_id):
         raise BadRequest('Invalid game id')
     game = get_game_by_id(game_id)
     gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
-    gameProfileCoins = get_game_profile_coins_by_game_profile_id(gameProfile.id)
-    net_worth = get_net_worth_by_game_profile_id(gameProfile.id)
-    coins = get_coins_by_game_id(game_id)
-    for coin in coins:
-        coinNumber = 0
-        for gameProfileCoin in gameProfileCoins:
-            if int(gameProfileCoin.coin.id) == int(coin.id):
-                coinNumber = gameProfileCoin.coin_amount
-                break
-        coin.number = coinNumber
-
+    netWorth = get_net_worth_by_game_profile_id(gameProfile.id)
+    
     return jsonify(GetGameResponse.serialize({
         'game': game,
         'gameProfile': {
             'cash': gameProfile.cash,
-            'net_worth': net_worth,
+            'netWorth': netWorth,
         },
-        'coins': coins
     }))
 
 
 @game_bp.route('/coins', methods=['GET'])
 def get_coins():
     return jsonify(CoinsResponse.serialize(Coin.select(), many=True))
+
+@game_bp.route('/<game_id>/coins', methods=['GET'])
+@require_authentication
+def get_game_coins(profile, game_id):
+    try:
+        int(game_id)
+    except:
+        raise BadRequest('Invalid game id')
+    time_span = request.args.get('timeSpan')
+    sort_by = request.args.get('sortBy')
+    page_num = request.args.get('pageNum')
+    num_per_page = request.args.get('numPerPage')
+    try:
+        time_span = int(time_span)
+        sort_by = int(sort_by)
+        page_num = int(page_num)
+        num_per_page = int(num_per_page)
+    except:
+        raise BadRequest('Parameters not in correct form')
+
+    game_profile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
+    start_time = get_start_time_from_time_span(time_span)
+    coins = get_coins_by_game_id_and_sorting(
+        game_id,
+        sort_by,
+        page_num,
+        num_per_page
+    )
+    coins_and_prices = get_pricing_by_coins(coins, start_time)
+
+    game_profile_coins = get_game_profile_coins_by_game_profile_id(game_profile.id)
+    for coin_and_prices in coins_and_prices:
+        coin_number = 0
+        for game_profile_coin in game_profile_coins:
+            if game_profile_coin.coin == coin_and_prices['coin'].id:
+                coin_number = game_profile_coin.number
+                break
+        coin_and_prices['coin'].number = coin_number
+
+    return jsonify(GetCoinsResponse.serialize({
+        'coins_and_prices': coins_and_prices
+    }))
 
 
 @game_bp.route('/<game_id>/coin', methods=['POST'])

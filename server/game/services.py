@@ -1,9 +1,8 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from decimal import Decimal
 
 import pytz
 from werkzeug.exceptions import BadRequest
-
 from db import db, Game, GameCoin, Coin, GameProfile, GameProfileCoin, Ticker
 
 
@@ -31,7 +30,8 @@ def create_game(
     shareable_code,
     ends_at,
     active_coins,
-    profile):
+    profile
+):
     # bounds check, validate
     if ends_at < datetime.utcnow().replace(tzinfo=pytz.utc):
         raise BadRequest('Invalid game ending date')
@@ -60,7 +60,7 @@ def update_game(
     starting_cash,
     ends_at,
     active_coins,
-    ):
+):
     game = Game.get_or_none(Game.id == game_id)
     if not game:
         raise BadRequest(f'A game with id {game_id} does not exist')
@@ -83,28 +83,88 @@ def get_game_by_id(game_id):
 
 @db.atomic()
 def get_coins_by_game_id(game_id):
-    coins = Coin.select().join(GameCoin).where(GameCoin.game == game_id)
-    if not coins:
+    coins_query = Coin.select().join(GameCoin).where(GameCoin.game == game_id)
+    if coins_query.count() == 0:
         raise BadRequest('Coins not found')
+    coins = []
+    for coin in coins_query:
+        coins.append(coin)
     return coins
 
 
 @db.atomic()
 def get_game_profile_by_profile_id_and_game_id(profile_id, game_id):
-    gameProfile = GameProfile.get_or_none(GameProfile.game == game_id, GameProfile.profile == profile_id)
-    # gameProfile = GameProfile.get_or_none((GameProfile.game == game_id) & (GameProfile.profile == profile_id))
-    if not gameProfile:
+    game_profile = GameProfile.get_or_none(GameProfile.game == game_id, GameProfile.profile == profile_id)
+    if not game_profile:
         raise BadRequest('User not in game')
-    return gameProfile
+    return game_profile
 
 
 @db.atomic()
 def get_game_profile_coins_by_game_profile_id(game_profile_id):
-    gameProfileCoins = GameProfileCoin.select().where(GameProfileCoin.game_profile == game_profile_id)
-    if not gameProfileCoins:
+    game_profile_coins_query = GameProfileCoin.select().where(GameProfileCoin.game_profile == game_profile_id)
+    if game_profile_coins_query.count() == 0:
         return []
-    return [gpc for gpc in gameProfileCoins]
+    game_profile_coins = []
+    for gpc in game_profile_coins_query:
+        game_profile_coins.append(gpc)
+    return game_profile_coins
 
+
+@db.atomic()
+def get_coins_by_game_id_and_sorting(game_id, sorting_int, page_num, num_per_page):
+    coins_query = Coin.select().join(GameCoin).where(GameCoin.game == game_id)
+    if coins_query.count() == 0:
+        raise BadRequest('Incorrect Sorting')
+    if sorting_int == 1:
+        coins_query = coins_query.order_by(+Coin.name)
+    if sorting_int == 2:
+        coins_query = coins_query.order_by(-Coin.name)
+    if sorting_int == 3:
+        coins_query = coins_query.order_by(-Coin.price)  # TODO: Double check if this should +/-
+    if sorting_int == 4:
+        coins_query = coins_query.order_by(+Coin.price)  # TODO: Double check if this should +/-
+
+    coins_query = coins_query.paginate(page_num, num_per_page)
+    coins = []
+    for coin in coins_query:
+        coins.append(coin)
+    return coins
+
+
+@db.atomic()
+def get_pricing_by_coins(coins, start_time):
+    coins_and_prices = []
+    for currentCoin in coins:
+        prices_query = Ticker.select()\
+            .join(Coin)\
+            .where(Coin.id == currentCoin.id, Ticker.captured_at > start_time)\
+            .order_by(-Ticker.captured_at)
+        if prices_query.count() == 0:
+            raise BadRequest("Coin's prices not found")
+
+        prices = []
+        for price in prices_query:
+            prices.append(price)
+        coins_and_prices.append({
+            'coin': currentCoin,
+            'prices': prices
+        })
+    return coins_and_prices
+
+
+def get_start_time_from_time_span(time_span_int):
+    if time_span_int == 0:
+        return datetime.utcnow() - timedelta(hours=1)
+    if time_span_int == 1:
+        return datetime.utcnow() - timedelta(days=1)
+    if time_span_int == 2:
+        return datetime.utcnow() - timedelta(weeks=1)
+    if time_span_int == 3:
+        return datetime.utcnow() - timedelta(weeks=4)
+    if time_span_int == 4:
+        return datetime.utcnow() - timedelta(weeks=52)
+    raise BadRequest("Time span invalid: {}".format(str(time_span_int)))
 
 @db.atomic()
 def get_net_worth_by_game_profile_id(game_profile_id):
@@ -116,7 +176,7 @@ def get_net_worth_by_game_profile_id(game_profile_id):
     
     gameProfileCoins = get_game_profile_coins_by_game_profile_id(game_profile_id)
     for gameProfileCoin in gameProfileCoins:
-        ticker = Ticker.select().where(gameProfileCoin.id == Ticker.coin).order_by(Ticker.captured_at.desc()).get()
+        ticker = Ticker.select().where(gameProfileCoin.coin == Ticker.coin).order_by(Ticker.captured_at.desc()).get()
         if not ticker:
             raise BadRequest('One coin did not exist')
         netWorth += ticker.price * gameProfileCoin.coin_amount

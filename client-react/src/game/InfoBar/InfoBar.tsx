@@ -5,6 +5,7 @@ import CSS from 'csstype';
 import { connect } from 'react-redux';
 import { priceOrder } from '../Game';
 import { RootState } from '../../redux/reducers';
+import { CoinsAndPrices } from '../../redux/actions/Coins';
 
 const styles: { [name: string]: CSS.Properties } = {
 	main: {
@@ -15,12 +16,8 @@ const styles: { [name: string]: CSS.Properties } = {
 interface InfoBarProps {
 	cash: string,
 	netWorth: string
-	coins: Array<{
-		id: string;
-		name: string;
-		symbol: string;
-		number: string;
-	}>,
+	coins: CoinsAndPrices,
+	gameProfile: any,
 	liquify: () => void,
 	changePriceOrder: (priceOrder: priceOrder) => void,
 }
@@ -63,7 +60,7 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 	private getNetWorth = () => {
 		let cash_d: number = Number(this.props.gameProfile.cash) ? Number(this.props.gameProfile.cash) : 0.0
 		this.props.coins.forEach(coin => {
-			cash_d = cash_d + 1 + Number(coin.number);
+			cash_d = cash_d + 1 + Number(coin.coin.number);
 		})
 		return cash_d;
 	}

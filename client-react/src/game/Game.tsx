@@ -1,19 +1,28 @@
 import * as React from 'react';
 import { RootState } from '../redux/reducers';
-import { Container } from 'react-bootstrap';
+import {Button, Container, Row} from 'react-bootstrap';
 import Actions from '../redux/actions';
 import { connect } from 'react-redux';
 import { GameType } from '../redux/actions/Game';
 import HeaderBar from './HeaderBar/HeaderBar';
 import InfoBar from './InfoBar/InfoBar';
+import { CoinsAndPrices } from '../redux/actions/Coins';
 import Cointable from './CoinTable/Cointable';
 
 interface GameProps {
 	getGame: (
 		id: number
 	) => void;
-	gameId: string;
-	game: GameType;
+	getCoins: (
+		gameId: number,
+		timeSpan?: number,
+		sortBy?: number,
+		pageNum?: number,
+		numPerPage?: number
+	) => void;
+	coinsAndPrices: CoinsAndPrices;
+	gameId?: string;
+	game: GameType
 	error: string;
 	history: any;
 }
@@ -41,11 +50,16 @@ class Game extends React.Component<GameProps, GameState> {
 		const { gameId } = this.props;
 		if (!gameId) { // global game
 			this.props.getGame(1);
+			this.props.getCoins(1);
 		} else {
 			const id = parseInt(gameId);
 			if (isNaN(id)) this.props.history.push('/'); // non-numerical ID
-			else this.props.getGame(id); // private game
+			else {
+				this.props.getGame(id); // private game
+				this.props.getCoins(id);
+			}
 		}
+
 	}
 
 	private changePriceOrder = (priceOrder: priceOrder) => {
@@ -53,7 +67,7 @@ class Game extends React.Component<GameProps, GameState> {
 	}
 
 	render() {
-		const { gameId, error, game } = this.props;
+		const { gameId, error, game, coinsAndPrices } = this.props;
 		const { priceOrder } = this.state;
 		const global = gameId ? false : true;
 		if (error) {
@@ -70,14 +84,14 @@ class Game extends React.Component<GameProps, GameState> {
 						gameId={gameId}
 					/>
 					<InfoBar
-						coins={game.coins}
+						gameProfile={game.gameProfile}
+						coins={coinsAndPrices}
 						changePriceOrder={this.changePriceOrder}
 					/>
-					<Cointable
-						gameId={this.props.gameId!}
-						coins={game.coins}
+					{/* <Cointable
+						coins={coinsAndPrices}
 						priceOrder={priceOrder}
-					/>
+					/> */}
 				</Container>
 			</div>
 		)
@@ -87,9 +101,11 @@ class Game extends React.Component<GameProps, GameState> {
 const mapStateToProps = (state: RootState) => ({
 	game: state.game.game,
 	error: state.game.setGameErrorMessage,
+	coinsAndPrices: state.coins.coins,
 })
 
 const mapDispatchToProps = {
+	getCoins: Actions.coins.getAllCoinsForGame,
 	getGame: Actions.game.getGame,
 }
 

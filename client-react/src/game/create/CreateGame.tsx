@@ -102,7 +102,7 @@ class CreateGame extends React.Component<CreateGameProps, CreateGameState>  {
 }
 
 const mapStateToProps = (state: RootState) => ({
-    allCoins: state.coins.coins,
+    allCoins: state.coins.simpleCoins,
     error: state.game.createGameErrorMessage,
     loading: state.game.createGameLoading,
 });
