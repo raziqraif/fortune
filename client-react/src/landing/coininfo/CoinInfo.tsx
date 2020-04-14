@@ -57,7 +57,7 @@ class CoinInfo extends React.Component<CoinInfoProps> {
     if(allCoins) {
       for (let i = 0; i < allCoins.length; i++) {
         if(allCoins[i].coin.id == id.toString()){
-          return parseInt(allCoins[i].prices[0].price_change_day_pct)
+          return parseFloat(allCoins[i].prices[0].price_change_day_pct)
         }
       }
     }
@@ -77,22 +77,10 @@ class CoinInfo extends React.Component<CoinInfoProps> {
   }
 
   private parseTickers(id:Number) {
-    let oneCoinTickers: Array<{ticker: Ticker}> = [];
+    let oneCoinTickers: Ticker
     this.props.allCoins.forEach(coinAndPrices => {
       if(Number(coinAndPrices.coin.id) === id){
-        oneCoinTickers.push({
-          tickers: [{
-            price_change_day_pct: coinAndPrices.prices[0].price_change_day_pct,
-            coin: {
-              id: parseInt(coinAndPrices.coin.id),
-              name: coinAndPrices.coin.name,
-              symbol: coinAndPrices.coin.name
-            },
-            captured_at: coinAndPrices.prices[0].captured_at.toString(),
-            id: parseInt(coinAndPrices.prices[0].id),
-            price: coinAndPrices.prices[0].price.toString(),
-          }]
-        })
+        oneCoinTickers = coinAndPrices.prices
       }
     });
 

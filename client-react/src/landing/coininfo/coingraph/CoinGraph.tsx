@@ -4,7 +4,7 @@ import { Sparklines, SparklinesLine } from 'react-sparklines';
 interface CoinGraphProps {
   id: Number;
   change: Number;
-  oneDayTickers: Array<{tickers: currentPricesType}>;
+  oneDayTickers: Ticker;
 }
 
 export default class CoinGraph extends React.Component<CoinGraphProps> {
@@ -22,7 +22,7 @@ export default class CoinGraph extends React.Component<CoinGraphProps> {
     let erroneous = false;
     if(props.oneDayTickers.length > 0 && Number(state.data.length) === 0) {
       props.oneDayTickers.forEach(ticker => {
-        if(!ticker.price || ticker.price === 0 || ticker.coin.symbol === "CO3") { erroneous = true }
+        if(!ticker.price || ticker.price === 0 ) { erroneous = true }
           nData.push(ticker.price)
       });
     }
