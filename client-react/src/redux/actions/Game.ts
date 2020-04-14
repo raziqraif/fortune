@@ -81,7 +81,6 @@ export const getGame = (
       await fetchAuthToken();
       const res = await axios.get(`http://localhost:5000/game/${id}`);
 
-      console.log("Get game response: ", res.data)
       dispatch({type: Type.SET_GAME, payload: res.data.game});
       dispatch({type: Type.SET_GAME_PROFILE, payload: res.data.gameProfile});
     } catch (e) {
@@ -113,7 +112,6 @@ export const transaction = (
   amount: string,
 ) => {
   return async (dispatch: Dispatch<Action>) => {
-    console.log(amount)
     try {
       await fetchAuthToken();
       const res = await axios.post(`http://localhost:5000/game/${gameId}/coin`, {coinId: id, coinAmount: amount});
