@@ -9,7 +9,10 @@ export enum Type {
     LOGOUT,
 
     // coin types
+    SET_SIMPLE_COINS,
     SET_COINS,
+    SET_GAME_COINS,
+    SET_CURRENT_PRICES,
 
     // game types
     CREATE_GAME,
@@ -20,7 +23,12 @@ export enum Type {
     JOIN_GAME_FAILED,
     SET_GAME,
     SET_GAME_FAILED,
+    SET_GAME_PROFILE,
+    LIQUIFY_FAILED,
+    TRANSACTION,
+    TRANSACTION_FAILED,
 
     SET_REGISTRATION_ERROR,
     SET_LOGIN_ERROR,
+    CLEAR_ERRORS
 }
