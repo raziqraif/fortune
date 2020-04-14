@@ -6,14 +6,10 @@ import { currentPricesType } from '../../redux/reducers/CoinReducer';
 import { connect } from 'react-redux';
 import { RootState } from '../../redux/reducers';
 import { priceOrder } from '../Game';
+import { CoinsAndPrices } from '../../redux/actions/Coins';
 
 interface CointableProps {
-	coins: Array<{
-		id: string;
-		name: string;
-		symbol: string;
-		number: string;
-	}>;
+	coins: CoinsAndPrices;
 	currentPrices: currentPricesType;
 	priceOrder: priceOrder;
 }
@@ -28,41 +24,38 @@ type coinWithPrice = { id: string, name: string, symbol: string, number: string,
 
 class Cointable extends React.Component<CointableProps> {
 
-	private createCoinRows = (coins: Array<{
-		id: string;
-		name: string;
-		symbol: string;
-		number: string;
-	}>) => {
+	private createCoinRows = (coins: CoinsAndPrices) => {
 		let rows: JSX.Element[] = [];
 		const { currentPrices } = this.props;
 		let coinsWithPrices: Array<coinWithPrice> = [];
-		coins.forEach(coin => {
-			for (let i = 0; i < currentPrices.length; i++) {
-				if (currentPrices[i].coin.id === Number(coin.id)) {
-					coinsWithPrices.push({ ...coin, price: currentPrices[i].price });
-					break;
+		if (coins.length > 0) {
+			coins.forEach(coin => {
+				for (let i = 0; i < currentPrices.length; i++) {
+					if (currentPrices[i].coin.id === Number(coin.coin.id)) {
+						coinsWithPrices.push({ ...coin.coin, price: coin.prices[0].price.toString() });
+						break;
+					}
 				}
+	
+			})
+
+			if (this.props.priceOrder === priceOrder.MINIMUM) {
+				coinsWithPrices.sort(this.sortMin);
+			} else {
+				coinsWithPrices.sort(this.sortMax);
 			}
 
-		})
-
-		if (this.props.priceOrder === priceOrder.MINIMUM) {
-			coinsWithPrices.sort(this.sortMin);
-		} else {
-			coinsWithPrices.sort(this.sortMax);
+			coinsWithPrices.forEach(coin => {
+				rows.push(
+					<CointableCoin
+						coin={coin}
+						key={coin.id}
+						number={coin.number}
+						price={coin.price}
+					/>
+				)
+			})
 		}
-
-		coinsWithPrices.forEach(coin => {
-			rows.push(
-				<CointableCoin
-					coin={coin}
-					key={coin.id}
-					number={coin.number}
-					price={coin.price}
-				/>
-			)
-		})
 
 		return rows;
 	}

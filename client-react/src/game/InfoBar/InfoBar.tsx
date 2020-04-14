@@ -4,6 +4,8 @@ import { Row, Col, Button, ButtonGroup } from 'react-bootstrap';
 import CSS from 'csstype';
 import { connect } from 'react-redux';
 import { priceOrder } from '../Game';
+import { RootState } from '../../redux/reducers';
+import { CoinsAndPrices } from '../../redux/actions/Coins';
 
 const styles: { [name: string]: CSS.Properties } = {
 	main: {
@@ -12,15 +14,10 @@ const styles: { [name: string]: CSS.Properties } = {
 };
 
 interface InfoBarProps {
-	gameProfile: {
-		cash: string,
-	},
-	coins: Array<{
-		id: string;
-		name: string;
-		symbol: string;
-		number: string;
-	}>,
+	cash: string,
+	netWorth: string
+	coins: CoinsAndPrices,
+	gameProfile: any,
 	liquify: () => void,
 	changePriceOrder: (priceOrder: priceOrder) => void,
 }
@@ -63,23 +60,26 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 	private getNetWorth = () => {
 		let cash_d: number = Number(this.props.gameProfile.cash) ? Number(this.props.gameProfile.cash) : 0.0
 		this.props.coins.forEach(coin => {
-			cash_d = cash_d + 1 + Number(coin.number);
+			cash_d = cash_d + 1 + Number(coin.coin.number);
 		})
 		return cash_d;
 	}
 
 	render() {
-		const { gameProfile } = this.props;
+		let { cash, netWorth } = this.props;
+		// format cash values to have 2 numbers past decimal
+		cash = Number(cash).toFixed(2);
+		netWorth = Number(netWorth).toFixed(2);
 		return (
 			<div className="InfoBar" style={styles.main}>
 				{/* Game info row */}
 				<Row>
 					<Col>
 						<Row>
-							<span>Cash: ${gameProfile.cash}</span>
+							Cash: ${cash}
 						</Row>
 						<Row>
-							<span>Net worth: ${this.getNetWorth()}</span>
+							Net worth: ${netWorth}
 						</Row>
 					</Col>
 
@@ -88,7 +88,7 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 					</Col>
 
 					<Col>
-						<div style={{ alignSelf: 'center' }}>Time span:  </div>
+						Time span:
 						<ButtonGroup aria-label="Time Span">
 							<Button variant="secondary" onClick={() => this.changeTimeSpan(timeSpan.HOUR)}>Hour</Button>
 							<Button variant="secondary" onClick={() => this.changeTimeSpan(timeSpan.DAY)}>Day</Button>
@@ -111,9 +111,13 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 	}
 }
 
+const mapStateToProps = (state: RootState) => ({
+	netWorth: state.game.game.gameProfile.netWorth,
+	cash: state.game.game.gameProfile.cash,
+})
 const mapDispatchToProps = {
-    liquify: Actions.game.liquify,
+	liquify: Actions.game.liquify,
 };
 
 // no mapStateToProps, so pass null as first arg
-export default connect(null, mapDispatchToProps)(InfoBar);
+export default connect(mapStateToProps, mapDispatchToProps)(InfoBar);

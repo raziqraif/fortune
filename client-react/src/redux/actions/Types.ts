@@ -9,10 +9,10 @@ export enum Type {
     LOGOUT,
 
     // coin types
+    SET_SIMPLE_COINS,
     SET_COINS,
     SET_GAME_COINS,
     SET_CURRENT_PRICES,
-    SET_ONEDAY_TICKERS,
 
     // game types
     CREATE_GAME,
@@ -30,6 +30,5 @@ export enum Type {
 
     SET_REGISTRATION_ERROR,
     SET_LOGIN_ERROR,
-
     CLEAR_ERRORS
 }

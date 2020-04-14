@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Row, Modal, Col, Button } from 'react-bootstrap';
-import { GameType } from '../../redux/actions/Game'
+import { GameDataType } from '../../redux/actions/Game'
 import CSS from 'csstype';
 import moment from 'moment';
+import copy from 'copy-to-clipboard';
 
 interface HeaderBarState {
 	days: string;
@@ -13,8 +14,10 @@ interface HeaderBarState {
 }
 
 interface HeaderBarProps {
-	game: GameType,
+	game: GameDataType,
 	global: boolean,
+	history: any,
+	gameId?: string,
 }
 
 const styles: { [name: string]: CSS.Properties } = {
@@ -53,8 +56,8 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 	}
 
 	componentDidMount() {
-		// moment countdown interval
-		this.interval = setInterval(this.countdown, 1000);
+		// moment countdown interval if there's an endAt
+		if (this.props.game.endsAt) this.interval = setInterval(this.countdown, 1000);
 	}
 
 	componentWillUnmount() {
@@ -63,8 +66,13 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 
 	// calculates how much time is left in the game
 	private countdown = () => {
-		const endsAt = moment(this.props.game.endsAt);
+		const endsAt = moment.utc(this.props.game.endsAt);
 		const now = moment();
+		// game time is expired, so navigate to leaderboard
+		if (now > endsAt) {
+			this.navigateToLeaderBoard();
+			return;
+		}
 		const diff = moment.duration(endsAt.diff(now));
 		const days = diff.days().toString();
 		const hours = diff.hours().toString();
@@ -77,69 +85,86 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 		this.setState({ showShare: !this.state.showShare });
 	}
 
+	private copyLink = () => {
+		copy(this.props.game.shareableLink);
+	}
+
+	private navigateToLeaderBoard = () => {
+		if (this.props.gameId) this.props.history.push(`/${this.props.gameId}/leaderboard`); // private game leaderboard
+		else this.props.history.push('/leaderboard'); // global leaderboard
+	}
+
 	render() {
 		const { days, hours, minutes, seconds, showShare } = this.state;
 		const { global, game } = this.props;
+		// truncate name with '...' if it is too long
+		let name = game.name;
+		name = name.length > 10 ? name.substring(0, 10) + '...' : name;
 		return (
 			<div className="HeaderBar">
 				<Row style={styles.heading}>
 					<Col md="auto">
-						<div>
-							<h1>{global ? `Global Game` : `Private Game: ${game.name}`}</h1>
-						</div>
+						<h1>{global ? `Global Game` : `Private Game: ${name}`}</h1>
 					</Col>
 
 					<Col md="auto">
 						<Row style={styles.toolbar}>
-							<Col style={{ textAlign: 'right' }}>
-								<h4>
-									Ends in:
-								</h4>
-							</Col>
-							<Col style={styles.toolbar}>
+							{
+								game.endsAt &&
+								<>
+									<Col style={{ textAlign: 'right' }}>
+										<h4>Ends in:</h4>
+									</Col>
+									<Col style={styles.toolbar}>
 
-								<Row style={styles.time}>
-									<Col>{days}</Col>
-									<Col>{minutes}</Col>
-									<Col>{hours}</Col>
-									<Col>{seconds}</Col>
-								</Row>
-								<Row style={styles.time}>
-									<Col>days</Col>
-									<Col>minutes</Col>
-									<Col>hours</Col>
-									<Col>seconds</Col>
-								</Row>
-							</Col>
-							
+										<Row style={styles.time}>
+											<Col>{days}</Col>
+											<Col>{hours}</Col>
+											<Col>{minutes}</Col>
+											<Col>{seconds}</Col>
+										</Row>
+										<Row style={styles.time}>
+											<Col>days</Col>
+											<Col>hours</Col>
+											<Col>minutes</Col>
+											<Col>seconds</Col>
+										</Row>
+									</Col>
+								</>
+							}
+
 							<Button style={{ marginRight: '1em' }} variant="primary" onClick={this.toggleShow}>Share</Button>
-							<Button variant="primary">Leaderboard</Button>
+							<Button variant="primary" onClick={this.navigateToLeaderBoard}>Leaderboard</Button>
 						</Row>
 					</Col>
 				</Row>
-				
 
-				{/* Share modal */ }
-			<div className="myModal">
-				<Modal show={showShare} onHide={this.toggleShow}>
-					<Modal.Header closeButton>
-						<Modal.Title>Share this game!</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>
-						<Row>Link: {game.shareableLink}</Row>
-						<Row>Code: {game.shareableCode}</Row>
-					</Modal.Body>
-					<Modal.Footer style={{ justifyContent: 'center' }}>
-						<Button variant="secondary" onClick={this.toggleShow}>
-							Close
-									</Button>
-					</Modal.Footer>
-				</Modal>
+
+				{/* Share modal */}
+				<div className="myModal">
+					<Modal show={showShare} onHide={this.toggleShow}>
+						<Modal.Header closeButton>
+							<Modal.Title>Share this game!</Modal.Title>
+						</Modal.Header>
+						<Modal.Body>
+							<Row style={{ justifyContent: 'center' }}>Link:</Row>
+							<Row onClick={this.copyLink}>{game.shareableLink}</Row>
+							<br />
+							<Row style={{ justifyContent: 'center' }}>Code:</Row>
+							<Row style={{ justifyContent: 'center' }}>{game.shareableCode}</Row>
+						</Modal.Body>
+						<Modal.Footer style={{ justifyContent: 'center' }}>
+							<Button variant="secondary" onClick={this.toggleShow}>
+								Close
+							</Button>
+						</Modal.Footer>
+					</Modal>
+				</div>
 			</div>
-			</div>
-			
+
 		)
 	}
 }
+
 
 export default HeaderBar

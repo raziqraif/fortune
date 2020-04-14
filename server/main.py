@@ -1,15 +1,3 @@
-from auth.routes import auth_bp
-from errors.handlers import errors_bp
-from game.routes import game_bp
-from play.routes import play_bp
-from join.routes import join_bp
-from scripts.routes import tickers_bp
-from db import *  # FIXME get rid of * when you have db migrations
-from scripts.service import begin
-from flask import Flask
-from flask_cors import CORS
-from flask_socketio import SocketIO, emit
-
 import eventlet
 eventlet.monkey_patch()
 import flask
@@ -17,6 +5,18 @@ from threading import Thread
 import time
 import traceback
 
+from flask import Flask
+from flask_cors import CORS
+from flask_socketio import SocketIO, emit
+
+from auth.routes import auth_bp
+from errors.handlers import errors_bp
+from game.routes import game_bp
+from scripts.routes import tickers_bp
+from play.routes import play_bp
+from join.routes import join_bp
+from db import * # FIXME get rid of * when you have db migrations
+from scripts.service import begin
 
 def create_app():
     app = Flask(__name__)
