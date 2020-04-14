@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RootState } from '../redux/reducers';
-import {Button, Container, Row} from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import Actions from '../redux/actions';
 import { connect } from 'react-redux';
 import { GameType } from '../redux/actions/Game';

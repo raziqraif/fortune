@@ -3,7 +3,6 @@ import { Dispatch } from 'redux'
 import { Action } from '../reducers/AuthReducer'
 import {Type} from './Types'
 import {SortCriteriaType} from '../../play/Play'
-import {push} from 'connected-react-router'
 import {handleAxiosError} from './Utils'
 import {fetchAuthToken} from "./Auth";
 
