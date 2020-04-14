@@ -87,6 +87,7 @@ class TestService(DbTest):
         {'symbol': 'DASH', 'price': '56.12345678', '1d': {'price_change_pct': '-1.23456789'}},
     ])))
     def test_parsing_with_four_character_symbol(self):
+        coin = Coin.create(name='foocoin', symbol='DASH')
         ping('DASH')
         dash = Coin.get(Coin.symbol == 'DASH')
         ticker = Ticker.get(Ticker.coin == dash)

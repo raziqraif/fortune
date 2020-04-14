@@ -75,7 +75,8 @@ class TestService(TestCase):
     ])))
     @patch('scripts.service.Coin')
     @patch('scripts.service.Ticker')
-    def test_parsing_with_many_ping_calls(self, mock_ticker, mock_coin):
+    @patch('scripts.service.check_price_alerts')
+    def test_parsing_with_many_ping_calls(self, check_price_alerts_mock, mock_ticker, mock_coin):
         side_effect = [
             Coin(symbol='FOO', name='Foocoin'),
             Coin(symbol='BAR', name='Barcoin'),
