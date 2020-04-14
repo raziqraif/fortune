@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Actions from '../redux/actions'
-import { Pagination, ListGroup } from 'react-bootstrap';
+import { Pagination, ListGroup, Button } from 'react-bootstrap';
 import { Notification } from '../redux/reducers/NotificationsReducer'
 import { RootState } from '../redux/reducers';
 

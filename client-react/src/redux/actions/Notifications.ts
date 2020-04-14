@@ -3,7 +3,7 @@ import { Dispatch } from 'redux'
 import { Action } from '../reducers/AuthReducer'
 import { Type } from "./Types"
 import { handleAxiosError } from "./Utils"
-import { Notification } from "../reducers/NotificationsReducer"
+import { Notification, PriceAlert } from "../reducers/NotificationsReducer"
 
 export enum PriceAlertType {
     ABOVE,
@@ -19,6 +19,14 @@ type GetNotificationsResponse = {
     },
 }
 
+type GetPriceAlertsResponse = {
+    data: Array<PriceAlert>,
+}
+
+type CreatePriceAlertResponse = {
+    data: PriceAlert,
+}
+
 export const getNotifications = (page: number) => {
     return async (dispatch: Dispatch<Action>) => {
         let res: GetNotificationsResponse
@@ -32,9 +40,22 @@ export const getNotifications = (page: number) => {
     }
 }
 
+export const getPriceAlerts = () => {
+    return async (dispatch: Dispatch<Action>) => {
+        let res: GetPriceAlertsResponse
+        try {
+            res = await axios.get('http://localhost:5000/alert')
+        } catch (e) {
+            handleAxiosError(e, dispatch, Type.GET_PRICE_ALERTS_FAILED);
+            return
+        }
+        dispatch({type: Type.GET_PRICE_ALERTS_SUCCEEDED, payload: res.data})
+    }
+}
+
 export const createPriceAlert = (coinId: string, strikePrice: string, type: PriceAlertType) => {
     return async (dispatch: Dispatch<Action>) => {
-        let res: GetNotificationsResponse
+        let res: CreatePriceAlertResponse
         dispatch({type: Type.CREATE_PRICE_ALERT})
         let stringType;
         if (type == PriceAlertType.ABOVE) {
@@ -49,7 +70,9 @@ export const createPriceAlert = (coinId: string, strikePrice: string, type: Pric
             return
         }
         await dispatch({type: Type.CREATE_PRICE_ALERT_SUCCEEDED, payload: res.data})
-        const b: any = getNotifications(0)
+        let b: any = getNotifications(0)
+        await dispatch(b)
+        b = getPriceAlerts()
         await dispatch(b)
     }
 }

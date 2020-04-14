@@ -106,7 +106,7 @@ class CreatePriceAlertForm extends React.Component<CreatePriceAlertProps, Create
 }
 
 export default connect((state: RootState) => ({
-    coins: state.coins.coins,
+    coins: state.coins.simpleCoins,
 }), {
     getAllCoins: Actions.coins.getAllCoins,
 })(CreatePriceAlertForm);

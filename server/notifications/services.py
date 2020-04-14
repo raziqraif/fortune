@@ -39,7 +39,8 @@ def get_notifications_count(profile: Profile):
 def get_price_alerts(profile: Profile):
     return (PriceAlert
         .select()
-        .where(PriceAlert.profile == profile))
+        .where((PriceAlert.profile == profile) & (PriceAlert.hit == False))
+        .order_by(PriceAlert.created_at.desc()))
 
 
 @db.atomic()
