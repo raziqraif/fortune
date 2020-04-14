@@ -69,7 +69,7 @@ class Game extends React.Component<GameProps, GameState> {
 	render() {
 		const { gameId, error, game, coinsAndPrices } = this.props;
 		const { priceOrder } = this.state;
-		const global = gameId ? false : true;
+		const global = (!gameId || parseInt(gameId) == 1)
 		if (error) {
 			return <p style={{ color: 'red' }}>{error}</p>
 		}
