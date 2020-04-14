@@ -1,5 +1,5 @@
 import { Type } from '../actions/Types'
-import {GameType} from '../actions/Game'
+import { GameType } from '../actions/Game'
 
 export type State = typeof initialState;
 const initialState = {
@@ -19,7 +19,8 @@ const initialState = {
     },
     coins: [],
   },
-  setGameErrorMessage: ''
+  setGameErrorMessage: '',
+  transactionErrorMessage: '',
 }
 
 export type Action = {
@@ -31,7 +32,20 @@ export type GameState = {
   game: GameType;
   createGameErrorMessage: string;
   createGameLoading: boolean;
+  game: {
+    data: GameType,
+    gameProfile: {
+      cash: string;
+    }
+    coins: Array<{
+      id: string;
+      name: string;
+      symbol: string;
+      number: string;
+    }>
+  };
   setGameErrorMessage: string;
+  transactionErrorMessage: string;
 }
 
 export default (state = initialState, action: Action) => {
@@ -58,7 +72,7 @@ export default (state = initialState, action: Action) => {
             name: action.payload.name,
             shareableCode: action.payload.shareable_code,
             shareableLink: action.payload.shareable_link,
-            startingCash:  action.payload.starting_cash,
+            startingCash: action.payload.starting_cash,
           }
         },
         setGameErrorMessage: '',
@@ -77,15 +91,32 @@ export default (state = initialState, action: Action) => {
         },
       }
     case Type.SET_GAME_COINS:
-        return {
-          ...state,
-          game: {
-            ...state.game,
-            coins: action.payload,
-          }
+      return {
+        ...state,
+        game: {
+          ...state.game,
+          coins: action.payload,
         }
+      }
+    case Type.TRANSACTION:
+      return {
+        ...state,
+        transactionErrorMessage: '',
+      }
+    case Type.TRANSACTION_FAILED:
+      return {
+        ...state,
+        transactionErrorMessage: action.payload,
+      }
     case Type.LIQUIFY_FAILED:
       return state;
+    case Type.CLEAR_ERRORS:
+      return {
+        ...state,
+        transactionErrorMessage: '',
+        setGameErrorMessage: '',
+        createGameErrorMessage: '',
+      }
     default:
       return state
   }

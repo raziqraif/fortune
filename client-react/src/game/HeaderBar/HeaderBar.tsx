@@ -22,7 +22,6 @@ interface HeaderBarProps {
 
 const styles: { [name: string]: CSS.Properties } = {
 	heading: {
-		width: '100%',
 		borderBottom: 'medium solid',
 		alignItems: 'center',
 		flexWrap: 'nowrap',
@@ -162,6 +161,7 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 					</Modal>
 				</div>
 			</div>
+
 		)
 	}
 }

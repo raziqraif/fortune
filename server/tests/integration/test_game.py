@@ -4,7 +4,7 @@ from unittest.mock import Mock, patch, MagicMock
 import json
 import pytz
 
-from db import db, AuthToken, Profile, Coin, Game, GameProfile, GameCoin
+from db import db, AuthToken, Profile, Coin, Game, GameProfile, GameCoin, Ticker, GameProfileCoin
 from tests.utils import DbTest, AuthDbTest
 
 
@@ -174,3 +174,202 @@ class GameTest(AuthDbTest):
             'Authorization': 'Bearer ' + self.token
         })
         self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+
+    def test_buy_coin_without_cash(self):
+        profile = Profile.get_or_none(Profile.username=='theusername')
+        GameProfile.create(
+            game=1,
+            profile=profile,
+            cash=0
+        )
+        GameCoin.create(
+            game=1,
+            coin=1
+        )
+        Ticker.create(
+            coin=1,
+            price=10,
+            price_change_day_pct=1.1
+        )
+        res = self.client.post('/game/1/coin',
+        data=json.dumps({
+            'coinId': '1',
+            'coinAmount': '1',
+        }),
+        content_type='application/json',
+        headers={
+            'Authorization': 'Bearer ' + self.token
+        })
+        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+
+    def test_buy_coin_success(self):
+        profile = Profile.get_or_none(Profile.username=='theusername')
+        GameProfile.create(
+            game=1,
+            profile=profile,
+            cash=10000
+        )
+        GameCoin.create(
+            game=1,
+            coin=1
+        )
+        Ticker.create(
+            coin=1,
+            price=10,
+            price_change_day_pct=1.1,
+        )
+        res = self.client.post('/game/1/coin',
+        data=json.dumps({
+            'coinId': '1',
+            'coinAmount': '1',
+        }),
+        content_type='application/json',
+        headers={
+            'Authorization': 'Bearer ' + self.token
+        })
+        self.assertEqual(int(HTTPStatus.OK), res._status_code)
+
+    def test_sell_coin_without_coin(self):
+        profile = Profile.get_or_none(Profile.username=='theusername')
+        GameProfile.create(
+            game=1,
+            profile=profile,
+            cash=0
+        )
+        GameCoin.create(
+            game=1,
+            coin=1
+        )
+        Ticker.create(
+            coin=1,
+            price=10,
+            captured_at=(datetime.utcnow()).isoformat(),
+            price_change_day_pct=1.1,
+        )
+        res = self.client.post('/game/1/coin',
+        data=json.dumps({
+            'coinId': '1',
+            'coinAmount': '-1',
+        }),
+        content_type='application/json',
+        headers={
+            'Authorization': 'Bearer ' + self.token
+        })
+        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+
+    def test_sell_coin_success(self):
+        profile = Profile.get_or_none(Profile.username=='theusername')
+        game_profile = GameProfile.create(
+            game=1,
+            profile=profile,
+            cash=0
+        )
+        GameCoin.create(
+            game=1,
+            coin=1
+        )
+        GameProfileCoin.create(
+            game_profile=game_profile,
+            coin=1,
+            coin_amount=2
+        )
+        Ticker.create(
+            coin=1,
+            price=10,
+            captured_at=(datetime.utcnow()).isoformat(),
+            price_change_day_pct=1.1,
+        )
+        res = self.client.post('/game/1/coin',
+        data=json.dumps({
+            'coinId': '1',
+            'coinAmount': '-1',
+        }),
+        content_type='application/json',
+        headers={
+            'Authorization': 'Bearer ' + self.token
+        })
+        self.assertEqual(int(HTTPStatus.OK), res._status_code)
+
+    def test_liquefy_success(self):
+        profile = Profile.get_or_none(Profile.username=='theusername')
+        game_profile = GameProfile.create(
+            game=1,
+            profile=profile,
+            cash=0
+        )
+        GameCoin.create(
+            game=1,
+            coin=1
+        )
+        GameProfileCoin.create(
+            game_profile=game_profile,
+            coin=1,
+            coin_amount=2
+        )
+        Ticker.create(
+            coin=1,
+            price=10,
+            captured_at=(datetime.utcnow()).isoformat(),
+            price_change_day_pct=1.1,
+        )
+        res = self.client.delete('/game/1/coins',
+        headers={
+            'Authorization': 'Bearer ' + self.token
+        })
+        self.assertEqual(int(HTTPStatus.OK), res._status_code)
+
+    def test_get_coins_with_non_num_params(self):
+        profile = Profile.get_or_none(Profile.username == 'theusername')
+        GameProfile.create(
+            game=1,
+            profile=profile,
+            cash=10000
+        )
+        res = self.client.get(
+            '/game/1/coins?timeSpan=not&sortBy=a&numPerPage=&pageNum=1',
+            headers={
+                'Authorization': 'Bearer ' + self.token
+            }
+        )
+        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+
+    def test_get_coins_with_invalid_time_span(self):
+        profile = Profile.get_or_none(Profile.username == 'theusername')
+        GameProfile.create(
+            game=1,
+            profile=profile,
+            cash=10000
+        )
+        res = self.client.get(
+            '/game/1/coins?timeSpan=6&sortBy=0&numPerPage=10&pageNum=1',
+            headers={
+                'Authorization': 'Bearer ' + self.token
+            }
+        )
+        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
+    
+    def test_get_coins_success(self):
+        profile = Profile.get_or_none(Profile.username == 'theusername')
+        GameProfile.create(
+            game=1,
+            profile=profile,
+            cash=10000
+        )
+        GameCoin.create(
+            game=1,
+            coin=1,
+        )
+        for coin in Coin.select():
+            Ticker.create(
+                coin=coin,
+                price=30.0,
+                captured_at=(datetime.utcnow()).isoformat(),
+                price_change_day_pct=1.1,
+            )
+        res = self.client.get(
+            '/game/1/coins?timeSpan=1&sortBy=0&numPerPage=10&pageNum=1',
+            headers={
+                'Authorization': 'Bearer ' + self.token
+            }
+        )
+        self.assertEqual(int(HTTPStatus.OK), res._status_code)

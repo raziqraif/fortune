@@ -3,7 +3,9 @@ import Actions from '../../redux/actions';
 import { Row, Col, Button, ButtonGroup } from 'react-bootstrap';
 import CSS from 'csstype';
 import { connect } from 'react-redux';
+import { priceOrder } from '../Game';
 import { RootState } from '../../redux/reducers';
+import { CoinsAndPrices } from '../../redux/actions/Coins';
 
 const styles: { [name: string]: CSS.Properties } = {
 	main: {
@@ -14,13 +16,10 @@ const styles: { [name: string]: CSS.Properties } = {
 interface InfoBarProps {
 	cash: string,
 	netWorth: string
-	coins: Array<{
-		id: string;
-		name: string;
-		symbol: string;
-		number: number;
-	}>,
+	coins: CoinsAndPrices,
+	gameProfile: any,
 	liquify: () => void,
+	changePriceOrder: (priceOrder: priceOrder) => void,
 }
 
 interface InfoBarState {
@@ -48,8 +47,22 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 		this.setState({ timeSpan });
 	}
 
+	private changePriceOrder = (priceOrder: priceOrder) => {
+		this.props.changePriceOrder(priceOrder);
+	}
+
 	private liquify = () => {
 		this.props.liquify();
+	}
+
+	// TODO - get price of coins to calculate current net worth
+	// also will probably have to worry about casting
+	private getNetWorth = () => {
+		let cash_d: number = Number(this.props.gameProfile.cash) ? Number(this.props.gameProfile.cash) : 0.0
+		this.props.coins.forEach(coin => {
+			cash_d = cash_d + 1 + Number(coin.coin.number);
+		})
+		return cash_d;
 	}
 
 	render() {
@@ -82,6 +95,14 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 							<Button variant="secondary" onClick={() => this.changeTimeSpan(timeSpan.WEEK)}>Week</Button>
 							<Button variant="secondary" onClick={() => this.changeTimeSpan(timeSpan.MONTH)}>Month</Button>
 							<Button variant="secondary" onClick={() => this.changeTimeSpan(timeSpan.YEAR)}>Year</Button>
+						</ButtonGroup>
+					</Col>
+
+					<Col>
+						<div style={{ alignSelf: 'center' }}>Price:  </div>
+						<ButtonGroup aria-label="Price">
+							<Button variant="secondary" onClick={() => this.changePriceOrder(priceOrder.MINIMUM)}>Minimum</Button>
+							<Button variant="secondary" onClick={() => this.changePriceOrder(priceOrder.MAXIMUM)}>Maximum</Button>
 						</ButtonGroup>
 					</Col>
 				</Row>
