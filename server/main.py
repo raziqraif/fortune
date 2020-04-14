@@ -6,7 +6,7 @@ from threading import Thread
 import time
 import traceback
 
-from flask import Flask 
+from flask import Flask
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 
@@ -15,6 +15,9 @@ from auth.routes import auth_bp
 from errors.handlers import errors_bp
 from game.routes import game_bp
 from notifications.routes import notification_bp, alert_bp
+from scripts.routes import tickers_bp
+from play.routes import play_bp
+from join.routes import join_bp
 from db import * # FIXME get rid of * when you have db migrations
 from notifications.services import register_socketio
 from scripts.service import begin
@@ -40,6 +43,9 @@ def create_app():
     app.register_blueprint(game_bp)
     app.register_blueprint(notification_bp)
     app.register_blueprint(alert_bp)
+    app.register_blueprint(tickers_bp)
+    app.register_blueprint(play_bp)
+    app.register_blueprint(join_bp)
 
     @app.route('/')
     def hello():
@@ -64,4 +70,3 @@ def create_app():
     socketio.start_background_task(begin, cb=cb)
 
     return app, socketio
-

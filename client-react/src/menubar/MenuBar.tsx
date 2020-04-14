@@ -7,19 +7,27 @@ import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import {connect} from 'react-redux'
 import Actions from '../redux/actions'
 import { RootState } from '../redux/reducers';
-import { push } from 'connected-react-router';
+import { Redirect } from 'react-router-dom';
+import { currentPricesType } from '../redux/reducers/CoinReducer'
 
 interface MenuBarProps {
     loggedIn: boolean;
     authToken: string;
     logout: () => void;
-    navigateTo: (location: string) => void;
     fetchAuthToken: () => void;
+    setCurrentPrices: (payload: currentPricesType) => void;
 }
 
-class MenuBar extends React.Component<MenuBarProps> {
+interface MenuBarState {
+    navigateTo?: string;
+}
+
+class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
     constructor(props: MenuBarProps) {
         super(props);
+        this.state = {
+            navigateTo: undefined
+        }
     }
 
     async componentDidMount() {
@@ -27,9 +35,9 @@ class MenuBar extends React.Component<MenuBarProps> {
       await this.props.fetchAuthToken()
       // TODO reestablish connection on login/register? Or just send the user's socketid when logging in/registering?
       const socket = io('http://localhost:5000', {query: {token: this.props.authToken}}).connect();
-      socket.on('message', function(data: any){
+      socket.on('message', (data: any) => {
         console.log('event received:', data)
-        // TODO dispatch
+        this.setCurrentPrices(data);
       });
       socket.on('notification', function(data: string){
         console.log('notification received:', data)
@@ -37,8 +45,8 @@ class MenuBar extends React.Component<MenuBarProps> {
       });
     }
 
-    private navigateTo = (location: string) => () => {
-        this.props.navigateTo(location);
+    private navigateTo = (navigateTo: string) => () => {
+        this.setState({ navigateTo })
     }
 
     private logout = () => {
@@ -46,7 +54,16 @@ class MenuBar extends React.Component<MenuBarProps> {
         this.navigateTo('/')();
     }
 
+    private setCurrentPrices = (payload: currentPricesType) => {
+        this.props.setCurrentPrices(payload);
+    }
+
     render() {
+        if (this.state.navigateTo) {
+            this.setState({ navigateTo: undefined })
+            return <Redirect to={this.state.navigateTo} />
+        }
+        
         return (
             <Navbar collapseOnSelect expand="md" bg="dark" variant="dark">
                 <Navbar.Brand href="/">
@@ -91,9 +108,9 @@ const mapStateToProps = (state: RootState) => ({
   loggedIn: state.auth.loggedIn,
   authToken: state.auth.authToken,
 })
-const mapDispatchToProps = (dispatch: any) => ({
-  logout: () => dispatch(Actions.auth.logout()),
-  navigateTo: (location: string) => dispatch(push(location)),
-  fetchAuthToken: () => dispatch(Actions.auth.fetchAuthToken()),
-})
+const mapDispatchToProps = {
+  logout: Actions.auth.logout,
+  fetchAuthToken: Actions.auth.fetchAuthToken,
+  setCurrentPrices: Actions.coins.setCurrentPrices,
+}
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar)
