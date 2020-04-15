@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
   Redirect
@@ -12,7 +11,7 @@ import Game, { CreateGame } from './game';
 import Login from './login';
 import Play from './play';
 import Register from './register';
-
+import Landing from './landing';
 
 interface MatchParams {
   gameId?: string;
@@ -24,15 +23,13 @@ function App() {
         <MenuBar />
         <div className="container">
           <Switch>
-            <Route path="/global" render={({match}) => {
-              return <Game gameId={match.params.gameId} />
+            <Route path="/global" render={({match, history}) => {
+              return <Game gameId={match.params.gameId} history={history}/>
             }} />
-            <Route path="/game/:gameId" render={({match}) => {
-              return <Game gameId={match.params.gameId} />
+            <Route path="/game/:gameId" render={({match, history}) => {
+              return <Game gameId={match.params.gameId} history={history}/>
             }} />
-            <Route exact path="/" render={({match}) => {
-              return <Game gameId={match.params.gameId} />
-            }} />
+            <Route exact path="/" component={Landing} />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
             <Route path="/play" component={Play} />
