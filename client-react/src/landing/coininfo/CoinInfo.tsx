@@ -102,6 +102,11 @@ private dynamicRowRender() {
                                            </tr> );
     rows = rows.slice(0,10) //only show first 10 coins - in reality need to filter through rows for certain coins
   }
+  if(rows.length === 0){
+    rows = <tr key={0}>
+            No coins available to display
+           </tr>
+  }
   return rows
 }
 
