@@ -176,7 +176,10 @@ def get_net_worth_by_game_profile_id(game_profile_id):
     
     gameProfileCoins = get_game_profile_coins_by_game_profile_id(game_profile_id)
     for gameProfileCoin in gameProfileCoins:
-        ticker = Ticker.select().where(gameProfileCoin.coin == Ticker.coin).order_by(Ticker.captured_at.desc()).get()
+        ticker = Ticker.select().where(gameProfileCoin.coin == Ticker.coin).order_by(Ticker.captured_at.desc())
+        if ticker.count() == 0:
+            raise BadRequest('One coin did not have prices')
+        ticker = ticker.get()
         if not ticker:
             raise BadRequest('One coin did not exist')
         netWorth += ticker.price * gameProfileCoin.coin_amount
@@ -184,33 +187,51 @@ def get_net_worth_by_game_profile_id(game_profile_id):
 
 @db.atomic()
 def buy_coin(coin_id, coin_amount, game_profile):
-    ticker = Ticker.select().where(Ticker.coin == coin_id).order_by(Ticker.captured_at.desc()).get()
+    ticker = Ticker.select().where(Ticker.coin == coin_id).order_by(Ticker.captured_at.desc())
+    if ticker.count() == 0:
+        raise BadRequest('Coin has no prices')
+    ticker = ticker.get()
     new_cash = game_profile.cash - (ticker.price * coin_amount)
     if new_cash < 0:
         raise BadRequest('Not enough cash to buy this coin amount')
-    gameProfileCoin = GameProfileCoin.get_or_none(GameProfileCoin.game_profile == game_profile.id, GameProfileCoin.coin == coin_id)
+    game_coin = GameCoin.get_or_none(GameCoin.game == game_profile.game, GameCoin.coin == coin_id)
+    if game_coin is None:
+        raise BadRequest('Coin does not exist in this game')
+    gameProfileCoin = GameProfileCoin.get_or_none(GameProfileCoin.game_profile == game_profile.id,
+                                                  GameProfileCoin.coin == coin_id)
+
     if gameProfileCoin is None:
         GameProfileCoin.create(
-            game_profile = game_profile.id,
-            coin = coin_id,
-            coin_amount = coin_amount
+            game_profile=game_profile.id,
+            coin=coin_id,
+            coin_amount=coin_amount
         )
-        GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id)
+
+        rows = GameProfile.update(cash=new_cash).where(GameProfile == game_profile).execute()
+
+        if rows == 0:
+            raise BadRequest('Money could not be removed from your account')
         return coin_amount
     else:
         new_coin_amount = gameProfileCoin.coin_amount + coin_amount
-        GameProfileCoin.update(coin_amount=new_coin_amount).where(GameProfileCoin.id == gameProfileCoin.id)
-        GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id)
+        rows = GameProfile.update(cash=new_cash).where(GameProfile == game_profile).execute()
+        if rows == 0:
+            raise BadRequest('Money could not be removed from your account')
+        GameProfileCoin.update(coin_amount=new_coin_amount).where(GameProfileCoin.id == gameProfileCoin.id).execute()
         return new_coin_amount
+
 
 @db.atomic()
 def sell_coin(coin_id, coin_amount, game_profile):
     gameProfileCoin = GameProfileCoin.get_or_none(GameProfileCoin.game_profile == game_profile.id, GameProfileCoin.coin == coin_id)
     if gameProfileCoin is None or gameProfileCoin.coin_amount < coin_amount:
         raise BadRequest('Not enough of these coins to sell')
-    ticker = Ticker.select().where(Ticker.coin == coin_id).order_by(Ticker.captured_at.desc()).get()
+    ticker = Ticker.select().where(Ticker.coin == coin_id).order_by(Ticker.captured_at.desc())
+    if ticker.count() == 0:
+        raise BadRequest('Coin has no prices')
+    ticker = ticker.get()
     new_cash = game_profile.cash + (ticker.price * coin_amount)
     new_coin_amount = gameProfileCoin.coin_amount - coin_amount
-    GameProfileCoin.update(coin_amount=new_coin_amount).where(GameProfileCoin.id == gameProfileCoin.id)
-    GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id)
+    GameProfileCoin.update(coin_amount=new_coin_amount).where(GameProfileCoin.id == gameProfileCoin.id).execute()
+    GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id).execute()
     return new_coin_amount
