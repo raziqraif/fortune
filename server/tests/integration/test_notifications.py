@@ -18,12 +18,12 @@ class NotificationsTest(AuthDbTest):
             )
             tok = 'correct-token'
             self.token = AuthToken.create(profile=self.profile, token=tok)
-            profile = Profile.create(
+            self.profile1 = Profile.create(
                 username='someotherusername',
                 hashed_password='th3p455w0rd'
             )
             tok = 'correct-token1'
-            AuthToken.create(profile=profile, token=tok)
+            self.token1 = AuthToken.create(profile=self.profile1, token=tok)
 
     def test_send_notification_creates_notifications(self):
         msg = 'This is a notification'
@@ -106,3 +106,42 @@ class NotificationsTest(AuthDbTest):
             content_type='application/json'
         )
         self.assertEqual(400, res._status_code)
+    
+    def test_users_can_access_only_own_notifications(self):
+        msg = 'This is a notification'
+        send_notification(self.profile, msg)
+        Notification.get((Notification.content == msg) & (Notification.profile == self.profile))
+        res = self.client.get(
+            '/notification',
+            headers={'Authorization': 'Bearer ' + self.token.token}
+        )
+        self.assertEqual(200, res._status_code)
+        self.assertEqual(1, len(res.json['notifications']))
+
+        res = self.client.get(
+            '/notification',
+            headers={'Authorization': 'Bearer ' + self.token1.token}
+        )
+        self.assertEqual(200, res._status_code)
+        self.assertEqual(0, len(res.json['notifications']))
+
+    def test_users_can_access_only_own_price_alerts(self):
+        PriceAlert.create(
+            profile=self.profile,
+            above=True,
+            coin=Coin.get_by_id(1),
+            strike_price=100000,
+        )
+        res = self.client.get(
+            '/alert',
+            headers={'Authorization': 'Bearer ' + self.token.token}
+        )
+        self.assertEqual(200, res._status_code)
+        self.assertEqual(1, len(res.json))
+
+        res = self.client.get(
+            '/alert',
+            headers={'Authorization': 'Bearer ' + self.token1.token}
+        )
+        self.assertEqual(200, res._status_code)
+        self.assertEqual(0, len(res.json))
