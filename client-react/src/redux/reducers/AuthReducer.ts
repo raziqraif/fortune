@@ -8,6 +8,7 @@ const initialState = {
   registrationLoading: false,
   loginErrorMessage: '',
   loginLoading: false,
+  socket: null,
 }
 
 export type Action = {
@@ -22,6 +23,7 @@ export type Auth = {
   registrationLoading: boolean;
   loginErrorMessage: string;
   loginLoading: boolean;
+  socket: SocketIOClient.Socket;
 }
 
 export default (state = initialState, action: Action) => {
@@ -47,12 +49,13 @@ export default (state = initialState, action: Action) => {
         loginLoading: false,
         loggedIn: true,
       }
-    case Type.LOGOUT:
+    case Type.SET_SOCKET:
       return {
         ...state,
-        authToken: '',
-        loggedIn: false,
+        socket: action.payload,
       }
+    case Type.LOGOUT:
+      return initialState
     case Type.REGISTER:
       return {
         ...state,

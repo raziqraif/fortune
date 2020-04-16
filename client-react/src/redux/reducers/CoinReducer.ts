@@ -47,6 +47,8 @@ export default (state = initialState, action: Action) => {
       }
     case Type.SET_CURRENT_PRICES:
       return setCurrentPrices(state, action.payload);
+    case Type.LOGOUT:
+      return initialState
     default:
       return state;
   }

@@ -47,6 +47,8 @@ export default (state = initialState, action: Action) => {
                 ...state,
                 priceAlerts: action.payload,
             }
+        case Type.LOGOUT:
+            return initialState
     default:
         return state
   }

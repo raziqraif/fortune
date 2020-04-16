@@ -1,7 +1,5 @@
 import * as React from 'react';
-import io from 'socket.io-client'
 import logo from '../logo.svg';
- import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import {connect} from 'react-redux'
@@ -9,6 +7,7 @@ import Actions from '../redux/actions'
 import { RootState } from '../redux/reducers';
 import { Redirect } from 'react-router-dom';
 import { currentPricesType } from '../redux/reducers/CoinReducer'
+import { toast } from 'react-toastify';
 
 interface MenuBarProps {
     loggedIn: boolean;
@@ -16,6 +15,7 @@ interface MenuBarProps {
     logout: () => void;
     fetchAuthToken: () => void;
     setCurrentPrices: (payload: currentPricesType) => void;
+    initializeSocketConnection: (authToken: string) => void;
 }
 
 interface MenuBarState {
@@ -34,15 +34,7 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
       toast.configure()
       await this.props.fetchAuthToken()
       // TODO reestablish connection on login/register? Or just send the user's socketid when logging in/registering?
-      const socket = io('http://localhost:5000', {query: {token: this.props.authToken}}).connect();
-      socket.on('message', (data: any) => {
-        console.log('event received:', data)
-        this.setCurrentPrices(data);
-      });
-      socket.on('notification', function(data: string){
-        console.log('notification received:', data)
-        toast(data)
-      });
+      await this.props.initializeSocketConnection(this.props.authToken)
     }
 
     private navigateTo = (navigateTo: string) => () => {
@@ -52,10 +44,6 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
     private logout = () => {
         this.props.logout();
         this.navigateTo('/')();
-    }
-
-    private setCurrentPrices = (payload: currentPricesType) => {
-        this.props.setCurrentPrices(payload);
     }
 
     render() {
@@ -92,6 +80,7 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
             return (
                 <NavDropdown title="Username" id="basic-nav-dropdown" alignRight>
                     <NavDropdown.Item onClick={this.navigateTo('/play')} >Games</NavDropdown.Item>
+                    <NavDropdown.Item onClick={this.navigateTo('/notifications')} >Notifications</NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item onClick={this.logout}>Logout</NavDropdown.Item>
                 </NavDropdown>
@@ -112,5 +101,6 @@ const mapDispatchToProps = {
   logout: Actions.auth.logout,
   fetchAuthToken: Actions.auth.fetchAuthToken,
   setCurrentPrices: Actions.coins.setCurrentPrices,
+  initializeSocketConnection: Actions.auth.initializeSocketConnection,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar)
