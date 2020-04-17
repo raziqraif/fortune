@@ -21,27 +21,26 @@ const emptyProps = {
     },
   }
 }
-const sampleData = {
+const sampleData = [
+{
     coin: {
       id: '1',
       name: '1',
       symbol: '1',
       number: '1',
     },
-    prices: [{
+   prices: [{
       price: '11',
-      captured_at: new Date(),
+      captured_at: '',
       price_change_day_pct: '',
       id: '1',
-    },],
+    },]
 }
 
-
-
-
+];
 
 test('Should display correct coin data', () => {
   const {getByText} = deeplyRenderComponentWithRedux(
     <CoinInfo allCoins={sampleData}/>);
-  expect(getByText('11')).toBeInTheDocument() //TODO
+  expect(getByText('$11.00')).toBeInTheDocument() //TODO
 })
