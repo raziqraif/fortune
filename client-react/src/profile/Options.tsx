@@ -42,7 +42,7 @@ class Options extends Component<OptionsProps, OptionsState> {
                         <Form.Group controlId="newUsername" className="col-sm-6">
                             <Form.Control
                                 type="username"
-                                placeholder="Change username"
+                                placeholder="New username"
                                 name="newUsername"
                                 value={this.state.newUsername}
                                 onChange={this.handleChange}

@@ -58,7 +58,7 @@ def verify_route():
 def change_username_route(profile):
     validated_data: dict = ChangeUsername.deserialize(request.json)
     new_username = validated_data['username']
-    change_username(profile_id, new_username)
+    change_username(profile.id, new_username)
     return jsonify(ChangeUsername.serialize({
         'username': new_username
     }))
