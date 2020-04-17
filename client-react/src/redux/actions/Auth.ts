@@ -78,8 +78,13 @@ export const verifyToken = () => {
       await fetchAuthToken()
 
       const res = await axios.post('http://localhost:5000/auth/verify');
-
-      dispatch({type: Type.VERIFY_AUTH_TOKEN_SUCCEEDED, payload: res.data});
+      
+      if (!res.data.username) {
+        dispatch(logout() as any);
+      }
+      else {
+        dispatch({type: Type.VERIFY_AUTH_TOKEN_SUCCEEDED, payload: res.data});
+      }
     }
     catch (e) {
       handleAxiosError(e, dispatch, Type.SET_VERIFY_FAILED);
