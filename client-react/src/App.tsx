@@ -12,6 +12,7 @@ import Login from './login';
 import Play from './play';
 import Register from './register';
 import Landing from './landing';
+import Profile from './profile/Profile';
 
 interface MatchParams {
   gameId?: string;
@@ -34,7 +35,10 @@ function App() {
             <Route path="/register" component={Register} />
             <Route path="/play" component={Play} />
             <Route path="/create" component={CreateGame} />
-            <Route render={({match}) => {
+            <Route path="/profile/:profileId" render={({match}) => {
+              return <Profile profileId={match.params.profileId}/>
+            }}/>
+            <Route render={() => {
               return <Redirect to="/"/>
             }} />
           </Switch>

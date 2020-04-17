@@ -41,7 +41,6 @@ def require_authentication(route_func):
     def wrapper(*args, **kwargs):
         auth = request.headers.get('Authorization')
         if not auth:
-            # FIXME use a more fine-grained exception when such a pr gets merged
             raise BadRequest('Missing authorization token')
         # I figure we have a 'Bearer' prefix, e.g. Authorization: 'Bearer thetoken'
         # Although with this it could really be any prefix
@@ -51,7 +50,6 @@ def require_authentication(route_func):
         tok = split[1]
         auth_token = get_auth_token(tok)
         if auth_token is None:
-            # FIXME use a more fine-grained exception when such a pr gets merged
             raise Unauthorized('Invalid token')
         return route_func(auth_token.profile, *args, **kwargs)
     return wrapper

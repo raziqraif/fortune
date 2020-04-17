@@ -7,12 +7,16 @@ import Actions from '../redux/actions'
 import { RootState } from '../redux/reducers';
 import { Redirect } from 'react-router-dom';
 import { currentPricesType } from '../redux/reducers/CoinReducer'
+import { push } from 'connected-react-router';
 
 interface MenuBarProps {
+    username?: string;
+    profileId?: number;
     loggedIn: boolean;
     logout: () => void;
     fetchAuthToken: () => void;
     setCurrentPrices: (payload: currentPricesType) => void;
+    verifyToken: () => void;
 }
 
 interface MenuBarState {
@@ -28,7 +32,8 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
     }
 
     componentDidMount() {
-      this.props.fetchAuthToken()
+      this.props.fetchAuthToken();
+      this.props.verifyToken();
       const socket = io('http://localhost:5000').connect();
       socket.on('message', (data: any) => {
         console.log('event received:', data);
@@ -81,8 +86,15 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
     private renderLoginOrUsername = () => {
         if (this.props.loggedIn) {
             return (
-                <NavDropdown title="Username" id="basic-nav-dropdown" alignRight>
+                <NavDropdown title={this.props.username} id="basic-nav-dropdown" alignRight>
                     <NavDropdown.Item onClick={this.navigateTo('/play')} >Games</NavDropdown.Item>
+                    <NavDropdown.Item
+                        onClick={
+                            this.navigateTo('/profile/' + this.props.profileId)
+                        }
+                    >
+                        Profile
+                    </NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item onClick={this.logout}>Logout</NavDropdown.Item>
                 </NavDropdown>
@@ -97,10 +109,14 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
 
 const mapStateToProps = (state: RootState) => ({
   loggedIn: state.auth.loggedIn,
+  username: state.auth.username,
+  profileId: state.auth.profileId,
 })
-const mapDispatchToProps = {
-  logout: Actions.auth.logout,
-  fetchAuthToken: Actions.auth.fetchAuthToken,
-  setCurrentPrices: Actions.coins.setCurrentPrices,
-}
+const mapDispatchToProps = (dispatch: any) => ({
+  logout: () => dispatch(Actions.auth.logout()),
+  navigateTo: (location: string) => dispatch(push(location)),
+  fetchAuthToken: () => dispatch(Actions.auth.fetchAuthToken()),
+  verifyToken: () => dispatch(Actions.auth.verifyToken()),
+  setCurrentPrices: (data: currentPricesType) => dispatch(Actions.coins.setCurrentPrices(data)),
+})
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar)
