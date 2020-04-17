@@ -125,7 +125,7 @@ class Play extends React.Component<PlayProp, PlayState> {
 
     handleJoinGame = (event: any) => {
         // TODO: Show error if code is invalid/game doesn't exist. Add player to the game if it exists.
-        if (this.gameCode == "") {
+        if (this.gameCode === "") {
             return
         }
         this.props.joinGame(this.gameCode);
@@ -159,7 +159,7 @@ class Play extends React.Component<PlayProp, PlayState> {
     };
 
     render() {
-        if (this.props.redirectLink != "") {
+        if (this.props.redirectLink !== "") {
             return <Redirect to={this.props.redirectLink}/>
         }
         return (
