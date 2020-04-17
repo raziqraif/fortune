@@ -1,0 +1,7 @@
+.gamecards-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: left;
+    width: 58rem;
+}
