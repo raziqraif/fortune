@@ -80,6 +80,10 @@ export const register = (username: string, password: string) => {
 
 export const changeUsername = (username: string) => {
   return async (dispatch: Dispatch<Action>) => {
+    if (!username) {
+      dispatch({type: Type.SET_CHANGE_USERNAME_FAILED, payload: 'Please enter a username'})
+      return;
+    }
     let res: ChangeUsernameResponse;
     try {
       res = await axios.put('http://localhost:5000/auth/username', { username })
