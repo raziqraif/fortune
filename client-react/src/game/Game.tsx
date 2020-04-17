@@ -88,10 +88,11 @@ class Game extends React.Component<GameProps, GameState> {
 						coins={coinsAndPrices}
 						changePriceOrder={this.changePriceOrder}
 					/>
-					{/* <Cointable
+					<Cointable
+						gameId={gameId}
 						coins={coinsAndPrices}
 						priceOrder={priceOrder}
-					/> */}
+					/>
 				</Container>
 			</div>
 		)

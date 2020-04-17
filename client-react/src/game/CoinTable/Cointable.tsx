@@ -9,6 +9,7 @@ import { priceOrder } from '../Game';
 import { CoinsAndPrices } from '../../redux/actions/Coins';
 
 interface CointableProps {
+	gameId:string
 	coins: CoinsAndPrices;
 	currentPrices: currentPricesType;
 	priceOrder: priceOrder;
@@ -24,6 +25,25 @@ type coinWithPrice = { id: string, name: string, symbol: string, number: string,
 
 class Cointable extends React.Component<CointableProps> {
 
+private newCoinRows = (coins: CoinsAndPrices) => {
+		let rows: JSX.Element[] = [];
+		coins.forEach(cnp => {
+			let coin = cnp.coin
+			let price = cnp.prices
+			rows.push(
+				<CointableCoin
+				  gameId={this.props.gameId}
+					name={coin.name}
+					key={coin.id}
+					number={coin.number}
+					price={Number(price[0].price)}
+					percent={Number(price[0].price_change_day_pct)}
+				/>
+			)
+		})
+		return rows;
+}
+
 	private createCoinRows = (coins: CoinsAndPrices) => {
 		let rows: JSX.Element[] = [];
 		const { currentPrices } = this.props;
@@ -36,7 +56,7 @@ class Cointable extends React.Component<CointableProps> {
 						break;
 					}
 				}
-	
+
 			})
 
 			if (this.props.priceOrder === priceOrder.MINIMUM) {
@@ -77,7 +97,7 @@ class Cointable extends React.Component<CointableProps> {
 	}
 
 	render() {
-		const coinRows = this.createCoinRows(this.props.coins);
+		const coinRows = this.newCoinRows(this.props.coins);
 		return (
 			<div className="Cointable" style={styles.main}>
 				<Table bordered>

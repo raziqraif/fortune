@@ -8,7 +8,10 @@ import Actions from '../../redux/actions';
 interface CointableCoinProps {
 	gameId: string;
 	coin: { id: string, name: string };
+	name: string;
+	key: string;
 	price: string;
+	percent: string;
 	number: string;
 	error: string;
 	transaction: (gameId: string, coinId: string, amount: string) => void;
@@ -63,7 +66,7 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 			let confirmMes = "Are you sure you want to ";
 			confirmMes += type === transactionType.BUY ? "buy" : "sell";
 			confirmMes += " " + amount;
-			confirmMes += " " + this.props.coin.name + "?";
+			confirmMes += " " + this.props.name + "?";
 			this.setState({ confirmMes });
 		}
 
@@ -95,21 +98,25 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 		else {
 			sentAmount = (-1 * Number(amount)).toString();
 		}
-		this.props.transaction(this.props.gameId, this.props.coin.id, sentAmount);
+		this.props.transaction(this.props.gameId, this.props.key, sentAmount);
 		this.toggleConfirm();
 	}
 
 	render() {
-		const { name } = this.props.coin;
-		const { price, number } = this.props;
+		const name  = this.props.name;
+		const price = this.props.price;
+		const num = this.props.number;
+		const percent = this.props.percent;
 		const { showConfirm, errMes, confirmMes } = this.state;
-		const price_f = price.substring(0, price.indexOf('.') + 3); // 2 digits after decimal
+		const price_f = Number(price).toFixed(2);
+		const percent_f = Number(percent * 100).toFixed(3);
+		var style = ((percent > 0) ? {color:'green'} : {color:'red'})
 		return (
 			<tr>
 				<td>{name}</td>
 				<td>${price_f}</td>
 				<td>^^_^_^^^____^_^_^_</td>
-				<td>+.4%</td>
+				<td><div style={style}>{percent_f}%</div></td>
 				<td>
 					<InputGroup className="mb-1">
 						<FormControl
@@ -123,7 +130,7 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 				</td>
 				<td><Button variant="outline-primary" onClick={() => this.transactionDialogue(transactionType.BUY)}>Buy</Button></td>
 				<td><Button variant="outline-danger" onClick={() => this.transactionDialogue(transactionType.SELL)}>Sell</Button></td>
-				<td>{number}</td>
+				<td>{num}</td>
 
 				{/* confirmation modal */}
 				<Modal show={showConfirm} onHide={this.toggleConfirm}>
