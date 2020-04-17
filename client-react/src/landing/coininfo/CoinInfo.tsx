@@ -18,7 +18,7 @@ interface CoinInfoProps {
 	) => void;
 }
 
-class CoinInfo extends React.Component<CoinInfoProps> {
+export class CoinInfo extends React.Component<CoinInfoProps> {
 
   componentDidMount() {
       this.props.getCoins(1, 1, 1, 1, 10);
