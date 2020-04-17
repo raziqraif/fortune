@@ -1,13 +1,21 @@
 import React, { Component } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import { RootState } from '../redux/reducers';
+import Actions from '../redux/actions';
+import { connect } from 'react-redux';
+
+interface OptionsProps {
+    changeUsername: (username: string) => void;
+    error: string;
+}
 
 interface OptionsState {
     [key: string]: any;
     newUsername: string;
 }
 
-class Options extends Component<{}, OptionsState> {
-    constructor(props: {}) {
+class Options extends Component<OptionsProps, OptionsState> {
+    constructor(props: OptionsProps) {
         super(props);
         
         this.state = {
@@ -21,13 +29,14 @@ class Options extends Component<{}, OptionsState> {
 
     private changeUsername = (event: any) => {
         event.preventDefault();
-        console.log(this.state.newUsername);
+        this.props.changeUsername(this.state.newUsername);
     }
 
     render() {
         return (
             <div style={{ padding: 10 }}>
                 <h4>Options</h4>
+                <p style={{color: 'red'}}>{this.props.error}</p>
                 <Form onSubmit={this.changeUsername}>
                     <Form.Row>
                         <Form.Group controlId="newUsername" className="col-sm-6">
@@ -51,4 +60,11 @@ class Options extends Component<{}, OptionsState> {
     }
 }
 
-export default Options;
+const mapStateToProps = (state: RootState) => ({
+    error: state.auth.optionsErrorMessage,
+})
+const mapDispatchToProps = {
+    changeUsername: Actions.auth.changeUsername
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Options);
