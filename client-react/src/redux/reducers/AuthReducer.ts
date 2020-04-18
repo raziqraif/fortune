@@ -9,6 +9,7 @@ const initialState = {
   registrationLoading: false,
   loginErrorMessage: '',
   loginLoading: false,
+  optionsErrorMessage: '',
 }
 
 export type Action = {
@@ -24,6 +25,7 @@ export type Auth = {
   registrationLoading: boolean;
   loginErrorMessage: string;
   loginLoading: boolean;
+  optionsErrorMessage: string;
 }
 
 export default (state = initialState, action: Action) => {
@@ -76,6 +78,17 @@ export default (state = initialState, action: Action) => {
         ...state,
         username: action.payload.username,
         profileId: action.payload.id,
+      }
+    case Type.CHANGE_USERNAME_SUCCEEDED:
+      return {
+        ...state,
+        username: action.payload.username,
+        optionsErrorMessage: ''
+      }
+    case Type.SET_CHANGE_USERNAME_FAILED:
+      return {
+        ...state,
+        optionsErrorMessage: action.payload
       }
     default:
       return state
