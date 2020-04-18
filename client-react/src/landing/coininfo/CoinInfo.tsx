@@ -28,7 +28,7 @@ export class CoinInfo extends React.Component<CoinInfoProps> {
     const { allCoins } = this.props;
     if(allCoins) {
       for (let i = 0; i < allCoins.length; i++) {
-        if (allCoins[i].coin.id.toString() === id.toString())
+        if (allCoins[i].coin.id === id)
           return <div> ${Number(allCoins[i].prices[0].price).toFixed(2)}</div>
       }
       return <div>Retrieving...</div>
@@ -40,7 +40,7 @@ export class CoinInfo extends React.Component<CoinInfoProps> {
     const { allCoins } = this.props;
     if(allCoins) {
       for (let i = 0; i < allCoins.length; i++) {
-        if (allCoins[i].coin.id.toString() === id.toString()) {
+        if (allCoins[i].coin.id === id) {
           var style = {color:'green'}
           var change = Number(allCoins[i].prices[0].price_change_day_pct) * 100
           if (change < 0) { style = {color:'red'} }
@@ -56,7 +56,7 @@ export class CoinInfo extends React.Component<CoinInfoProps> {
     const { allCoins } = this.props;
     if(allCoins) {
       for (let i = 0; i < allCoins.length; i++) {
-        if(allCoins[i].coin.id.toString() === id.toString()){
+        if(allCoins[i].coin.id === id){
           return parseFloat(allCoins[i].prices[0].price_change_day_pct)
         }
       }
