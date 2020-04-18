@@ -34,7 +34,7 @@ private newCoinRows = (coins: CoinsAndPrices) => {
 				<CointableCoin
 				  gameId={this.props.gameId}
 					name={coin.name}
-					key={coin.id}
+					coinId={coin.id}
 					number={coin.number}
 					price={Number(price[0].price)}
 					percent={Number(price[0].price_change_day_pct)}

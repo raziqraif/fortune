@@ -9,7 +9,7 @@ interface CointableCoinProps {
 	gameId: string;
 	coin: { id: string, name: string };
 	name: string;
-	key: string;
+	coinId: string;
 	price: string;
 	percent: string;
 	number: string;
@@ -98,7 +98,7 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 		else {
 			sentAmount = (-1 * Number(amount)).toString();
 		}
-		this.props.transaction(this.props.gameId, this.props.key, sentAmount);
+		this.props.transaction(this.props.gameId, this.props.coinId, sentAmount);
 		this.toggleConfirm();
 	}
 
