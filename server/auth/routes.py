@@ -5,9 +5,10 @@ from .serializers import (
     LoginRequestSerializer,
     AuthTokenSerializer,
     VerifyResponseSerializer,
-    ChangeUsername
+    ChangeUsername,
+    ChangePassword
 )
-from .services import register, login, change_username
+from .services import register, login, change_username, change_password
 from .decorators import get_auth_token, require_authentication
 from werkzeug.exceptions import BadRequest, Unauthorized
 
@@ -62,3 +63,12 @@ def change_username_route(profile):
     return jsonify(ChangeUsername.serialize({
         'username': new_username
     }))
+
+@auth_bp.route('/password', methods=['PUT'])
+@require_authentication
+def change_password_route(profile):
+    validated_data: dict = ChangePassword.deserialize(request.json)
+    old_password = validated_data['oldPassword']
+    new_password = validated_data['newPassword']
+    change_password(profile, old_password, new_password)
+    return 'Password changed successfully'

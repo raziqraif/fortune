@@ -9,7 +9,9 @@ const initialState = {
   registrationLoading: false,
   loginErrorMessage: '',
   loginLoading: false,
-  optionsErrorMessage: '',
+  usernameErrorMessage: '',
+  passwordErrorMessage: '',
+  passwordSuccessMessage: '',
 }
 
 export type Action = {
@@ -25,7 +27,9 @@ export type Auth = {
   registrationLoading: boolean;
   loginErrorMessage: string;
   loginLoading: boolean;
-  optionsErrorMessage: string;
+  usernameErrorMessage: string;
+  passwordErrorMessage: string;
+  passwordSuccessMessage: string;
 }
 
 export default (state = initialState, action: Action) => {
@@ -83,12 +87,24 @@ export default (state = initialState, action: Action) => {
       return {
         ...state,
         username: action.payload.username,
-        optionsErrorMessage: ''
+        usernameErrorMessage: ''
       }
     case Type.SET_CHANGE_USERNAME_FAILED:
       return {
         ...state,
-        optionsErrorMessage: action.payload
+        usernameErrorMessage: action.payload
+      }
+    case Type.CHANGE_PASSWORD_SUCCEEDED:
+      return {
+        ...state,
+        passwordSuccessMessage: 'Password change successful',
+        passwordErrorMessage: '',
+      }
+    case Type.SET_CHANGE_PASSWORD_FAILED:
+      return {
+        ...state,
+        passwordSuccessMessage: '',
+        passwordErrorMessage: action.payload,
       }
     default:
       return state

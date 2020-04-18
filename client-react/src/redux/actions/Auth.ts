@@ -81,16 +81,32 @@ export const register = (username: string, password: string) => {
 export const changeUsername = (username: string) => {
   return async (dispatch: Dispatch<Action>) => {
     if (!username) {
-      dispatch({type: Type.SET_CHANGE_USERNAME_FAILED, payload: 'Please enter a username'})
+      dispatch({type: Type.SET_CHANGE_USERNAME_FAILED, payload: 'Please enter a username'});
       return;
     }
     let res: ChangeUsernameResponse;
     try {
-      res = await axios.put('http://localhost:5000/auth/username', { username })
+      res = await axios.put('http://localhost:5000/auth/username', { username });
       dispatch({type: Type.CHANGE_USERNAME_SUCCEEDED, payload: res.data});
     }
     catch (e) {
       handleAxiosError(e, dispatch, Type.SET_CHANGE_USERNAME_FAILED);
+    }
+  }
+}
+
+export const changePassword = (oldPassword: string, newPassword: string) => {
+  return async (dispatch: Dispatch<Action>) => {
+    if (!oldPassword || !newPassword) {
+      dispatch({type: Type.SET_CHANGE_PASSWORD_FAILED, payload: 'Please enter both old and new password'});
+      return;
+    }
+    try {
+      await axios.put('http://localhost:5000/auth/password', { oldPassword, newPassword });
+      dispatch({type: Type.CHANGE_PASSWORD_SUCCEEDED });
+    }
+    catch (e) {
+      handleAxiosError(e, dispatch, Type.SET_CHANGE_PASSWORD_FAILED);
     }
   }
 }
