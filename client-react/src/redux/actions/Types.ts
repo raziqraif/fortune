@@ -35,5 +35,9 @@ export enum Type {
 
     SET_REGISTRATION_ERROR,
     SET_LOGIN_ERROR,
-    CLEAR_ERRORS
+    CLEAR_ERRORS,
+
+    // achievement types
+    SET_ACHIEVEMENTS,
+    SET_ACHIEVEMENT_PROFILE,
 }
