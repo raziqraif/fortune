@@ -45,16 +45,16 @@ class Cointable extends React.Component<CointableProps> {
 				coinsWithPrices.sort(this.sortMax);
 			}
 
-			coinsWithPrices.forEach(coin => {
-				rows.push(
-					<CointableCoin
-						coin={coin}
-						key={coin.id}
-						number={coin.number}
-						price={coin.price}
-					/>
-				)
-			})
+			// coinsWithPrices.forEach(coin => {
+			// 	rows.push(
+			// 		<CointableCoin
+			// 			coin={coin}
+			// 			key={coin.id}
+			// 			number={coin.number}
+			// 			price={coin.price}
+			// 		/>
+			// 	)
+			// })
 		}
 
 		return rows;

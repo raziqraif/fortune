@@ -1,18 +1,3 @@
-<<<<<<< HEAD
-from auth.routes import auth_bp
-from errors.handlers import errors_bp
-from game.routes import game_bp
-from play.routes import play_bp
-from join.routes import join_bp
-from achievement.routes import achievement_bp
-from db import *  # FIXME get rid of * when you have db migrations
-from scripts.service import begin
-from flask import Flask
-from flask_cors import CORS
-from flask_socketio import SocketIO, emit
-
-=======
->>>>>>> 67ea73b0101be6ad15d427caaf0676100678156b
 import eventlet
 eventlet.monkey_patch()
 import flask
@@ -29,6 +14,7 @@ from errors.handlers import errors_bp
 from game.routes import game_bp
 from scripts.routes import tickers_bp
 from play.routes import play_bp
+from achievement.routes import achievement_bp
 from join.routes import join_bp
 from db import * # FIXME get rid of * when you have db migrations
 from scripts.service import begin

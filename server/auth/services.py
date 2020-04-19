@@ -23,16 +23,12 @@ def register(username: str, password: str):
         username=username,
         hashed_password=hashed,
     )
-<<<<<<< HEAD
-
-=======
     global_game = Game.get_or_none(Game.name == 'Global Indefinite')
     GameProfile.create(
         game=global_game,
         profile=profile,
         cash=global_game.starting_cash
     )
->>>>>>> 67ea73b0101be6ad15d427caaf0676100678156b
     return create_auth_token(profile)
 
 
