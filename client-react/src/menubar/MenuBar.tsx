@@ -116,6 +116,6 @@ const mapDispatchToProps = (dispatch: any) => ({
   fetchAuthToken: () => dispatch(Actions.auth.fetchAuthToken()),
   verifyToken: () => dispatch(Actions.auth.verifyToken()),
   setCurrentPrices: (data: currentPricesType) => dispatch(Actions.coins.setCurrentPrices(data)),
-  initializeSocketConnection: () => dispatch(Actions.auth.initializeSocketConnection),
+  initializeSocketConnection: (tok: string) => dispatch(Actions.auth.initializeSocketConnection(tok)),
 })
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar)

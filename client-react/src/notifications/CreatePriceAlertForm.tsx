@@ -81,19 +81,17 @@ class CreatePriceAlertForm extends React.Component<CreatePriceAlertProps, Create
                 </Form.Group>
                 <Form.Group>
                     <Form.Label style={{paddingRight: 10}}>Notify me when the price of {this.state.coin.name} is:</Form.Label>
-                    <ToggleButtonGroup type='radio' defaultValue={this.state.type} name='hi'>
+                    <ToggleButtonGroup type='radio' defaultValue={this.state.type} name='hi' onChange={(type: PriceAlertType) => this.setState({type})}>
                         <ToggleButton
                             type='radio'
                             name='radio'
                             defaultChecked
                             value={PriceAlertType.ABOVE}
-                            onSelect={() => this.setState({type: PriceAlertType.ABOVE})}
                         >above this price</ToggleButton>
                         <ToggleButton
                             type='radio'
                             name='radio'
                             value={PriceAlertType.BELOW}
-                            onSelect={() => this.setState({type: PriceAlertType.BELOW})}
                         >below this price</ToggleButton>
                     </ToggleButtonGroup>
                 </Form.Group>
