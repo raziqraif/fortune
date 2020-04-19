@@ -23,6 +23,7 @@ def register(username: str, password: str):
         username=username,
         hashed_password=hashed,
     )
+
     return create_auth_token(profile)
 
 
