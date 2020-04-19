@@ -11,6 +11,11 @@ export type Achievement = {
     description: string;
 }
 
+export type AchievementState = {
+    achievements: Array<Achievement>;
+    achievementProfile: Array<AchievementProfile>;
+}
+
 export type AchievementProfile = {
     achievement: Achievement;
     achievedAt: Date;

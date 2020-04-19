@@ -6,6 +6,7 @@ import AuthReducer, { Auth } from './AuthReducer';
 import CoinReducer, { CoinState } from './CoinReducer';
 import GameReducer, { GameState } from './GameReducer';
 import PlayReducer, { PlayState } from "./PlayReducer";
+import AchievementReducer, { AchievementState } from './AchievementReducer';
 
 export type RootState = {
   router: any;
@@ -13,6 +14,7 @@ export type RootState = {
   coins: CoinState;
   game: GameState;
   play: PlayState;
+  achievement: AchievementState;
 }
 
 const rootReducer = (history: H.History) => combineReducers({
@@ -21,6 +23,7 @@ const rootReducer = (history: H.History) => combineReducers({
   coins: CoinReducer,
   game: GameReducer,
   play: PlayReducer,
+  achievement: AchievementReducer,
 });
 
 export default rootReducer;
