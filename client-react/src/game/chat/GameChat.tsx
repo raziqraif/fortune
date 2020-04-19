@@ -1,9 +1,16 @@
 import React from 'react';
-
+import './GameChat.css'
+import {ChatFeed, Message, Author, ChatBubbleProps, ChatFeedApi, ChatBubble, ChatInput} from 'react-bell-chat';
 
 // import * as React from 'react';
 import { render } from 'react-dom';
-import { ChatFeed, Message, Author, ChatBubbleProps, ChatFeedApi } from 'react-bell-chat';
+import {ChatFeedStyles} from "react-bell-chat/src/lib/ChatFeed";
+import {ChatScrollAreaStyles} from "react-bell-chat/src/lib/ChatScrollArea";
+import {ChatBubbleStyles} from "react-bell-chat/src/lib/ChatBubble/styles";
+import {RootState} from "../../redux/reducers";
+import Actions from "../../redux/actions";
+import {connect} from "react-redux";
+// import {ThemedProvider} from '@livechat/ui-kit'
 
 const styles: { [key: string]: React.CSSProperties } = {
     button: {
@@ -27,54 +34,80 @@ const styles: { [key: string]: React.CSSProperties } = {
     },
 };
 
-const customBubble: React.SFC<ChatBubbleProps> = props => (
-    <div>
-        <p>{props.author && props.author.name + ' ' + (props.message.authorId !== props.yourAuthorId ? 'says' : 'said') + ': ' + props.message.message}</p>
-    </div>
-);
+const chatBubbleStyles: ChatBubbleStyles = {
+    // TODO: Update this to make sure text is wrapped properly in the chat bubbles
+}
+
+const chatFeedStyles: ChatFeedStyles = {
+    chatPanel: {
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        position: 'relative',
+        // height: "100%",
+        border: 'thin solid black',
+    },
+    showRecipientAvatarChatMessages: {
+        paddingLeft: 50
+    },
+    showIsTypingChatMessages: {
+        paddingBottom: 24,
+        position: 'relative'
+    },
+    showRecipientLastSeenMessageChatMessages: {
+        paddingRight: 30
+    },
+    chatMessages: {
+        paddingBottom: 10,
+        paddingTop: 10,
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-end'
+    }
+};
+
+const chatScrollAreaStyles: ChatScrollAreaStyles = {
+    container: {
+        // overflow: 'auto',
+        // padding: '0 10px 15px 15px',
+        paddingLeft: '20px',
+        paddingRight: '20px',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '50rem',
+        maxHeight: '60rem',
+        width: '22rem',
+        border: "thin solid grey",
+        borderRadius: 5,
+        // flexDirection: 'column-reverse'
+    }
+};
+
 
 interface GameChatProps {
-
+    messages: Message[],
+    hasOlderMessages: boolean,
+    players: Author[],
+    currentPlayerID: number,
+    getMessagesData: () => void,
+    getPlayersData: () => void,
 }
 
 interface GameChatState {
-    authors: Author[];
-    messages: Message[];
-    useCustomBubble: boolean;
-    currentUser: number;
+    // authors: Author[];
+    // messages: Message[];
+    // currentUser: number;
     messageText: string;
-    simulateTyping: boolean;
-    showAvatar: boolean;
-    showLastSeen: boolean;
-    showDateRow: boolean;
-    showIsTyping: boolean;
-    showLoadingMessages: boolean;
-    hasOldMessages: boolean;
 }
 
-export default class GameChat extends React.Component<GameChatProps, GameChatState> {
+class GameChat extends React.Component<GameChatProps, GameChatState> {
     private chat: ChatFeedApi;
-    private firstAuthorTimer: number = 0;
-    private secondAuthorTimer: number = 0;
 
-    constructor(props: GameChatProps) {
-        super(props);
-        this.chat = {
-            onMessageSend: ()=>{},
-            scrollApi: {
-                scrolledToBottom: ()=> true,
-                scrollTo: (a:number)=> {},
-                scrolledToLoadThreshold: () => true,
-                scrollHeight: () => {return 10;},
-                scrollToBottom: ()=>{},
-                scrollTop: ()=>{return 10;},
-                clientHeight: ()=>{return 10;},
-            }
-        };
-
-        // TODO: Handle newly-registered authors,
-        this.state = {
-            authors: [
+    getPlayersData() {
+        // TODO: Use real API
+        return {
+            players: [
                 {
                     id: 0,
                     name: 'You',
@@ -82,89 +115,80 @@ export default class GameChat extends React.Component<GameChatProps, GameChatSta
                 {
                     id: 1,
                     name: 'Mark',
-                    isTyping: true,
-                    lastSeenMessageId: 7,
                 },
                 {
                     id: 2,
                     name: 'Evan',
-                    isTyping: true,
-                    lastSeenMessageId: 7,
-                }
-            ],
-            messages: [
-                {
-                    id: 0,
-                    authorId: 1,
-                    message: 'Hey guys!!',
-                    createdOn: new Date(2018, 2, 27, 18, 32, 24),
-                    isSend: true
-                },
-                {
-                    id: 1,
-                    authorId: 2,
-                    message: 'Hey! Evan here. react-bell-chat is pretty dooope.',
-                    createdOn: new Date(2018, 2, 28, 18, 12, 24),
-                    isSend: true
-                },
-                {
-                    id: 2,
-                    authorId: 2,
-                    message: 'Rly is.',
-                    createdOn: new Date(2018, 2, 28, 18, 13, 24),
-                    isSend: true
-                },
-                {
-                    id: 3,
-                    authorId: 2,
-                    message: 'Long group.',
-                    createdOn: new Date(2018, 2, 28, 18, 13, 24),
-                    isSend: true
+                }],
+            currentPlayerID: 0,
+        }
+    }
+
+    getMessagesData() {
+         // TODO: Use real API
+         return {
+             messages: [
+                 {
+                     id: 0,
+                     authorId: 1,
+                     message: 'Hey guys!!',
+                     createdOn: new Date(2018, 2, 27, 18, 32, 24),
+                 },
+                 {
+                     id: 3,
+                     authorId: 2,
+                     message: 'Long group.',
+                     createdOn: new Date(2018, 2, 28, 18, 13, 24),
                 },
                 {
                     id: 4,
                     authorId: 0,
                     message: 'My message.',
                     createdOn: new Date(2018, 2, 29, 19, 32, 24),
-                    isSend: true
                 },
                 {
                     id: 5,
                     authorId: 0,
                     message: 'One more.',
                     createdOn: new Date(2018, 2, 29, 19, 33, 24),
-                    isSend: true
                 },
                 {
                     id: 6,
                     authorId: 2,
                     message: 'One more group to see the scroll.',
                     createdOn: new Date(2018, 2, 29, 19, 35, 24),
-                    isSend: true
                 },
                 {
                     id: 7,
                     authorId: 2,
                     message: 'I said group.',
                     createdOn: new Date(2018, 2, 29, 19, 35, 24),
-                    isSend: true
-                }
+                },
             ],
-            useCustomBubble: false,
-            currentUser: 0,
-            messageText: '',
-            simulateTyping: false,
-            showAvatar: true,
-            showDateRow: true,
-            showLastSeen: true,
-            showIsTyping: true,
-            showLoadingMessages: false,
-            hasOldMessages: true
-        } as GameChatState;
+            hasOlderMessages: true
+        }
     }
 
-    onPress(user: number) {
-        this.setState({ currentUser: user });
+    constructor(props: GameChatProps) {
+        super(props);
+        // TODO: What's thissss??
+        this.chat = {
+            onMessageSend: ()=>{},
+            scrollApi: {
+                scrolledToBottom: ()=> true,
+                scrollTo: (a:number)=> {},
+                scrolledToLoadThreshold: () => true,
+                scrollHeight: () => {return 100000;},
+                scrollToBottom: ()=>{},
+                scrollTop: ()=>{return 1000000;},
+                clientHeight: ()=>{return 1000000;},
+            }
+        };
+
+        // TODO: Handle newly-registered authors, if given time
+        this.state = {
+            messageText: '',
+        };
     }
 
     onMessageSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -173,227 +197,136 @@ export default class GameChat extends React.Component<GameChatProps, GameChatSta
             const id = Number(new Date());
             const newMessage: Message = {
                 id,
-                authorId: this.state.currentUser,
+                authorId: this.props.currentPlayerID,
                 message: this.state.messageText,
                 createdOn: new Date(),
                 isSend: false
             };
             this.setState(previousState => ({
                 messageText: '',
-                messages: previousState.messages.concat(newMessage)
+                // messages: previousState.messages.concat(newMessage)
             }), () => this.chat && this.chat.onMessageSend());
             setTimeout(() => {
-                this.setState(previousState => ({ messages: previousState.messages.map(m => m.id === id ? { ...m, isSend: true } : m) }));
+                // this.setState(previousState => ({ messages: previousState.messages.map(m => m.id === id ? { ...m, isSend: true } : m) }));
             }, 2000);
         }
         return true;
     }
 
+    customBubble = (props: ChatBubbleProps) => {
+        // LOOKATME: Do not remove this comment in case we want to switch to terminal-style chat messages.
+        // return <div>
+        //     {/*<p>{props.author && props.author.name + ' ' + (props.message.authorId !== props.yourAuthorId ? 'says' : 'said') + ': ' + props.message.message}</p>*/}
+        //     <p>{props.author && (props.message.authorId !== props.yourAuthorId ? '' : '     ') +  props.message.message}</p>
+        // </div>
+        // if (props.author) {
+        return (
+            <ChatBubble
+                message={props.message}
+                author={props.author}
+                yourAuthorId={0}
+                styles={{
+                    ...props.styles,
+                    text: {
+                        color: '#FFFFFF',
+                        fontSize: 16,
+                        fontWeight: 300,
+                        margin: 0,
+                        marginRight: 30,
+                        whiteSpace: 'pre',
+                        overflowWrap: 'break-word',
+                        width: "100%",
+                    } as React.CSSProperties,
+                }}
+            />
+        )
+        // }
+    };
+
+    updateEarlierMessages(resolve: any) {
+        // TODO: Call get messages API
+        // Combine messages
+        // Slice messages after threshold
+        // Get earliest id
+
+        // this.setState(previousState => ({
+        //     messages: (
+        //         new Array(10).fill(1)).map((e, i) => ({
+        //             id: Number(new Date()),
+        //             createdOn: new Date(2017, 1, 1),
+        //             message: 'Old message ' + (i + 1).toString(),
+        //             authorId: Math.round(Math.random() + 1)
+        //    } as Message)).concat(previousState.messages)
+       // }), () => resolve());
+    }
+
     render() {
         return (
-            <div className="container">
-                <div className="chatfeed-wrapper">
-                    <ChatFeed
-                        yourAuthorId={0}
-                        authors={this.state.authors}
-                        // customChatBubble={this.state.useCustomBubble && customBubble}
-                        // chatBubbleStyles={bubbleStyles}
-                        maxHeight={350}
-                        // minHeight={600}
-                        messages={this.state.messages}
-                        showRecipientAvatar={this.state.showAvatar}
-                        ref={(e:any) => this.chat = e}
-                        showIsTyping={this.state.showIsTyping}
-                        showRecipientLastSeenMessage={this.state.showLastSeen}
-                        showDateRow={this.state.showDateRow}
-                        showLoadingMessages={this.state.showLoadingMessages}
-                        // tslint:disable-next-line:no-console
-                        onLoadOldMessages={() => new Promise(resolve => setTimeout(() => {
-                            this.setState(previousState => ({
-                                messages: (new Array(10).fill(1)).map((e, i) => ({
-                                    id: Number(new Date()),
-                                    createdOn: new Date(2017, 1, 1),
-                                    message: 'Old message ' + (i + 1).toString(),
-                                    authorId: Math.round(Math.random() + 1)
-                                } as Message)).concat(previousState.messages)
-                            }), () => resolve());
-                        }, 1000))}
-                        hasOldMessages={this.state.hasOldMessages}
+            <div className="chatfeed-wrapper">
+                <h2 style={{margin: "0px 0px 15px", }}>Chat</h2>
+                <ChatFeed
+                    styles={chatFeedStyles}
+                    chatScrollArea={chatScrollAreaStyles}
+                    yourAuthorId={this.props.currentPlayerID}
+                    authors={this.props.players}
+                    customChatBubble={this.customBubble}
+                    chatBubbleStyles={styles}
+                    messages={this.props.messages}
+                    showRecipientAvatar={true}
+                    ref={(e:any) => this.chat = e}
+                    showIsTyping={false}
+                    showRecipientLastSeenMessage={false}
+                    showDateRow={true}
+                    showLoadingMessages={false}
+                    hasOldMessages={this.props.hasOlderMessages}
+                    // onLoadOldMessages={() => new Promise(resolve => setTimeout(() => {
+                    //     this.setState(previousState => ({
+                    //         messages: (
+                    //             new Array(10).fill(1)).map((e, i) => ({
+                    //                 id: Number(new Date()),
+                    //                 createdOn: new Date(2017, 1, 1),
+                    //                 message: 'Old message ' + (i + 1).toString(),
+                    //                 authorId: Math.round(Math.random() + 1)
+                    //        } as Message)).concat(previousState.messages)
+                    //    }), () => resolve());
+                    // }, 1000))}
+                    onLoadOldMessages={() => new Promise(resolve => setTimeout(() => {
+                        this.updateEarlierMessages(resolve)
+                    }, 1000))}
+                />
+
+                <form
+                    style={{width: "100%", paddingBottom: 80}}
+                    onSubmit={e => this.onMessageSubmit(e)}>
+                    <input
+                        style={{
+                            height: "50px",
+                            width: "100%",
+                            border: "none",
+                            borderBottom: "1px solid black",
+                            outlineWidth: 0,
+                        }}
+                        placeholder="Type a message..."
+                        className="message-input"
+                        value={this.state.messageText}
+                        onChange={e => this.setState({ messageText: e.target.value })}
                     />
-
-                    <form onSubmit={e => this.onMessageSubmit(e)}>
-                        <input
-                            placeholder="Type a message..."
-                            className="message-input"
-                            value={this.state.messageText}
-                            onChange={e => this.setState({ messageText: e.target.value })}
-                        />
-                    </form>
-
-                    <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                        <button
-                            role="button"
-                            style={{
-                                ...styles.button,
-                                ...(this.state.currentUser === 0 ? styles.selected : {}),
-                            }}
-                            onClick={() => this.onPress(0)}
-                        >
-                            You
-                        </button>
-                        <button
-                            style={{
-                                ...styles.button,
-                                ...(this.state.currentUser === 1 ? styles.selected : {}),
-                            }}
-                            onClick={() => this.onPress(1)}
-                        >
-                            Mark
-                        </button>
-                        <button
-                            style={{
-                                ...styles.button,
-                                ...(this.state.currentUser === 2 ? styles.selected : {}),
-                            }}
-                            onClick={() => this.onPress(2)}
-                        >
-                            Evan
-                        </button>
-                    </div>
-                    <div
-                        style={{ display: 'flex', justifyContent: 'space-around', marginTop: 10 }}
-                    >
-                        <button
-                            style={{
-                                ...styles.button,
-                                ...(this.state.useCustomBubble ? styles.selected : {}),
-                            }}
-                            onClick={() =>
-                                this.setState({ useCustomBubble: !this.state.useCustomBubble })
-                            }
-                        >
-                            Custom Bubbles
-                        </button>
-                        <button
-                            style={{
-                                ...styles.button,
-                                ...(this.state.simulateTyping ? styles.selected : {}),
-                            }}
-                            onClick={() => {
-                                if (this.state.simulateTyping) {
-                                    clearInterval(this.firstAuthorTimer);
-                                    clearInterval(this.secondAuthorTimer);
-                                } else {
-                                    this.firstAuthorTimer = window.setInterval(() => this.setState({
-                                        authors: this.state.authors.slice(0).map((a, i) => i === 1 ? a : { ...a, isTyping: !a.isTyping })
-                                    }), 2000);
-                                    this.secondAuthorTimer = window.setInterval(() => this.setState({
-                                        authors: this.state.authors.slice(0).map((a, i) => i === 2 ? a : { ...a, isTyping: !a.isTyping })
-                                    }), 3200);
-                                }
-                                this.setState({ simulateTyping: !this.state.simulateTyping });
-                            }}
-                        >
-                            Simulate typing
-                        </button>
-                        <button
-                            style={{
-                                ...styles.button,
-                            }}
-                            onClick={() => {
-                                this.setState({
-                                    messages: this.state.messages.concat([{
-                                        id: Number(new Date()),
-                                        createdOn: new Date(),
-                                        message: 'Simulated message',
-                                        authorId: Math.round(Math.random() + 1)
-                                    }])
-                                });
-                            }}
-                        >
-                            Simulate message
-                        </button>
-                        <button
-                            style={{
-                                ...styles.button,
-                            }}
-                            onClick={() => {
-                                this.setState({
-                                    messages: this.state.messages.concat([{
-                                        id: Number(new Date()),
-                                        createdOn: new Date(),
-                                        message: 'System message',
-                                    }])
-                                });
-                            }}
-                        >
-                            System message
-                        </button>
-                    </div>
-                    <div
-                        style={{ display: 'flex', justifyContent: 'space-around', marginTop: 10 }}
-                    >
-                        <button
-                            style={{
-                                ...styles.button,
-                                ...(this.state.showAvatar ? styles.selected : {}),
-                            }}
-                            onClick={() => this.setState({ showAvatar: !this.state.showAvatar })}
-                        >
-                            Show avatar
-                        </button>
-                        <button
-                            style={{
-                                ...styles.button,
-                                ...(this.state.showIsTyping ? styles.selected : {}),
-                            }}
-                            onClick={() => this.setState({ showIsTyping: !this.state.showIsTyping })}
-                        >
-                            Show typing
-                        </button>
-                        <button
-                            style={{
-                                ...styles.button,
-                                ...(this.state.showLastSeen ? styles.selected : {}),
-                            }}
-                            onClick={() => this.setState({ showLastSeen: !this.state.showLastSeen })}
-                        >
-                            Show last seen
-                        </button>
-                        <button
-                            style={{
-                                ...styles.button,
-                                ...(this.state.showDateRow ? styles.selected : {}),
-                            }}
-                            onClick={() => this.setState({ showDateRow: !this.state.showDateRow })}
-                        >
-                            Show date row
-                        </button>
-                    </div>
-                    <div
-                        style={{ display: 'flex', justifyContent: 'space-around', marginTop: 10 }}
-                    >
-                        <button
-                            style={{
-                                ...styles.button,
-                                ...(this.state.showLoadingMessages ? styles.selected : {}),
-                            }}
-                            onClick={() => this.setState({ showLoadingMessages: !this.state.showLoadingMessages })}
-                        >
-                            Show Loading
-                        </button>
-                        <button
-                            style={{
-                                ...styles.button,
-                                ...(this.state.hasOldMessages ? styles.selected : {}),
-                            }}
-                            onClick={() => this.setState({ hasOldMessages: !this.state.hasOldMessages })}
-                        >
-                            Has more messages
-                        </button>
-                    </div>
-                </div>
+                </form>
             </div>
         );
     }
 }
+
+const mapStateToProps = (state: RootState) => ({
+    players: state.game.players,
+    currentPlayerID: state.game.currentPlayerID,
+    messages: state.game.messages,
+    hasOlderMessages: state.game.hasOlderMessages,
+});
+
+const mapDispatchToProps = {
+    getPlayersData: Actions.game.getPlayersData,
+    getMessagesData: Actions.game.getMessagesData,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(GameChat);

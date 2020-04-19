@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RootState } from '../redux/reducers';
-import { Container } from 'react-bootstrap';
+import {Col, Row, Container} from 'react-bootstrap';
 import Actions from '../redux/actions';
 import { connect } from 'react-redux';
 import { GameType } from '../redux/actions/Game';
@@ -9,6 +9,7 @@ import InfoBar from './InfoBar/InfoBar';
 import GameChat from "./chat";
 import { CoinsAndPrices } from '../redux/actions/Coins';
 import Cointable from './CoinTable/Cointable';
+import "./Game.css"
 
 interface GameProps {
 	getGame: (
@@ -76,8 +77,9 @@ class Game extends React.Component<GameProps, GameState> {
 		}
 
 		return (
-			<div className="Game">
-				<Container fluid>
+			<div className="Game-container">
+				<div className="Chat-container"/>
+				<div className={"GameDetails-container"}>
 					<HeaderBar
 						game={game.data}
 						global={global}
@@ -90,11 +92,13 @@ class Game extends React.Component<GameProps, GameState> {
 						changePriceOrder={this.changePriceOrder}
 					/>
 					{/* <Cointable
-						coins={coinsAndPrices}
-						priceOrder={priceOrder}
+					coins={coinsAndPrices}
+					priceOrder={priceOrder}
 					/> */}
-				</Container>
-				<GameChat/>
+				</div>
+				<div className="Chat-container">
+					<GameChat/>
+				</div>
 			</div>
 		)
 	}
