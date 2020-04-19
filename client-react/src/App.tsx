@@ -22,7 +22,7 @@ function App() {
   return (
     <div className="App">
         <MenuBar />
-        <div className="container">
+        <div className="App-container">
           <Switch>
             <Route path="/global" render={({match, history}) => {
               return <Game gameId={match.params.gameId} history={history}/>
