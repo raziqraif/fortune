@@ -20,6 +20,7 @@ interface InfoBarProps {
 	gameProfile: any,
 	liquify: () => void,
 	changePriceOrder: (priceOrder: priceOrder) => void,
+	changeTimeSpan: (timespan: number) => void,
 }
 
 interface InfoBarState {
@@ -44,6 +45,7 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 	}
 
 	private changeTimeSpan = (timeSpan: timeSpan) => {
+		this.props.changeTimeSpan(timeSpan);
 		this.setState({ timeSpan });
 	}
 

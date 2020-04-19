@@ -5,6 +5,7 @@ interface CoinGraphProps {
   id: Number;
   change: Number;
   oneDayTickers: Ticker;
+  timespan: Number
 }
 
 export default class CoinGraph extends React.Component<CoinGraphProps> {
@@ -36,7 +37,7 @@ export default class CoinGraph extends React.Component<CoinGraphProps> {
     render() {
       //limit is 24 for one ticker per hour. it will look wonky with < 24 tickers in the db
         return (
-          <Sparklines data={this.state.data} limit={24}>
+          <Sparklines data={this.state.data}>
             <SparklinesLine color={this.state.color} />
           </Sparklines>
         )

@@ -15,7 +15,7 @@ interface GameProps {
 	) => void;
 	getCoins: (
 		gameId: number,
-		timeSpan?: number,
+		timeSpan: number,
 		sortBy?: number,
 		pageNum?: number,
 		numPerPage?: number
@@ -29,6 +29,7 @@ interface GameProps {
 
 interface GameState {
 	priceOrder: priceOrder;
+	timeSpan: number;
 }
 
 export enum priceOrder {
@@ -43,6 +44,7 @@ class Game extends React.Component<GameProps, GameState> {
 
 		this.state = {
 			priceOrder: priceOrder.MINIMUM,
+			timeSpan: 0,
 		}
 	}
 
@@ -50,20 +52,25 @@ class Game extends React.Component<GameProps, GameState> {
 		const { gameId } = this.props;
 		if (!gameId) { // global game
 			this.props.getGame(1);
-			this.props.getCoins(1);
+			this.props.getCoins(1,this.state.timeSpan);
 		} else {
 			const id = parseInt(gameId);
 			if (isNaN(id)) this.props.history.push('/'); // non-numerical ID
 			else {
 				this.props.getGame(id); // private game
-				this.props.getCoins(id);
+				this.props.getCoins(1,this.state.timeSpan);
 			}
 		}
 
 	}
 
 	private changePriceOrder = (priceOrder: priceOrder) => {
-		this.setState({ priceOrder });
+		this.setState({ priceOrder: priceOrder });
+	}
+
+	private setTimespan = (timespan:number) => {
+		this.props.getCoins(this.props.gameId,timespan)
+		this.setState({timeSpan: timespan})
 	}
 
 	render() {
@@ -87,6 +94,7 @@ class Game extends React.Component<GameProps, GameState> {
 						gameProfile={game.gameProfile}
 						coins={coinsAndPrices}
 						changePriceOrder={this.changePriceOrder}
+						changeTimeSpan={this.setTimespan}
 					/>
 					<Cointable
 						gameId={gameId}
