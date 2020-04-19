@@ -5,17 +5,21 @@ import { connect } from "react-redux";
 import { RootState } from "../../redux/reducers";
 import Actions from '../../redux/actions';
 
+import CoinGraph from '../../landing/coininfo/coingraph'
+
 interface CointableCoinProps {
 	gameId: string;
 	coin: { id: string, name: string };
 	name: string;
 	coinId: string;
+	key: string;
 	price: string;
 	percent: string;
 	number: string;
 	error: string;
 	transaction: (gameId: string, coinId: string, amount: string) => void;
 	clearErrorMessages: () => void;
+	tickers: Ticker;
 }
 
 interface CointableCoinState {
@@ -115,7 +119,7 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 			<tr>
 				<td>{name}</td>
 				<td>${price_f}</td>
-				<td>^^_^_^^^____^_^_^_</td>
+				<td width='300%'><CoinGraph id={this.props.coinId} change={percent} oneDayTickers={this.props.tickers}/></td>
 				<td><div style={style}>{percent_f}%</div></td>
 				<td>
 					<InputGroup className="mb-1">
