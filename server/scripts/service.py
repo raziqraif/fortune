@@ -1,4 +1,5 @@
 from decimal import Decimal
+from datetime import datetime, timedelta
 import os
 import random
 import sys
@@ -76,3 +77,12 @@ def begin(cb=None):
             if cb is not None: cb(tickers)
             time.sleep(WAIT)
 
+
+
+@db.atomic()
+def get_tickers_24hr():
+    yesterday = datetime.utcnow() - timedelta(days=1)
+    tickers = Ticker.select().where(Ticker.captured_at > yesterday)
+    if not tickers:
+        return []
+    return tickers

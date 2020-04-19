@@ -38,11 +38,10 @@ export const login = (username: string, password: string) => {
       res = await axios.post('http://localhost:5000/auth/login', {username, password})
       persistToken(res.data.token)
       dispatch({type: Type.LOGIN_SUCCEEDED, payload: true})
+      dispatch(verifyToken() as any);
       const pushAction: any = push('/')
       dispatch(pushAction)
     } catch (e) {
-      // TODO failed, dispatch error
-      console.log(e)
       handleAxiosError(e, dispatch, Type.LOGIN_FAILED)
     }
   }
@@ -64,12 +63,31 @@ export const register = (username: string, password: string) => {
       res = await axios.post('http://localhost:5000/auth/register', {username, password})
       persistToken(res.data.token)
       dispatch({type: Type.REGISTER_SUCCEEDED, payload: true})
+      dispatch(verifyToken() as any);
       const pushAction: any = push('/')
       dispatch(pushAction)
     } catch (e) {
-      // TODO failed, dispatch error
-      console.log('registration error', e)
       handleAxiosError(e, dispatch, Type.REGISTER_FAILED)
+    }
+  }
+}
+
+export const verifyToken = () => {
+  return async (dispatch: Dispatch<Action>) => {
+    try {
+      await fetchAuthToken()
+
+      const res = await axios.post('http://localhost:5000/auth/verify');
+      
+      if (!res.data.username) {
+        dispatch(logout() as any);
+      }
+      else {
+        dispatch({type: Type.VERIFY_AUTH_TOKEN_SUCCEEDED, payload: res.data});
+      }
+    }
+    catch (e) {
+      handleAxiosError(e, dispatch, Type.SET_VERIFY_FAILED);
     }
   }
 }

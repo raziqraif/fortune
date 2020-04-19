@@ -2,6 +2,8 @@ import { Type } from '../actions/Types'
 
 export type State = typeof initialState;
 const initialState = {
+  username: '' as string | undefined,
+  profileId: 0 as number | undefined,
   loggedIn: false,
   registrationErrorMessage: '',
   registrationLoading: false,
@@ -15,6 +17,8 @@ export type Action = {
 }
 
 export type Auth = {
+  username: string | undefined;
+  profileId: number | undefined;
   loggedIn: boolean;
   registrationErrorMessage: string;
   registrationLoading: boolean;
@@ -66,6 +70,12 @@ export default (state = initialState, action: Action) => {
         registrationErrorMessage: '',
         registrationLoading: false,
         loggedIn: true,
+      }
+    case Type.VERIFY_AUTH_TOKEN_SUCCEEDED:
+      return {
+        ...state,
+        username: action.payload.username,
+        profileId: action.payload.id,
       }
     default:
       return state
