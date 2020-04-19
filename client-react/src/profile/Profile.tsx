@@ -4,6 +4,7 @@ import Options from './Options';
 import { RootState } from '../redux/reducers';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
+import Achievements from './Achievements'
 
 interface ProfileProps {
     profileId: string;
@@ -18,7 +19,7 @@ const tabs = [
     },
     {
         title: 'Achievements',
-        component: <div>Achievements</div>
+        component: <Achievements />
     },
     {
         title: 'Friends',
@@ -52,7 +53,7 @@ class Profile extends Component<ProfileProps> {
         return (
             <Tabs defaultActiveKey={tabs[0].title} id="profile-tabbing" style={{width: '100%', marginTop: 10}}>
                 {tabs.map((tab) => 
-                    <Tab eventKey={tab.title} title={tab.title}>
+                    <Tab key={tab.title} eventKey={tab.title} title={tab.title}>
                         {tab.component}
                     </Tab>
                 )}
