@@ -59,6 +59,8 @@ export default (state = initialState, action: Action) => {
             return {
                ...state,
             };
+        case Type.LOGOUT:
+            return initialState
         default:
             return state
     }
