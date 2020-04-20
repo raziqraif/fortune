@@ -14,11 +14,12 @@ const styles: { [name: string]: CSS.Properties } = {
 };
 
 interface InfoBarProps {
+	gameId: string,
 	cash: string,
 	netWorth: string
 	coins: CoinsAndPrices,
 	gameProfile: any,
-	liquify: () => void,
+	liquefy: (gameId: string) => void,
 	changePriceOrder: (priceOrder: priceOrder) => void,
 }
 
@@ -51,8 +52,8 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 		this.props.changePriceOrder(priceOrder);
 	}
 
-	private liquify = () => {
-		this.props.liquify();
+	private liquefy = () => {
+		this.props.liquefy(this.props.gameId);
 	}
 
 	// TODO - get price of coins to calculate current net worth
@@ -84,7 +85,7 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 					</Col>
 
 					<Col>
-						<Button variant="primary" onClick={this.liquify}>Liquify</Button>
+						<Button variant="primary" onClick={this.liquefy}>Liquefy</Button>
 					</Col>
 
 					<Col>
@@ -116,7 +117,7 @@ const mapStateToProps = (state: RootState) => ({
 	cash: state.game.game.gameProfile.cash,
 })
 const mapDispatchToProps = {
-	liquify: Actions.game.liquify,
+	liquefy: Actions.game.liquefy,
 };
 
 // no mapStateToProps, so pass null as first arg

@@ -84,6 +84,7 @@ class Game extends React.Component<GameProps, GameState> {
 						gameId={gameId}
 					/>
 					<InfoBar
+						gameId={gameId ? gameId : '1'}
 						gameProfile={game.gameProfile}
 						coins={coinsAndPrices}
 						changePriceOrder={this.changePriceOrder}

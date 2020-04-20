@@ -89,15 +89,14 @@ export const getGame = (
   }
 }
 
-// liquify
-export const liquify = () => {
+export const liquefy = (gameId: string) => {
   return async (dispatch: Dispatch<Action>) => {
     try {
       await fetchAuthToken();
-      const res = await axios.get(`http://localhost:5000/game/liquify`);
+      const res = await axios.delete(`http://localhost:5000/game/${gameId}/coins`);
 
       // I'm thinking this method's response will contain a player's new gameProfile and gameCoins after liquifying
-      dispatch({type: Type.SET_GAME_PROFILE, payload: res.data.gameProfile});
+      dispatch({type: Type.SET_CASH, payload: res.data});
 
     } catch (e) {
       handleAxiosError(e, dispatch, Type.LIQUIFY_FAILED);
