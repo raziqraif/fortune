@@ -39,11 +39,11 @@ export enum priceOrder {
 }
 
 class Game extends React.Component<GameProps, GameState> {
-	gameID = -1;
+	gameID: number;
 
 	constructor(props: GameProps) {
 		super(props);
-
+		this.gameID = 9
 		this.state = {
 			priceOrder: priceOrder.MINIMUM,
 		}

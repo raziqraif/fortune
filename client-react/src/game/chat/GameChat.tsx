@@ -100,6 +100,7 @@ interface GameChatState {
 
 class GameChat extends React.Component<GameChatProps, GameChatState> {
     private chat: ChatFeedApi;
+    gameID = this.props.gameID;
 
     getPlayersData() {
         // TODO: Use real API
@@ -191,17 +192,9 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
     onMessageSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         if (this.state.messageText !== '') {
-            const id = Number(new Date());
-            const newMessage: Message = {
-                id,
-                authorId: this.props.currentPlayerID,
-                message: this.state.messageText,
-                createdOn: new Date(),
-                isSend: false
-            };
+            this.props.createMessage(this.gameID, this.state.messageText);
             this.setState(previousState => ({
                 messageText: '',
-                // messages: previousState.messages.concat(newMessage)
             }), () => this.chat && this.chat.onMessageSend());
             setTimeout(() => {
                 // this.setState(previousState => ({ messages: previousState.messages.map(m => m.id === id ? { ...m, isSend: true } : m) }));
@@ -288,7 +281,7 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
                     //    }), () => resolve());
                     // }, 1000))}
                     onLoadOldMessages={() => new Promise(resolve => setTimeout(() => {
-                        this.props.getMessagesData()
+                        // this.props.getMessagesData()
                     }, 1000))}
                 />
 
