@@ -29,6 +29,12 @@ def register(username: str, password: str):
         profile=profile,
         cash=global_game.starting_cash
     )
+    global_game = Game.get_or_none(Game.name == 'Global Timed')
+    GameProfile.create(
+        game=global_game,
+        profile=profile,
+        cash=global_game.starting_cash
+    )
     return create_auth_token(profile)
 
 

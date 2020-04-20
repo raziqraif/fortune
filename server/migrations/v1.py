@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from decimal import Decimal
 
 from playhouse.migrate import PostgresqlMigrator, migrate
@@ -24,6 +25,13 @@ def up(db):
                         ends_at=None)
         GameCoin.create(game=global_indef, coin=Coin.get())
 
+        global_timed = Game.create(name='Global Timed',
+                        starting_cash=10000.00,
+                        shareable_link='TIMED',
+                        shareable_code='TIMED',
+                        ends_at=datetime.utcnow() + timedelta(minutes=1))
+        # CHANGEME for devel purposes, making it 1 min for now
+        GameCoin.create(game=global_timed, coin=Coin.get())
 
 def down(db):
     with db.atomic():

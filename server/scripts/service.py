@@ -7,7 +7,7 @@ import time
 
 import requests
 
-from db import db, Coin, Ticker, PriceAlert
+from db import db, Coin, Ticker, PriceAlert, Game, GameProfile, GameCoin
 from notifications.services import send_notification
 
 
@@ -36,6 +36,31 @@ def check_price_alerts(latest_ticker: Ticker):
                 alert.save()
 
 
+def check_global_timed_game():
+    game = Game.get(Game.shareable_link == 'TIMED')
+    if game.ends_at < datetime.utcnow():
+        # end global timed game, and start another
+        profiles = []
+        for game_profile in GameProfile.select().where(GameProfile.game == game):
+            profiles.append(game_profile.profile)
+            send_notification(game_profile.profile, 'The global timed game has expired')
+            game_profile.delete_instance(recursive=True)
+        game.delete_instance(recursive=True)
+        global_timed = Game.create(name='Global Timed',
+                        starting_cash=10000.00,
+                        shareable_link='TIMED',
+                        shareable_code='TIMED',
+                        ends_at=datetime.utcnow() + timedelta(minutes=1))
+        # CHANGEME for devel purposes, making it 1 min for now
+        GameCoin.create(game=global_timed, coin=Coin.get())
+        for profile in profiles:
+            GameProfile.create(
+                game=global_timed,
+                profile=profile,
+                cash=global_timed.starting_cash
+            )
+
+
 @db.atomic()
 def ping(*coins):
     res = requests.get(get_api_url(*coins))
@@ -49,6 +74,7 @@ def ping(*coins):
         ticker = Ticker.create(coin=coin, price=price, price_change_day_pct=price_change_day_pct)
         tickers.append(ticker)
         check_price_alerts(ticker)
+        check_global_timed_game()
     return tickers
 
 
@@ -76,6 +102,7 @@ def stubbed(*coins):
             print(f'{coin.symbol}: {new_price} {price_change_day_pct}%')
             ticker = Ticker.create(coin=coin, price=new_price, price_change_day_pct=price_change_day_pct)
             check_price_alerts(ticker)
+            check_global_timed_game()
             tickers.append(ticker)
     return tickers
 
