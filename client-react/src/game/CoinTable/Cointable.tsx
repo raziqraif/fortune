@@ -27,22 +27,24 @@ class Cointable extends React.Component<CointableProps> {
 
 private newCoinRows = (coins: CoinsAndPrices) => {
 		let rows: JSX.Element[] = [];
-		coins.forEach(cnp => { //cnp - "coins n prices"
-			let coin = cnp.coin
-			let price = cnp.prices
-			rows.push(
-				<CointableCoin
-				  gameId={this.props.gameId}
-					name={coin.name}
-					coinId={coin.id}
-					number={coin.number}
-					key={coin.id}
-					price={Number(price[0].price)}
-					percent={Number(price[0].price_change_day_pct)}
-					tickers={this.parseTickers(coin.id)}
-				/>
-			)
-		})
+		if(coins){
+			coins.forEach(cnp => { //cnp - "coins n prices"
+				let coin = cnp.coin
+				let price = cnp.prices
+				rows.push(
+					<CointableCoin
+					  gameId={this.props.gameId}
+						name={coin.name}
+						coinId={coin.id}
+						number={coin.number}
+						key={coin.id}
+						price={Number(price[0].price)}
+						percent={Number(price[0].price_change_day_pct)}
+						tickers={this.parseTickers(coin.id)}
+					/>
+				)
+			})
+		}
 		return rows;
 }
 
@@ -119,7 +121,7 @@ private newCoinRows = (coins: CoinsAndPrices) => {
 							<th>Coin</th>
 							<th>Price</th>
 							<th>Graph</th>
-							<th>% Change</th>
+							<th>24 hr % Change</th>
 							<th>Trade Amount</th>
 							<th>Buy</th>
 							<th>Sell</th>
