@@ -7,12 +7,14 @@ from auth.decorators import require_authentication
 from db import *
 from main import create_app
 from migrations.migrate import migrate
+from notifications.services import register_socketio
 
 
 class IntegrationTest(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.app, _ = create_app()
+        cls.app, socketio = create_app()
+        register_socketio(socketio)
         cls.client = cls.app.test_client()
 
 class AuthTest(TestCase):
@@ -32,7 +34,8 @@ class AuthTest(TestCase):
 class DbTest(IntegrationTest):
     @classmethod
     def setUpClass(cls):
-        super(IntegrationTest, cls).setUpClass()
+        #super(IntegrationTest, cls).setUpClass()
+        super(DbTest, cls).setUpClass()
         #IntegrationTest.setUpClass()
         #for i in range(1, 2):
         #    migrate('up', f'migrations.v{i}')
