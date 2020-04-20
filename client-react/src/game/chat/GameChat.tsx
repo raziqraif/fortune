@@ -89,6 +89,7 @@ interface GameChatProps {
     hasOlderMessages: boolean,
     players: Author[],
     currentPlayerID: number,
+    createMessage: (gameID: number, message: string) => void,
     getMessagesData: (gameID: number, oldestID: number, newestID: number, getNewMessages: boolean) => void,
     getPlayersData: (gameID: number) => void,
 }
@@ -323,6 +324,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = {
     getPlayersData: Actions.game.getPlayersData,
     getMessagesData: Actions.game.getMessagesData,
+    createMessage: Actions.game.createMessage,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameChat);

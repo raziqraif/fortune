@@ -63,7 +63,8 @@ export const createGame = (
   return async (dispatch: Dispatch<Action>) => {
     try {
       await fetchAuthToken();
-      const res: CreateGameResponse = await axios.post('http://localhost:5000/game/', {activeCoins, endsOn, startingCash, title});
+      const res: CreateGameResponse = await axios.post('http://localhost:5000/game/',
+          {activeCoins, endsOn, startingCash, title});
       const action: any = push(`/game/${res.data.id}`);
       dispatch(action);
     } catch (e) {
@@ -130,4 +131,55 @@ export const clearErrorMessages = () => {
   return async (dispatch: Dispatch<Action>) => {
     dispatch({type: Type.CLEAR_ERRORS});
   }
-}
+};
+
+export const getMessagesData = (
+    gameID: string,
+    oldestID: number,
+    newestID: number,
+    getNewMessages: boolean,
+) => {
+  return async (dispatch: Dispatch<Action>) => {
+    try {
+      await fetchAuthToken();
+      const res = await axios.get(`http://localhost:5000/game/${gameID}/chat`,
+          {params: {oldestID: oldestID, newestID: newestID, getNewMessages: getNewMessages}});
+      console.log("Get Messages API: ", res.data)
+      dispatch({type: Type.GET_MESSAGES_DATA, payload: res.data})
+    } catch (e) {
+      handleAxiosError(e, dispatch, Type.GET_MESSAGES_DATA_FAILED)
+    }
+  }
+};
+
+export const createMessage= (
+    gameID: string,
+    message: string,
+) => {
+  return async (dispatch: Dispatch<Action>) => {
+    try {
+      await fetchAuthToken();
+      const res = await axios.post(`http://localhost:5000/game/${gameID}/chat`,
+          {message: message});
+      console.log("Create Message API: ", res.data)
+      dispatch({type: Type.CREATE_MESSAGE, payload: res.data})
+    } catch (e) {
+      handleAxiosError(e, dispatch, Type.CREATE_MESSAGE_FAILED)
+    }
+  }
+};
+
+export const getPlayersData = (
+    gameID: string,
+) => {
+  return async (dispatch: Dispatch<Action>) => {
+    try {
+      await fetchAuthToken();
+      const res = await axios.post(`http://localhost:5000/game/${gameID}/chat/players`);
+      console.log("Get Players API: ", res.data)
+      dispatch({type: Type.GET_PLAYERS_DATA, payload: res.data})
+    } catch (e) {
+      handleAxiosError(e, dispatch, Type.GET_PLAYERS_DATA_FAILED)
+    }
+  }
+};

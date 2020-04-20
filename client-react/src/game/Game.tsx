@@ -64,7 +64,6 @@ class Game extends React.Component<GameProps, GameState> {
 				this.props.getCoins(id);
 			}
 		}
-
 	}
 
 	private changePriceOrder = (priceOrder: priceOrder) => {
