@@ -9,7 +9,6 @@ export const getAchievements = () => {
     return async (dispatch: Dispatch<Action>) => {
         try {
             const res = await axios.get('http://localhost:5000/achievement');
-            console.log('hi: ', res.data)
             dispatch({type: Type.SET_ACHIEVEMENTS, payload: res.data});
         } catch (e) {
             handleAxiosError(e, dispatch, Type.SET_ACHIEVEMENTS_FAILED);
