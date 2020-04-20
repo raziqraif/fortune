@@ -104,7 +104,7 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 			<div className="HeaderBar">
 				<Row style={styles.heading}>
 					<Col md="auto">
-						<h1>{global ? `Global Game` : `Private Game: ${name}`}</h1>
+						<h1>{name}</h1>
 					</Col>
 
 					<Col md="auto">
