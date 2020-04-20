@@ -22,7 +22,8 @@ class TestService(TestCase):
     ])))
     @patch('scripts.service.Coin')
     @patch('scripts.service.Ticker')
-    def test_parsing_with_one_coin(self, mock_ticker, mock_coin):
+    @patch('scripts.service.check_price_alerts')
+    def test_parsing_with_one_coin(self, check_price_alerts_mock, mock_ticker, mock_coin):
         mock_coin.get.return_value = Coin(symbol='FOO', name='Foocoin')
         ping('FOO')
         mock_ticker.create.assert_called_with(
@@ -46,7 +47,8 @@ class TestService(TestCase):
     ])))
     @patch('scripts.service.Coin')
     @patch('scripts.service.Ticker')
-    def test_parsing_with_many_coins(self, mock_ticker, mock_coin):
+    @patch('scripts.service.check_price_alerts')
+    def test_parsing_with_many_coins(self, check_price_alerts_mock, mock_ticker, mock_coin):
         side_effect = [
             Coin(symbol='FOO', name='Foocoin'),
             Coin(symbol='BAR', name='Barcoin'),
@@ -73,7 +75,8 @@ class TestService(TestCase):
     ])))
     @patch('scripts.service.Coin')
     @patch('scripts.service.Ticker')
-    def test_parsing_with_many_ping_calls(self, mock_ticker, mock_coin):
+    @patch('scripts.service.check_price_alerts')
+    def test_parsing_with_many_ping_calls(self, check_price_alerts_mock, mock_ticker, mock_coin):
         side_effect = [
             Coin(symbol='FOO', name='Foocoin'),
             Coin(symbol='BAR', name='Barcoin'),
