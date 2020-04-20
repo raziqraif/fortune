@@ -69,7 +69,6 @@ class Game extends React.Component<GameProps, GameState> {
 	render() {
 		const { gameId, error, game, coinsAndPrices } = this.props;
 		const { priceOrder } = this.state;
-		const global = (!gameId || parseInt(gameId) == 1 || parseInt(gameId) == 2)
 		// how to know if game is timed? Can't just tell from id alone
 		if (error) {
 			return <p style={{ color: 'red' }}>{error}</p>
@@ -80,7 +79,6 @@ class Game extends React.Component<GameProps, GameState> {
 				<Container fluid>
 					<HeaderBar
 						game={game.data}
-						global={global}
 						history={this.props.history}
 						gameId={gameId}
 					/>
