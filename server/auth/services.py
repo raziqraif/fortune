@@ -3,7 +3,7 @@ import secrets
 
 from werkzeug.exceptions import BadRequest, Unauthorized
 
-from db import db, Profile, AuthToken
+from db import db, Profile, AuthToken, Game, GameProfile
 
 
 def create_auth_token(profile: Profile):
@@ -23,6 +23,12 @@ def register(username: str, password: str):
         username=username,
         hashed_password=hashed,
     )
+    global_game = Game.get_or_none(Game.name == 'Global Indefinite')
+    GameProfile.create(
+        game=global_game,
+        profile=profile,
+        cash=global_game.starting_cash
+    )
     return create_auth_token(profile)
 
 
@@ -36,4 +42,3 @@ def login(username: str, password: str):
     if not bcrypt.checkpw(password.encode(), profile.hashed_password.encode()):
         raise BadRequest('Incorrect password')
     return create_auth_token(profile)
-

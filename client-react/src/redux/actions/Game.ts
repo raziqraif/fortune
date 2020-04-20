@@ -25,6 +25,21 @@ export type GameDataType = {
   endsAt?: Date;
 }
 
+export type GetGameResponse = {
+  data: {
+    game: GameType,
+    gameProfile: {
+      cash: string;
+    }
+    coins: Array<{
+      id: string;
+      name: string;
+      symbol: string;
+      number: string;
+    }>
+  }
+}
+
 export type GameType = {
   data: GameDataType,
   gameProfile: {
@@ -35,7 +50,7 @@ export type GameType = {
     id: string;
     name: string;
     symbol: string;
-    number: number;
+    number: string;
   }>
 }
 
@@ -65,9 +80,8 @@ export const getGame = (
     try {
       await fetchAuthToken();
       const res = await axios.get(`http://localhost:5000/game/${id}`);
-      
+
       dispatch({type: Type.SET_GAME, payload: res.data.game});
-      dispatch({type: Type.SET_GAME_COINS, payload: res.data.coins});
       dispatch({type: Type.SET_GAME_PROFILE, payload: res.data.gameProfile});
     } catch (e) {
       handleAxiosError(e, dispatch, Type.SET_GAME_FAILED);
@@ -83,10 +97,37 @@ export const liquify = () => {
       const res = await axios.get(`http://localhost:5000/game/liquify`);
 
       // I'm thinking this method's response will contain a player's new gameProfile and gameCoins after liquifying
-      dispatch({type: Type.SET_GAME_COINS, payload: res.data.coins});
       dispatch({type: Type.SET_GAME_PROFILE, payload: res.data.gameProfile});
+
     } catch (e) {
       handleAxiosError(e, dispatch, Type.LIQUIFY_FAILED);
     }
+  }
+}
+
+// transaction type will either be "buy" or "sell"
+export const transaction = (
+  gameId: string,
+  id: string,
+  amount: string,
+) => {
+  return async (dispatch: Dispatch<Action>) => {
+    try {
+      await fetchAuthToken();
+      const res = await axios.post(`http://localhost:5000/game/${gameId}/coin`, {coinId: id, coinAmount: amount});
+
+      dispatch({type: Type.SET_COIN_AMOUNT, payload: { id: id, newAmount: res.data.new_amount }})
+      dispatch({type: Type.SET_CASH, payload: { cash: res.data.new_cash }})
+    } catch (e) {
+      handleAxiosError(e, dispatch, Type.TRANSACTION_FAILED);
+    }
+  }
+}
+
+// clear all error messages
+// used when a user cannot complete a transaction, but tries to make another
+export const clearErrorMessages = () => {
+  return async (dispatch: Dispatch<Action>) => {
+    dispatch({type: Type.CLEAR_ERRORS});
   }
 }

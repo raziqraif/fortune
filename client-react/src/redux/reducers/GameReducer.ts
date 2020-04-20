@@ -1,5 +1,5 @@
 import { Type } from '../actions/Types'
-import {GameType} from '../actions/Game'
+import { GameType } from '../actions/Game'
 
 export type State = typeof initialState;
 const initialState = {
@@ -17,9 +17,15 @@ const initialState = {
       cash: '',
       netWorth: '',
     },
-    coins: [],
+    coins: [] as Array<{
+      id: string;
+      name: string;
+      symbol: string;
+      number: string;
+    }>,
   },
-  setGameErrorMessage: ''
+  setGameErrorMessage: '',
+  transactionErrorMessage: '',
 }
 
 export type Action = {
@@ -32,10 +38,38 @@ export type GameState = {
   createGameErrorMessage: string;
   createGameLoading: boolean;
   setGameErrorMessage: string;
+  transactionErrorMessage: string;
 }
 
 export default (state = initialState, action: Action) => {
   switch (action.type) {
+    case Type.SET_COIN_AMOUNT:
+      var id = action.payload.id;
+      var amount = action.payload.newAmount;
+      var newCoins = state.game.coins.map((coin) => {
+        if (coin.id === id) {
+          coin.number = amount;
+        }
+        return coin;
+      })
+      return {
+        ...state,
+        game: {
+          ...state.game,
+          coins: newCoins,
+        }
+      }
+    case Type.SET_CASH:
+      return {
+        ...state,
+        game: {
+          ...state.game,
+          gameProfile: {
+            ...state.game.gameProfile,
+            cash: action.payload.cash,
+          }
+        }
+      }
     case Type.CREATE_GAME:
       return {
         ...state,
@@ -58,7 +92,7 @@ export default (state = initialState, action: Action) => {
             name: action.payload.name,
             shareableCode: action.payload.shareable_code,
             shareableLink: action.payload.shareable_link,
-            startingCash:  action.payload.starting_cash,
+            startingCash: action.payload.starting_cash,
           }
         },
         setGameErrorMessage: '',
@@ -73,19 +107,41 @@ export default (state = initialState, action: Action) => {
         ...state,
         game: {
           ...state.game,
-          gameProfile: action.payload,
+          gameProfile: {
+            cash: action.payload.cash,
+            netWorth: action.payload.net_worth,
+          }
         },
       }
     case Type.SET_GAME_COINS:
-        return {
-          ...state,
-          game: {
-            ...state.game,
-            coins: action.payload,
-          }
+      return {
+        ...state,
+        game: {
+          ...state.game,
+          coins: action.payload,
         }
+      }
+    case Type.TRANSACTION:
+      return {
+        ...state,
+        transactionErrorMessage: '',
+      }
+    case Type.TRANSACTION_FAILED:
+      return {
+        ...state,
+        transactionErrorMessage: action.payload,
+      }
     case Type.LIQUIFY_FAILED:
       return state;
+    case Type.CLEAR_ERRORS:
+      return {
+        ...state,
+        transactionErrorMessage: '',
+        setGameErrorMessage: '',
+        createGameErrorMessage: '',
+      }
+    case Type.LOGOUT:
+      return initialState
     default:
       return state
   }

@@ -6,24 +6,43 @@ import { connect } from 'react-redux';
 import { GameType } from '../redux/actions/Game';
 import HeaderBar from './HeaderBar/HeaderBar';
 import InfoBar from './InfoBar/InfoBar';
+import { CoinsAndPrices } from '../redux/actions/Coins';
+import Cointable from './CoinTable/Cointable';
 
-export interface GameProps {
+interface GameProps {
 	getGame: (
 		id: number
 	) => void;
+	getCoins: (
+		gameId: number,
+		timeSpan?: number,
+		sortBy?: number,
+		pageNum?: number,
+		numPerPage?: number
+	) => void;
+	coinsAndPrices: CoinsAndPrices;
 	gameId?: string;
-	game: GameType;
+	game: GameType
 	error: string;
 	history: any;
 }
 
-class Game extends React.Component<GameProps> {
+interface GameState {
+	priceOrder: priceOrder;
+}
+
+export enum priceOrder {
+	MINIMUM,
+	MAXIMUM,
+}
+
+class Game extends React.Component<GameProps, GameState> {
 
 	constructor(props: GameProps) {
 		super(props);
 
 		this.state = {
-
+			priceOrder: priceOrder.MINIMUM,
 		}
 	}
 
@@ -31,17 +50,26 @@ class Game extends React.Component<GameProps> {
 		const { gameId } = this.props;
 		if (!gameId) { // global game
 			this.props.getGame(1);
-			return;
-		} 
+			this.props.getCoins(1);
+		} else {
+			const id = parseInt(gameId);
+			if (isNaN(id)) this.props.history.push('/'); // non-numerical ID
+			else {
+				this.props.getGame(id); // private game
+				this.props.getCoins(id);
+			}
+		}
 
-		const id = parseInt(gameId);
-		if (!id) this.props.history.push('/'); // non-numerical ID
-		else this.props.getGame(id); // private game 
+	}
+
+	private changePriceOrder = (priceOrder: priceOrder) => {
+		this.setState({ priceOrder });
 	}
 
 	render() {
-		const { gameId, error, game } = this.props;
-		const global = gameId ? false : true;
+		const { gameId, error, game, coinsAndPrices } = this.props;
+		const { priceOrder } = this.state;
+		const global = (!gameId || parseInt(gameId) == 1)
 		if (error) {
 			return <p style={{ color: 'red' }}>{error}</p>
 		}
@@ -57,8 +85,13 @@ class Game extends React.Component<GameProps> {
 					/>
 					<InfoBar
 						gameProfile={game.gameProfile}
-						coins={game.coins}
+						coins={coinsAndPrices}
+						changePriceOrder={this.changePriceOrder}
 					/>
+					{/* <Cointable
+						coins={coinsAndPrices}
+						priceOrder={priceOrder}
+					/> */}
 				</Container>
 			</div>
 		)
@@ -68,9 +101,11 @@ class Game extends React.Component<GameProps> {
 const mapStateToProps = (state: RootState) => ({
 	game: state.game.game,
 	error: state.game.setGameErrorMessage,
+	coinsAndPrices: state.coins.coins,
 })
 
 const mapDispatchToProps = {
+	getCoins: Actions.coins.getAllCoinsForGame,
 	getGame: Actions.game.getGame,
 }
 

@@ -22,7 +22,6 @@ interface HeaderBarProps {
 
 const styles: { [name: string]: CSS.Properties } = {
 	heading: {
-		width: '100%',
 		borderBottom: 'medium solid',
 		alignItems: 'center',
 		flexWrap: 'nowrap',
@@ -75,7 +74,7 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 			return;
 		}
 		const diff = moment.duration(endsAt.diff(now));
-		const days = diff.days().toString();
+		const days = diff.asDays().toFixed(0);
 		const hours = diff.hours().toString();
 		const minutes = diff.minutes().toString();
 		const seconds = diff.seconds().toString();
@@ -162,6 +161,7 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 					</Modal>
 				</div>
 			</div>
+
 		)
 	}
 }

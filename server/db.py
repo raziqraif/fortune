@@ -24,7 +24,7 @@ db = PooledPostgresqlDatabase(
 	user=DATABASE['USER'],
 	password=DATABASE['PASSWORD'],
 	host = DATABASE['HOST'])
-	
+
 class BaseModel(peewee.Model):
     class Meta:
         database = db
@@ -34,6 +34,7 @@ class Profile(BaseModel):
     joined_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
     username = peewee.TextField(unique=True)
     hashed_password = peewee.TextField()
+    socket_id = peewee.TextField(unique=True, null=True)
 
 
 class AuthToken(BaseModel):
@@ -47,7 +48,7 @@ class Game(BaseModel):
     starting_cash = peewee.DecimalField(max_digits=20, decimal_places=8)
     shareable_link = peewee.TextField(unique=True)
     shareable_code = peewee.TextField(unique=True)
-    ends_at = peewee.DateTimeField()
+    ends_at = peewee.DateTimeField(null=True)
 
     @property
     def coins(self):
@@ -83,7 +84,7 @@ class Ticker(BaseModel):
     price = peewee.DecimalField(max_digits=20, decimal_places=8)
     captured_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
     # don't want to take up precious db space?, just making a float
-    price_change_day_pct =  peewee.DecimalField(max_digits=20, decimal_places=8)
+    price_change_day_pct =  peewee.DecimalField(max_digits=20, decimal_places=8, null=True)
 
 
 class Trade(BaseModel):
@@ -101,5 +102,20 @@ class GameProfileCoin(BaseModel):
     coin_amount = peewee.DecimalField(max_digits=20, decimal_places=8)
 
 
+class Notification(BaseModel):
+    profile = peewee.ForeignKeyField(Profile)
+    content = peewee.TextField()
+    created_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
+
+
+class PriceAlert(BaseModel):
+    profile = peewee.ForeignKeyField(Profile)
+    above = peewee.BooleanField()
+    created_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
+    coin = peewee.ForeignKeyField(Coin, backref='alerts')
+    strike_price = peewee.DecimalField(max_digits=20, decimal_places=8)
+    hit = peewee.BooleanField(default=False)
+
+
 MODELS = [Profile, AuthToken, Game, GameProfile, Coin,
-    GameCoin, Ticker, Trade, GameProfileCoin]
+    GameCoin, Ticker, Trade, GameProfileCoin, Notification, PriceAlert]
