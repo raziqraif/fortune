@@ -7,7 +7,8 @@ import time
 
 import requests
 
-from db import db, Coin, Ticker
+from db import db, Coin, Ticker, PriceAlert
+from notifications.services import send_notification
 
 
 NOMICS_API_KEY = os.environ['NOMICS_API_KEY']
@@ -19,22 +20,40 @@ def get_api_url(*coins):
     return f'{NOMICS_BASE_URL}/currencies/ticker?ids={",".join(coins)}&key={NOMICS_API_KEY}'
 
 
+def check_price_alerts(latest_ticker: Ticker):
+    # only get non-hit alerts
+    alerts = PriceAlert.select().where((PriceAlert.hit == False) & (PriceAlert.coin == latest_ticker.coin))
+    for alert in alerts:
+        if alert.above:
+            if alert.strike_price < latest_ticker.price:
+                send_notification(alert.profile, f'{latest_ticker.coin.name} is now above {alert.strike_price}!')
+                alert.hit = True
+                alert.save()
+        else:
+            if alert.strike_price > latest_ticker.price:
+                send_notification(alert.profile, f'{latest_ticker.coin.name} is now below {alert.strike_price}!')
+                alert.hit = True
+                alert.save()
+
+
 @db.atomic()
 def ping(*coins):
     res = requests.get(get_api_url(*coins))
-    tokens = []
+    tickers = []
     for coin_res in res.json():
         symbol = coin_res['symbol']
         coin = Coin.get(Coin.symbol == symbol)
         price = Decimal(coin_res['price'])
         price_change_day_pct = Decimal(coin_res['1d']['price_change_pct'])
         print(f'{symbol}: {price} {price_change_day_pct}%')
-        tok = Ticker.create(coin=coin, price=price, price_change_day_pct=price_change_day_pct)
-        tokens.append(tok)
-    return tokens
+        ticker = Ticker.create(coin=coin, price=price, price_change_day_pct=price_change_day_pct)
+        tickers.append(ticker)
+        check_price_alerts(ticker)
+    return tickers
 
 
 def stubbed(*coins):
+    tickers = []
     for coin in coins:
         last_ticker = (Ticker
             .select()
@@ -44,17 +63,21 @@ def stubbed(*coins):
         if last_ticker.count() == 0:
             price = random.uniform(500, 12000)
             print(f'Creating first ticker for {coin.symbol}: {price} 0%')
-            yield Ticker.create(
+            ticker = Ticker.create(
                 coin=coin,
                 price=price,
                 price_change_day_pct=0,
             )
+            tickers.append(ticker)
         else:
             last_ticker = last_ticker.get()
             new_price = last_ticker.price * Decimal(random.uniform(0.98, 1.02))
             price_change_day_pct = (new_price - last_ticker.price) / last_ticker.price
             print(f'{coin.symbol}: {new_price} {price_change_day_pct}%')
-            yield Ticker.create(coin=coin, price=new_price, price_change_day_pct=price_change_day_pct)
+            ticker = Ticker.create(coin=coin, price=new_price, price_change_day_pct=price_change_day_pct)
+            check_price_alerts(ticker)
+            tickers.append(ticker)
+    return tickers
 
 
 def begin(cb=None):

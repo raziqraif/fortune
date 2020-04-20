@@ -140,6 +140,8 @@ export default (state = initialState, action: Action) => {
         setGameErrorMessage: '',
         createGameErrorMessage: '',
       }
+    case Type.LOGOUT:
+      return initialState
     default:
       return state
   }
