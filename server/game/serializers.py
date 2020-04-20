@@ -27,9 +27,11 @@ class GameCreateRequest(BaseSerializer):
     startingCash = fields.Decimal(required=True, as_string=True)
     title = fields.Str(required=True, validate=title_length_validator)
 
+
 class TradeRequest(BaseSerializer):
     coinId = fields.Int(required=True, as_string=True)
     coinAmount = fields.Decimal(required=True, as_string=True)
+
 
 class GameResponse(BaseSerializer):
     id = fields.Int(required=True)
@@ -43,6 +45,7 @@ class GameResponse(BaseSerializer):
 class GameProfileResponse(BaseSerializer):
     cash = fields.Decimal(required=True, as_string=True)
     net_worth = fields.Decimal(required=True, as_string=True)
+
 
 class CoinsResponse(BaseSerializer):
     id = fields.Int(required=True)
@@ -72,9 +75,44 @@ class GetGameResponse(BaseSerializer):
     game = fields.Nested(GameResponse)
     gameProfile = fields.Nested(GameProfileResponse)
 
+
 class Cash(BaseSerializer):
     cash = fields.Decimal(required=True, as_string=True)
+
 
 class TradeResponse(BaseSerializer):
     new_amount = fields.Decimal(required=True, as_string=True)
     new_cash = fields.Decimal(required=True, as_string=True)
+
+
+class CreateMessageRequest(BaseSerializer):
+    message = fields.Str(required=True)
+
+
+class CreateMessageResponse(BaseSerializer):
+    id = fields.Int(required=True)
+    authorId = fields.Int(required=True)
+    message = fields.Str(required=True)
+    createdOn = fields.DateTime(required=True)
+
+
+class Message(BaseSerializer):
+    id = fields.Int(required=True)
+    authorID = fields.Int(required=True)
+    message = fields.Str(required=True)
+    createdOn = fields.DateTime(required=True)
+
+
+class MessagesDataResponse(BaseSerializer):
+    messages = fields.List(Message, required=True)
+    hasOlderMessages = fields.Bool(required=True)
+
+
+class Player(BaseSerializer):
+    id = fields.Int(required=True)
+    name = fields.Str(required=True)
+
+
+class PlayersDataResponse(BaseSerializer):
+    players = fields.List(Player, required=True)
+    currentPlayerId = fields.Int(required=True)

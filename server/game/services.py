@@ -3,7 +3,7 @@ from decimal import Decimal
 
 import pytz
 from werkzeug.exceptions import BadRequest
-from db import db, Game, GameCoin, Coin, GameProfile, GameProfileCoin, Ticker
+from db import db, Game, GameCoin, Coin, GameProfile, GameProfileCoin, Ticker, Message, Profile
 
 
 @db.atomic()
@@ -166,6 +166,7 @@ def get_start_time_from_time_span(time_span_int):
         return datetime.utcnow() - timedelta(weeks=52)
     raise BadRequest("Time span invalid: {}".format(str(time_span_int)))
 
+
 @db.atomic()
 def get_net_worth_by_game_profile_id(game_profile_id):
     gameProfile = GameProfile.get_or_none(GameProfile.id == game_profile_id)
@@ -184,6 +185,7 @@ def get_net_worth_by_game_profile_id(game_profile_id):
             raise BadRequest('One coin did not exist')
         netWorth += ticker.price * gameProfileCoin.coin_amount
     return netWorth
+
 
 @db.atomic()
 def buy_coin(coin_id, coin_amount, game_profile):
@@ -235,3 +237,43 @@ def sell_coin(coin_id, coin_amount, game_profile):
     GameProfileCoin.update(coin_amount=new_coin_amount).where(GameProfileCoin.id == gameProfileCoin.id).execute()
     GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id).execute()
     return new_coin_amount
+
+
+@db.atomic()
+def create_chat_message(profile_id, game_id, message):
+    try:
+        int(profile_id)
+        int(game_id)
+        assert len(message) > 0
+    except:
+        raise BadRequest("Invalid parameters to create chat message")
+
+    message = Message.create(
+        game=game_id,
+        profile=profile_id,
+        content=message,
+        # use default value for created_on
+    )
+
+    return message
+
+
+@db.atomic
+def get_chat_messages_data(game_id: int, oldest_id: int, newest_id: int, newer_messages: bool):
+    older_message = Message.get_or_none(Message.id < oldest_id)
+    has_older_message = older_message is not None
+
+    if newer_messages:
+        # TODO: Limit result of newer messages too, if frontend has been optimized
+        messages = Message.select().where(Message.game == game_id, Message.id > newest_id).execute()
+    else:
+        messages = Message.select().where(Message.game == game_id, Message.id < oldest_id).limit(30).execute()
+
+    return messages, has_older_message
+
+
+@db.atomic
+def get_players_in_a_game(game_id: int):
+    game_profiles = GameProfile.select(GameProfile, Profile).join(Profile).where(GameProfile.game == game_id).execute()
+    return [gp.profile for gp in game_profiles]
+

@@ -105,7 +105,7 @@ class GameProfileCoin(BaseModel):
 class Message(BaseModel):
     game = peewee.ForeignKeyField(Game)
     profile = peewee.ForeignKeyField(Profile)
-    created_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
+    created_on = peewee.DateTimeField(default=datetime.datetime.utcnow)
     content = peewee.TextField()
 
 

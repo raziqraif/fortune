@@ -39,6 +39,7 @@ export enum priceOrder {
 }
 
 class Game extends React.Component<GameProps, GameState> {
+	gameID = -1;
 
 	constructor(props: GameProps) {
 		super(props);
@@ -51,12 +52,14 @@ class Game extends React.Component<GameProps, GameState> {
 	componentDidMount() {
 		const { gameId } = this.props;
 		if (!gameId) { // global game
+			this.gameID = 1;
 			this.props.getGame(1);
 			this.props.getCoins(1);
 		} else {
 			const id = parseInt(gameId);
 			if (isNaN(id)) this.props.history.push('/'); // non-numerical ID
 			else {
+				this.gameID = id;
 				this.props.getGame(id); // private game
 				this.props.getCoins(id);
 			}
@@ -97,7 +100,7 @@ class Game extends React.Component<GameProps, GameState> {
 					/> */}
 				</div>
 				<div className="Chat-container">
-					<GameChat/>
+					<GameChat gameID={this.gameID}/>
 				</div>
 			</div>
 		)

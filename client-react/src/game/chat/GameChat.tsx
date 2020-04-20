@@ -44,7 +44,6 @@ const chatFeedStyles: ChatFeedStyles = {
         flexDirection: 'column',
         overflow: 'hidden',
         position: 'relative',
-        // height: "100%",
         border: 'thin solid black',
     },
     showRecipientAvatarChatMessages: {
@@ -84,20 +83,17 @@ const chatScrollAreaStyles: ChatScrollAreaStyles = {
     }
 };
 
-
 interface GameChatProps {
+    gameID: number,
     messages: Message[],
     hasOlderMessages: boolean,
     players: Author[],
     currentPlayerID: number,
-    getMessagesData: () => void,
-    getPlayersData: () => void,
+    getMessagesData: (gameID: number, oldestID: number, newestID: number, getNewMessages: boolean) => void,
+    getPlayersData: (gameID: number) => void,
 }
 
 interface GameChatState {
-    // authors: Author[];
-    // messages: Message[];
-    // currentUser: number;
     messageText: string;
 }
 
@@ -291,7 +287,7 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
                     //    }), () => resolve());
                     // }, 1000))}
                     onLoadOldMessages={() => new Promise(resolve => setTimeout(() => {
-                        this.updateEarlierMessages(resolve)
+                        this.props.getMessagesData()
                     }, 1000))}
                 />
 
