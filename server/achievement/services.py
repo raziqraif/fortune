@@ -28,4 +28,8 @@ def add_achievement_by_achievement_id_and_profile_id(achievement_id, profile_id)
 
 @db.atomic()
 def get_achievements():
-    return Achievement.select()
+    print('bae')
+    achi = Achievement.get()
+    # for a in achi:
+    # print(a.name)
+    return achi

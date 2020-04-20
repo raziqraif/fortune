@@ -16,15 +16,15 @@ class BaseSerializer(Schema):
         """
         return cls().load(obj, many=many)
 
-class Achievement(BaseSerializer):
+class AchievementSerializer(BaseSerializer):
     name = fields.Str(required=True)
     description = fields.Str(required=True)
 
-class Achievements(Achievement):
-    achievements: fields.List(fields.Nested(Achievement))
+class Achievements(AchievementSerializer):
+    achievements: fields.List(fields.Nested(AchievementSerializer))
 
-class AchievementProfileAchievement(Achievement):
-    achievement = fields.Nested(Achievement)
+class AchievementProfileAchievement(AchievementSerializer):
+    achievement = fields.Nested(AchievementSerializer)
     achieved_at = fields.DateTime(required=True)
 
 class AchievementProfile(BaseSerializer):
