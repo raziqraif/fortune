@@ -69,7 +69,6 @@ class Game extends React.Component<GameProps, GameState> {
 	render() {
 		const { gameId, error, game, coinsAndPrices } = this.props;
 		const { priceOrder } = this.state;
-		// how to know if game is timed? Can't just tell from id alone
 		if (error) {
 			return <p style={{ color: 'red' }}>{error}</p>
 		}
