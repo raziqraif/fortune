@@ -62,7 +62,7 @@ const setCurrentPrices = (state = initialState, currentPrices: currentPricesType
   const newCoins = previousCoins.map(coinAndPrices => {
     const newPrice = currentPrices.find(
       (currentPrice: currentPrice) => {
-        return currentPrice.coin.id.toString() === coinAndPrices.coin.id;
+        return currentPrice.coin.id === coinAndPrices.coin.id;
       }
     );
     if (newPrice) {
