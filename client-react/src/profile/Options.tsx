@@ -31,7 +31,7 @@ class Options extends Component<OptionsProps, OptionsState> {
     }
 
     private handleChange = (event: any) => {
-        this.setState({ [event.currentTarget.name]: event.currentTarget.value });
+        this.setState({ [event.currentTarget.name]: event.currentTarget.value.trim() });
     }
 
     private changeUsername = (event: any) => {

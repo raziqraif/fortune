@@ -362,3 +362,10 @@ class GameTest(AuthDbTest):
             }
         )
         self.assertEqual(int(HTTPStatus.OK), res._status_code)
+    
+    def test_joining_game_more_than_once_is_idempotent(self):
+        game = Game.get(Game.name == 'Global Timed')
+        before = GameProfile.select().count()
+        self.client.get(f'/join?code={game.shareable_code}')
+        after = GameProfile.select().count()
+        self.assertEqual(before, after)
