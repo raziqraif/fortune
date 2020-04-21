@@ -123,8 +123,8 @@ def get_game_coins(profile, game_id):
     for coin_and_prices in coins_and_prices:
         coin_number = 0
         for game_profile_coin in game_profile_coins:
-            if game_profile_coin.coin == coin_and_prices['coin'].id:
-                coin_number = game_profile_coin.number
+            if game_profile_coin.coin.id == coin_and_prices['coin'].id:
+                coin_number = game_profile_coin.coin_amount
                 break
         coin_and_prices['coin'].number = coin_number
 
