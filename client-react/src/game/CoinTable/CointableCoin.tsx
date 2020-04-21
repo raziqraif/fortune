@@ -20,6 +20,7 @@ interface CointableCoinProps {
 	transaction: (gameId: string, coinId: string, amount: string) => void;
 	clearErrorMessages: () => void;
 	tickers: Ticker;
+	refetchData: () => void;
 }
 
 interface CointableCoinState {
@@ -53,7 +54,11 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 			errMes: '',
 			confirmMes: '',
 			type: 'buy',
+			amount_owned: '',
 		}
+	}
+	static getDerivedStateFromProps(props, state) {
+		return ({...state, amount_owned: props.number})
 	}
 
 	private handleChange = (event: any) => {
@@ -103,13 +108,13 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 			sentAmount = (-1 * Number(amount)).toString();
 		}
 		this.props.transaction(this.props.gameId, this.props.coinId, sentAmount);
+		this.props.refetchData()
 		this.toggleConfirm();
 	}
 
 	render() {
 		const name  = this.props.name;
 		const price = this.props.price;
-		const num = this.props.number;
 		const percent = this.props.percent;
 		const { showConfirm, errMes, confirmMes } = this.state;
 		const price_f = Number(price).toFixed(2);
@@ -135,7 +140,7 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 				</td>
 				<td><Button variant="outline-primary" onClick={() => this.transactionDialogue(transactionType.BUY)}>Buy</Button></td>
 				<td><Button variant="outline-danger" onClick={() => this.transactionDialogue(transactionType.SELL)}>Sell</Button></td>
-				<td>{num}</td>
+				<td>{this.state.amount_owned}</td>
 
 				{/* confirmation modal */}
 				<Modal show={showConfirm} onHide={this.toggleConfirm}>
