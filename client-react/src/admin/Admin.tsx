@@ -71,6 +71,8 @@ class Admin extends Component<AdminProps, AdminState> {
                         </p>}
                         <Form.Row>
                             <h4 style={{paddingRight: 10}}>Notify</h4>
+                        </Form.Row>
+                        <Form.Row style={{marginTop: 10}}>
                             <DropdownButton id="user-to-notify" title={currentSelectedUsername}>
                                 <Dropdown.Item as="button" onClick={(e) => this.setSelectedUserId()}>
                                     All Users
@@ -86,8 +88,6 @@ class Admin extends Component<AdminProps, AdminState> {
                                 <Dropdown.Divider />
                                 {this.renderUsersInDropdown()}
                             </DropdownButton>
-                        </Form.Row>
-                        <Form.Row style={{marginTop: 10}}>
                             <Form.Control
                                 type="input"
                                 placeholder="Message"
