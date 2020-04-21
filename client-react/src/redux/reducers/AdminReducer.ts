@@ -9,6 +9,7 @@ export type AdminState = typeof initialState;
 const initialState = {
     users: [] as UsersType,
     usersErrorMessage: '',
+    userActionErrorMessage: '',
     notifyErrorMessage: '',
 }
 
@@ -39,6 +40,16 @@ export default (state = initialState, action: Action) => {
             return {
                 ...state,
                 notifyErrorMessage: action.payload,
+            }
+        case Type.USER_ACTION_SUCCESS:
+            return {
+                ...state,
+                userActionErrorMessage: '',
+            }
+        case Type.USER_ACTION_FAILED:
+            return {
+                ...state,
+                userActionErrorMessage: action.payload,
             }
         default:
             return state;
