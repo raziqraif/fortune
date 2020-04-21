@@ -7,6 +7,7 @@ import CoinReducer, { CoinState } from './CoinReducer';
 import GameReducer, { GameState } from './GameReducer';
 import NotificationsReducer, { NotificationState } from './NotificationsReducer';
 import PlayReducer, { PlayState } from "./PlayReducer";
+import AdminReducer, { AdminState } from './AdminReducer';
 
 export type RootState = {
   router: any;
@@ -15,6 +16,7 @@ export type RootState = {
   game: GameState;
   notifications: NotificationState;
   play: PlayState;
+  admin: AdminState;
 }
 
 const rootReducer = (history: H.History) => combineReducers({
@@ -24,6 +26,7 @@ const rootReducer = (history: H.History) => combineReducers({
   game: GameReducer,
   notifications: NotificationsReducer,
   play: PlayReducer,
+  admin: AdminReducer,
 });
 
 export default rootReducer;

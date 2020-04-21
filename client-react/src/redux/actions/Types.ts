@@ -54,4 +54,10 @@ export enum Type {
     CREATE_PRICE_ALERT_FAILED,
 
     SET_SOCKET,
+
+    // admin types
+    SET_USERS,
+    GET_USERS_FAILED,
+    NOTIFY_USER_FAILED,
+    NOTIFY_USER_SUCCESS,
 }
