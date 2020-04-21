@@ -35,6 +35,7 @@ class Admin extends Component<AdminProps, AdminState> {
     notifyUser = (event: any) => {
         event.preventDefault();
         this.props.notifyUser(this.state.notificationMessage, this.state.selectedUserId);
+        this.setState({notificationMessage: '', selectedUserId: undefined});
     }
 
     setSelectedUserId = (selectedUserId?: number) => {
