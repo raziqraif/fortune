@@ -1,10 +1,10 @@
-from db import db, Notification, Profile, Friends
+from db import db, Notification, Profile, Friend
 from werkzeug.exceptions import BadRequest
 
-@db_atomic()
-def create_request(profile, requestee, status):
+@db.atomic()
+def create_request(requester, requestee, status):
     req = Friends.create(
-        requester=profile.id,
+        requester=requester,
         requestee=requestee,
         status=status
         )
