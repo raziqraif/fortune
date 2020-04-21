@@ -44,7 +44,11 @@ export class CoinInfo extends React.Component<CoinInfoProps> {
           var style = {color:'green'}
           var change = Number(allCoins[i].prices[0].price_change_day_pct) * 100
           if (change < 0) { style = {color:'red'} }
-          return <div style={style}>{Number(change).toFixed(2)}%</div>
+          if (!isNaN(change)){
+            return <div style={style}>{Number(change).toFixed(2)}%</div>
+          } else {
+            return <div>Fetching...</div>
+          }
         }
       }
       return <div>Retrieving...</div>
