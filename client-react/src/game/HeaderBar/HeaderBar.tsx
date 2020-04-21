@@ -15,7 +15,6 @@ interface HeaderBarState {
 
 interface HeaderBarProps {
 	game: GameDataType,
-	global: boolean,
 	history: any,
 	gameId?: string,
 }
@@ -96,7 +95,7 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 
 	render() {
 		const { days, hours, minutes, seconds, showShare } = this.state;
-		const { global, game } = this.props;
+		const { game } = this.props;
 		// truncate name with '...' if it is too long
 		let name = game.name;
 		name = name.length > 10 ? name.substring(0, 10) + '...' : name;
@@ -104,7 +103,7 @@ class HeaderBar extends React.Component<HeaderBarProps, HeaderBarState> {
 			<div className="HeaderBar">
 				<Row style={styles.heading}>
 					<Col md="auto">
-						<h1>{global ? `Global Game` : `Private Game: ${name}`}</h1>
+						<h1>{name}</h1>
 					</Col>
 
 					<Col md="auto">
