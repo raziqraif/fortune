@@ -76,12 +76,12 @@ def get(profile, game_id):
     game = get_game_by_id(game_id)
     gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
     netWorth = get_net_worth_by_game_profile_id(gameProfile.id)
-    
+
     return jsonify(GetGameResponse.serialize({
         'game': game,
         'gameProfile': {
             'cash': gameProfile.cash,
-            'netWorth': netWorth,
+            'net_worth': netWorth,
         },
     }))
 
