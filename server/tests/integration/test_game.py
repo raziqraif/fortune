@@ -164,17 +164,6 @@ class GameTest(AuthDbTest):
         })
         self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
 
-    def test_get_game_without_coins(self):
-        GameProfile.create(
-            game=1,
-            profile=1,
-            cash=10000
-        )
-        res = self.client.get('/game/1', headers={
-            'Authorization': 'Bearer ' + self.token
-        })
-        self.assertEqual(int(HTTPStatus.BAD_REQUEST), res._status_code)
-
     def test_buy_coin_without_cash(self):
         profile = Profile.get_or_none(Profile.username=='theusername')
         GameProfile.create(
@@ -373,3 +362,10 @@ class GameTest(AuthDbTest):
             }
         )
         self.assertEqual(int(HTTPStatus.OK), res._status_code)
+    
+    def test_joining_game_more_than_once_is_idempotent(self):
+        game = Game.get(Game.name == 'Global Timed')
+        before = GameProfile.select().count()
+        self.client.get(f'/join?code={game.shareable_code}')
+        after = GameProfile.select().count()
+        self.assertEqual(before, after)
