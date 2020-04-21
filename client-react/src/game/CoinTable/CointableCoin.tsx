@@ -115,12 +115,13 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 		const price_f = Number(price).toFixed(2);
 		const percent_f = Number(percent * 100).toFixed(3);
 		var style = ((percent > 0) ? {color:'green'} : {color:'red'})
+		var percent_div = (!isNaN(percent)) ? <div style={style}>{percent_f}%</div> : <div>Fetching...</div>
 		return (
 			<tr>
 				<td>{name}</td>
 				<td>${price_f}</td>
 				<td width='300%'><CoinGraph id={this.props.coinId} change={percent} oneDayTickers={this.props.tickers}/></td>
-				<td><div style={style}>{percent_f}%</div></td>
+				<td>{percent_div}</td>
 				<td>
 					<InputGroup className="mb-1">
 						<FormControl
