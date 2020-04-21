@@ -57,3 +57,16 @@ def change_username(profile_id: int, username: str):
         update_username.execute()
     except Exception as e:
         raise BadRequest('Failure to change username: {}'.format(str(e)))
+
+@db.atomic()
+def change_password(profile: Profile, old_password: str, new_password: str):
+    if not bcrypt.checkpw(old_password.encode(), profile.hashed_password.encode()):
+        raise BadRequest('Incorrect old password')
+    hashed_new_password = bcrypt.hashpw(new_password.encode(), bcrypt.gensalt()).decode()
+    try:
+        update_password = Profile.update({
+            Profile.hashed_password: hashed_new_password
+        }).where(Profile.id == profile.id)
+        update_password.execute()
+    except Exception as e:
+        raise BadRequest('Failure to change password: {}'.format(str(e)))
