@@ -12,7 +12,6 @@ def create_auth_token(profile: Profile):
         token=secrets.token_urlsafe(32),
     )
 
-
 @db.atomic()
 def register(username: str, password: str):
     profile = Profile.get_or_none(Profile.username == username)
@@ -37,9 +36,6 @@ def register(username: str, password: str):
     )
     return create_auth_token(profile)
 
-
-
-
 @db.atomic()
 def login(username: str, password: str):
     profile = Profile.get_or_none(Profile.username == username)
@@ -48,3 +44,16 @@ def login(username: str, password: str):
     if not bcrypt.checkpw(password.encode(), profile.hashed_password.encode()):
         raise BadRequest('Incorrect password')
     return create_auth_token(profile)
+
+@db.atomic()
+def change_username(profile_id: int, username: str):
+    profile = Profile.get_or_none(Profile.username == username)
+    if profile is not None:
+        raise BadRequest('A user with this username already exists')
+    try:
+        update_username = Profile.update({
+            Profile.username: username
+        }).where(Profile.id == profile_id)
+        update_username.execute()
+    except Exception as e:
+        raise BadRequest('Failure to change username: {}'.format(str(e)))

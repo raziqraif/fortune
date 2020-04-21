@@ -70,7 +70,6 @@ def ping(*coins):
         coin = Coin.get(Coin.symbol == symbol)
         price = Decimal(coin_res['price'])
         price_change_day_pct = Decimal(coin_res['1d']['price_change_pct'])
-        print(f'{symbol}: {price} {price_change_day_pct}%')
         ticker = Ticker.create(coin=coin, price=price, price_change_day_pct=price_change_day_pct)
         tickers.append(ticker)
         check_price_alerts(ticker)

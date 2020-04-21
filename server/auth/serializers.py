@@ -24,6 +24,8 @@ class LoginRequestSerializer(BaseSerializer):
     username = fields.Str(required=True, validate=username_length_validator)
     password = fields.Str(required=True, validate=password_length_validator)
 
+class ChangeUsername(BaseSerializer):
+    username = fields.Str(required=True, validate=username_length_validator)
 
 class AuthTokenSerializer(BaseSerializer):
     issued_at = fields.DateTime(required=True)

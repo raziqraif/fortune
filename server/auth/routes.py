@@ -1,9 +1,14 @@
 from flask import Blueprint, request, jsonify
 
 from db import AuthToken, Profile
-from .serializers import LoginRequestSerializer, AuthTokenSerializer, VerifyResponseSerializer
-from .services import register, login
-from .decorators import get_auth_token
+from .serializers import (
+    LoginRequestSerializer,
+    AuthTokenSerializer,
+    VerifyResponseSerializer,
+    ChangeUsername
+)
+from .services import register, login, change_username
+from .decorators import get_auth_token, require_authentication
 from werkzeug.exceptions import BadRequest, Unauthorized
 
 import datetime
@@ -46,4 +51,14 @@ def verify_route():
     return jsonify(VerifyResponseSerializer.serialize({
         'id': profile.id,
         'username': profile.username,
+    }))
+
+@auth_bp.route('/username', methods=['PUT'])
+@require_authentication
+def change_username_route(profile):
+    validated_data: dict = ChangeUsername.deserialize(request.json)
+    new_username = validated_data['username'].strip()
+    change_username(profile.id, new_username)
+    return jsonify(ChangeUsername.serialize({
+        'username': new_username
     }))
