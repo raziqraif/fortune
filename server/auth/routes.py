@@ -57,7 +57,7 @@ def verify_route():
 @require_authentication
 def change_username_route(profile):
     validated_data: dict = ChangeUsername.deserialize(request.json)
-    new_username = validated_data['username']
+    new_username = validated_data['username'].strip()
     change_username(profile.id, new_username)
     return jsonify(ChangeUsername.serialize({
         'username': new_username
