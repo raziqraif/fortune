@@ -1,7 +1,28 @@
 import React, { Component } from 'react';
 import {InputGroup, Button, FormControl, ListGroup} from 'react-bootstrap';
 
+interface FriendsState {
+  username: string;
+}
+
 class Friends extends Component {
+
+constructor(props){
+  super(props)
+  this.state = {
+    username: '',
+  }
+}
+
+private sendRequest = () => {
+  console.log('fren pls', this.state.username)
+}
+
+private handleChange = (event: any) => {
+  this.setState({
+      [event.currentTarget.name]: event.currentTarget.value
+    })
+}
 
     render() {
         return (
@@ -9,9 +30,12 @@ class Friends extends Component {
             <InputGroup className="mb-3">
               <FormControl
                 placeholder="Add by Username"
+                name="username"
+                value={this.state.username}
+                onChange={this.handleChange}
               />
               <InputGroup.Append>
-                <Button>Send Request</Button>
+                <Button onClick={this.sendRequest}>Send Request</Button>
               </InputGroup.Append>
             </InputGroup>
 
