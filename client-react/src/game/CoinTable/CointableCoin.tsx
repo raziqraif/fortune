@@ -20,7 +20,7 @@ interface CointableCoinProps {
 	transaction: (gameId: string, coinId: string, amount: string) => void;
 	clearErrorMessages: () => void;
 	tickers: Ticker;
-	refetchData: () => void;
+	refetchCoinData: () => void;
 }
 
 interface CointableCoinState {
@@ -107,14 +107,14 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 		else {
 			sentAmount = (-1 * Number(amount)).toString();
 		}
-		this.props.transaction(this.props.gameId, this.props.coinId, sentAmount);
-		this.props.refetchData()
+		this.props.transaction(this.props.gameId, this.props.coinId, sentAmount).then(this.props.refetchCoinData());
 		this.toggleConfirm();
 	}
 
 	render() {
 		const name  = this.props.name;
 		const price = this.props.price;
+		var amount_owned = (parseInt(this.state.amount_owned) === 0) ? '0' : parseInt(this.state.amount_owned).toFixed(5)
 		const percent = this.props.percent;
 		const { showConfirm, errMes, confirmMes } = this.state;
 		const price_f = Number(price).toFixed(2);
@@ -140,7 +140,7 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 				</td>
 				<td><Button variant="outline-primary" onClick={() => this.transactionDialogue(transactionType.BUY)}>Buy</Button></td>
 				<td><Button variant="outline-danger" onClick={() => this.transactionDialogue(transactionType.SELL)}>Sell</Button></td>
-				<td>{this.state.amount_owned}</td>
+				<td>{amount_owned}</td>
 
 				{/* confirmation modal */}
 				<Modal show={showConfirm} onHide={this.toggleConfirm}>

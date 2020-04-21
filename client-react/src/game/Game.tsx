@@ -50,18 +50,30 @@ class Game extends React.Component<GameProps, GameState> {
 
 	componentDidMount() {
 		this.getGameData()
+		this.getCoinData()
 	}
 
 	private getGameData() {
 		const { gameId } = this.props;
 		if (!gameId) { // global game
-			this.props.getGame(1);
 			this.props.getCoins(1,this.state.timeSpan);
 		} else {
 			const id = parseInt(gameId);
 			if (isNaN(id)) this.props.history.push('/'); // non-numerical ID
 			else {
 				this.props.getGame(id); // private game
+			}
+		}
+	}
+
+	private getCoinData() {
+		const { gameId } = this.props;
+		if (!gameId) { // global game
+			this.props.getCoins(1,this.state.timeSpan);
+		} else {
+			const id = parseInt(gameId);
+			if (isNaN(id)) this.props.history.push('/'); // non-numerical ID
+			else {
 				this.props.getCoins(1,this.state.timeSpan);
 			}
 		}
@@ -76,8 +88,8 @@ class Game extends React.Component<GameProps, GameState> {
 		this.setState({timeSpan: timespan})
 	}
 
-	private refetchData = () => {
-		this.getGameData()
+	private refetchCoinData = () => {
+		this.getCoinData()
 	}
 
 	render() {
@@ -99,7 +111,6 @@ class Game extends React.Component<GameProps, GameState> {
 					/>
 					<InfoBar
 						gameProfile={game.gameProfile}
-						coins={coinsAndPrices}
 						changePriceOrder={this.changePriceOrder}
 						changeTimeSpan={this.setTimespan}
 					/>
@@ -107,7 +118,7 @@ class Game extends React.Component<GameProps, GameState> {
 						gameId={gameId}
 						coins={coinsAndPrices}
 						priceOrder={priceOrder}
-						refetchData={this.refetchData}
+						refetchCoinData={this.refetchCoinData}
 					/>
 				</Container>
 			</div>

@@ -13,7 +13,7 @@ interface CointableProps {
 	coins: CoinsAndPrices;
 	currentPrices: currentPricesType;
 	priceOrder: priceOrder;
-	refetchData: () => void;
+	refetchCoinData: () => void;
 }
 
 const styles: { [name: string]: CSS.Properties } = {
@@ -47,7 +47,7 @@ private createCoinRows = (coins: CoinsAndPrices) => {
 						price={Number(price[0].price)}
 						percent={Number(price[0].price_change_day_pct)}
 						tickers={this.parseTickers(coin.id)}
-						refetchData={this.props.refetchData}
+						refetchCoinData={this.props.refetchCoinData}
 					/>
 				)
 			})
