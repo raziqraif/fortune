@@ -26,7 +26,7 @@ const initialState = {
     },
     setGameErrorMessage: '',
     transactionErrorMessage: '',
-}
+};
 
 export type Action = {
     type: Type;
@@ -67,14 +67,14 @@ export default (state = initialState, action: Action) => {
                     coin.number = amount;
                 }
                 return coin;
-            })
+            });
             return {
                 ...state,
                 game: {
                     ...state.game,
                     coins: newCoins,
                 }
-            }
+            };
         case Type.SET_CASH:
             return {
                 ...state,
@@ -85,19 +85,19 @@ export default (state = initialState, action: Action) => {
                         cash: action.payload.cash,
                     }
                 }
-            }
+            };
         case Type.CREATE_GAME:
             return {
                 ...state,
                 createGameErrorMessage: '',
                 createGameLoading: true,
-            }
+            };
         case Type.CREATE_GAME_FAILED:
             return {
                 ...state,
                 createGameErrorMessage: action.payload,
                 createGameLoading: false,
-            }
+            };
         case Type.SET_GAME:
             return {
                 ...state,
@@ -112,12 +112,12 @@ export default (state = initialState, action: Action) => {
                     }
                 },
                 setGameErrorMessage: '',
-            }
+            };
         case Type.SET_GAME_FAILED:
             return {
                 ...state,
                 setGameErrorMessage: action.payload,
-            }
+            };
         case Type.SET_GAME_PROFILE:
             return {
                 ...state,
@@ -128,7 +128,7 @@ export default (state = initialState, action: Action) => {
                         netWorth: action.payload.net_worth,
                     }
                 },
-            }
+            };
         case Type.SET_GAME_COINS:
             return {
                 ...state,
@@ -136,17 +136,17 @@ export default (state = initialState, action: Action) => {
                     ...state.game,
                     coins: action.payload,
                 }
-            }
+            };
         case Type.TRANSACTION:
             return {
                 ...state,
                 transactionErrorMessage: '',
-            }
+            };
         case Type.TRANSACTION_FAILED:
             return {
                 ...state,
                 transactionErrorMessage: action.payload,
-            }
+            };
         case Type.LIQUIFY_FAILED:
             return state;
         case Type.CLEAR_ERRORS:
@@ -155,7 +155,9 @@ export default (state = initialState, action: Action) => {
                 transactionErrorMessage: '',
                 setGameErrorMessage: '',
                 createGameErrorMessage: '',
-            }
+            };
+        case Type.LOGOUT:
+            return initialState;
         case Type.GET_PLAYERS_DATA:
             return {
                 ...state,
@@ -176,7 +178,6 @@ export default (state = initialState, action: Action) => {
             return state;
         case Type.CREATE_MESSAGE_FAILED:
             return state;
-
         default:
             return state
     }
