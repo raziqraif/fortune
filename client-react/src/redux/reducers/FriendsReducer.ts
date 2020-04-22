@@ -3,12 +3,12 @@ import { Type } from '../actions/Types'
 export type State = typeof initialState;
 const initialState = {
   pending: [],
-  list: [],
+  friendsList: [],
 }
 
 export type FriendsState = {
   pending: Array<Friend>;
-  list: Array<Friend>;
+  friendsList: Array<Friend>;
 }
 
 type FriendsRequest = {
@@ -38,6 +38,11 @@ export default (state = initialState, action: Action) => {
       return {
         ...state,
         pending: action.payload.pending
+      }
+    case Type.GET_FRIENDS:
+      return {
+        ...state,
+        friendsList: action.payload.friendsList
       }
     default:
       return state;

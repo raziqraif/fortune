@@ -5,6 +5,7 @@ import Actions from '../redux/actions';
 import { connect } from 'react-redux';
 
 import PendingList from './friends/PendingList'
+import FriendsList from './friends/FriendsList'
 
 interface FriendsProps {
   sendFriendRequest: (requester_name, requestee_name, status) => void;
@@ -54,13 +55,7 @@ private acceptRequest(requester_name, requestee_name) {
             </InputGroup>
 
             <PendingList/>
-
-              <div style={{paddingTop: 15}}>
-                <h3>Friends:</h3>
-                <ListGroup>
-                  <ListGroup.Item>usrname</ListGroup.Item>
-                </ListGroup>
-              </div>
+            <FriendsList/>
             </div>
 
         )
