@@ -36,6 +36,8 @@ def accept_request(requester_name, requestee_name):
     if requestee_profile is None:
         raise BadRequest('Could not find requestee')
     req = Friends.get_or_none((Friends.requester == requester_profile) & (Friends.requestee == requestee_profile))
+    if req is None:
+        raise BadRequest('Could not find request')
     req.status = 1
     other_way_friendship = Friends.create(
         requester=requestee_profile,
