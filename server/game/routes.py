@@ -297,7 +297,7 @@ def get_messages_data(profile, game_id):
     for msg in messages:
         message = Message()
         message.id = msg.id
-        message.authorID = msg.profile.id
+        message.authorId = msg.profile.id
         # https://stackoverflow.com/questions/5022447/converting-date-from-python-to-javascript
         message.createdOn = int(time.mktime(msg.created_on.timetuple())) * 1000
         message.message = msg.content

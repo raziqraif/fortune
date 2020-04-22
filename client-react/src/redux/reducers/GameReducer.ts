@@ -159,6 +159,7 @@ export default (state = initialState, action: Action) => {
         case Type.LOGOUT:
             return initialState;
         case Type.GET_PLAYERS_DATA:
+            console.log("Updating players")
             return {
                 ...state,
                 players: action.payload.players,

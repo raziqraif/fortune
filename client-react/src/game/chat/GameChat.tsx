@@ -254,6 +254,7 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
     }
 
     render() {
+        console.log("New authors:", this.props.players)
         return (
             <div className="chatfeed-wrapper">
                 <h2 style={{margin: "0px 0px 15px", }}>Chat</h2>
@@ -269,7 +270,7 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
                     ref={(e:any) => this.chat = e}
                     showIsTyping={false}
                     showRecipientLastSeenMessage={false}
-                    showDateRow={false}
+                    showDateRow={true}
                     showLoadingMessages={false}
                     hasOldMessages={this.props.hasOlderMessages}
                     // onLoadOldMessages={() => new Promise(resolve => setTimeout(() => {
@@ -283,9 +284,9 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
                     //        } as Message)).concat(previousState.messages)
                     //    }), () => resolve());
                     // }, 1000))}
-                    onLoadOldMessages={() => new Promise(resolve => setTimeout(() => {
+                    // onLoadOldMessages={() => new Promise(resolve => setTimeout(() => {
                         // this.props.getMessagesData()
-                    }, 1000))}
+                    //}, 1000))}
                 />
 
                 <form
