@@ -3,8 +3,8 @@ from werkzeug.exceptions import BadRequest
 
 from auth.decorators import require_authentication
 from db import Profile, Friends
-from .services import create_request, get_friends_by_username, accept_request
-from .serializers import FriendsSerializer
+from .services import create_request, get_friends_by_username, accept_request, get_pending_by_username
+from .serializers import FriendsSerializer, FriendsList, PendingList, Friend
 
 
 friends_bp = Blueprint('friends', __name__, url_prefix='/friends')
@@ -39,7 +39,12 @@ def accept(profile):
         return "Failed to accept request: {}".format(str(e))
     return jsonify(FriendsSerializer.serialize(accept))
 
-@friends_bp.route('/<username>', methods=['GET'])
-def get_by_username(username):
+@friends_bp.route('/list/<username>', methods=['GET'])
+def get_friends(username):
     friends = get_friends_by_username(username)
-    return jsonify(FriendsSerializer.serialize(friends))
+    return jsonify(FriendsList.serialize({'friendsList': friends,}))
+
+@friends_bp.route('/pending/<username>', methods=['GET'])
+def get_pending(username):
+    pending = get_pending_by_username(username)
+    return jsonify(PendingList.serialize({'pending': pending,}))

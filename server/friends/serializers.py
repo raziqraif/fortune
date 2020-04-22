@@ -17,7 +17,16 @@ class BaseSerializer(Schema):
         """
         return cls().load(obj, many=many)
 
+class Friend(BaseSerializer):
+    username = fields.Str()
+
 class FriendsSerializer(BaseSerializer):
     requester = fields.Str()
     requestee = fields.Str()
     status = fields.Int()
+
+class FriendsList(BaseSerializer):
+    friendsList = fields.List(fields.Nested(Friend))
+
+class PendingList(BaseSerializer):
+    pending = fields.List(fields.Nested(Friend))

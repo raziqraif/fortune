@@ -48,7 +48,31 @@ def accept_request(requester_name, requestee_name):
 
 @db.atomic()
 def get_friends_by_username(username):
-    get_friends = Friends.select().where((Friends.requester == username or Friends.requestee == username) and Friends.status == 1)
+    profile = Profile.get_or_none(Profile.username == username)
+    if profile is None:
+        raise BadRequest('User does not exist.')
+    get_friends = Friends.select().where(Friends.requester == profile).where(Friends.status == 1)
     if get_friends.count() == 0:
         raise BadRequest("This user has no friends.")
-    return get_friends
+    friends_names = []
+    for friend in get_friends:
+        friends_names.append({
+        'username': friend.requestee.username
+        })
+
+    return friends_names
+
+@db.atomic()
+def get_pending_by_username(username):
+    profile = Profile.get_or_none(Profile.username == username)
+    if profile is None:
+        raise BadRequest('User does not exist.')
+    get_pending = Friends.select().where(Friends.requestee == profile).where(Friends.status == 0)
+    if get_pending.count() == 0:
+        raise BadRequest("This user has no friend requests pending.")
+    pending_names = []
+    for pending in get_pending:
+        pending_names.append({
+        'username': pending.requester.username
+        })
+    return pending_names
