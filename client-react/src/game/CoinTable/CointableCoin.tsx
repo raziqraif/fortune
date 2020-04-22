@@ -114,7 +114,7 @@ class CointableCoin extends React.Component<CointableCoinProps, CointableCoinSta
 	render() {
 		const name  = this.props.name;
 		const price = this.props.price;
-		var amount_owned = (parseInt(this.state.amount_owned) === 0) ? '0' : parseInt(this.state.amount_owned).toFixed(5)
+		var amount_owned = (parseFloat(this.state.amount_owned) === 0) ? '0' : parseFloat(this.state.amount_owned).toFixed(5)
 		const percent = this.props.percent;
 		const { showConfirm, errMes, confirmMes } = this.state;
 		const price_f = Number(price).toFixed(2);

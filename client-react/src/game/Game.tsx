@@ -55,27 +55,21 @@ class Game extends React.Component<GameProps, GameState> {
 
 	private getGameData() {
 		const { gameId } = this.props;
-		if (!gameId) { // global game
-			this.props.getCoins(1,this.state.timeSpan);
+		const id = parseInt(gameId);
+		if (isNaN(id)) {
+			this.props.history.push('/'); // non-numerical ID
 		} else {
-			const id = parseInt(gameId);
-			if (isNaN(id)) this.props.history.push('/'); // non-numerical ID
-			else {
-				this.props.getGame(id); // private game
-			}
+			this.props.getGame(id); // private game
 		}
 	}
 
 	private getCoinData() {
 		const { gameId } = this.props;
-		if (!gameId) { // global game
-			this.props.getCoins(1,this.state.timeSpan);
+		const id = parseInt(gameId);
+		if (isNaN(id)){
+			this.props.history.push('/'); // non-numerical ID
 		} else {
-			const id = parseInt(gameId);
-			if (isNaN(id)) this.props.history.push('/'); // non-numerical ID
-			else {
-				this.props.getCoins(1,this.state.timeSpan);
-			}
+			this.props.getCoins(id,this.state.timeSpan);
 		}
 	}
 
