@@ -41,7 +41,7 @@ export enum Type {
     SET_LOGIN_ERROR,
 
     CLEAR_ERRORS,
-    
+
     // notification types
     GET_NOTIFICATIONS,
     GET_NOTIFICATIONS_SUCCEEDED,
@@ -54,4 +54,9 @@ export enum Type {
     CREATE_PRICE_ALERT_FAILED,
 
     SET_SOCKET,
+
+    // friends Types
+    SET_FRIEND_REQUEST,
+    ACCEPT_FRIEND_REQUEST,
+    FRIEND_FAILED,
 }

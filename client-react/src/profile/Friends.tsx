@@ -1,21 +1,30 @@
 import React, { Component } from 'react';
 import {InputGroup, Button, FormControl, ListGroup} from 'react-bootstrap';
+import { RootState } from '../redux/reducers';
+import Actions from '../redux/actions';
+import { connect } from 'react-redux';
 
-interface FriendsState {
-  username: string;
+interface FriendsProps {
+  sendFriendRequest: (requester_name, requestee_name, status) => void;
+  acceptFriendRequest: (requester_name, requestee_name, status) => void;
+  username?: string;
 }
 
-class Friends extends Component {
+interface FriendsState {
+  usernameToFriend: string;
+}
+
+class Friends  extends React.Component<FriendsProps, FriendsState> {
 
 constructor(props){
   super(props)
   this.state = {
-    username: '',
+    usernameToFriend: '',
   }
 }
 
 private sendRequest = () => {
-  console.log('fren pls', this.state.username)
+  this.props.sendFriendRequest(this.props.username, this.state.usernameToFriend, 0)
 }
 
 private handleChange = (event: any) => {
@@ -30,8 +39,8 @@ private handleChange = (event: any) => {
             <InputGroup className="mb-3">
               <FormControl
                 placeholder="Add by Username"
-                name="username"
-                value={this.state.username}
+                name="usernameToFriend"
+                value={this.state.usernameToFriend}
                 onChange={this.handleChange}
               />
               <InputGroup.Append>
@@ -57,4 +66,13 @@ private handleChange = (event: any) => {
     }
 }
 
-export default Friends;
+const mapStateToProps = (state: RootState) => ({
+  username: state.auth.username,
+})
+
+const mapDispatchToProps = {
+  sendFriendRequest: Actions.friends.sendFriendRequest,
+  acceptFriendRequest: Actions.friends.acceptFriendRequest,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Friends);

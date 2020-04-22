@@ -22,6 +22,10 @@ export default (state = initialState, action: Action) => {
   switch (action.type) {
     case Type.SET_FRIEND_REQUEST:
       return action.payload;
+      case Type.ACCEPT_FRIEND_REQUEST:
+        return action.payload;
+    case Type.FRIEND_FAILED:
+      return initialState;
     default:
       return state;
   }

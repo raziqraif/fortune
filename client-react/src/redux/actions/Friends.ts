@@ -9,14 +9,25 @@ import { fetchAuthToken } from './Auth'
 
 
 
-export const sendFriendRequest = (requester_name) => {
+export const sendFriendRequest = (requester, requestee, status) => {
   return async (dispatch: Dispatch<Action>) => {
     try {
       await fetchAuthToken();
-      const res = await axios.post('http://localhost:5000/friends/', {requester_name});
+      const res = await axios.post('http://localhost:5000/friends/', {requester, requestee, status});
       dispatch({type: Type.SET_FRIEND_REQUEST, payload: res })
     } catch (e) {
-      handleAxiosError(e, dispatch, Type.FRIEND_REQUEST_FAILED);
+      handleAxiosError(e, dispatch, Type.FRIEND_FAILED);
+    }
+  }
+
+export const acceptFriendRequest = (requester, requestee, status) => {
+  return async (dispatch: Dispatch<Action>) => {
+    try {
+      await fetchAuthToken();
+      const res = await axios.post('http://localhost:5000/friends/accept', {requester, requestee, status});
+      dispatch({type: Type.ACCEPT_FRIEND_REQUEST, payload: res })
+    } catch (e) {
+      handleAxiosError(e, dispatch, Type.FRIEND_FAILED);
     }
   }
 }
