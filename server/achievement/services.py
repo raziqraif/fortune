@@ -25,11 +25,3 @@ def add_achievement_by_achievement_id_and_profile_id(achievement_id, profile_id)
 
     #TODO - figure out way to skip this if player has already gotten it
     AchievementProfile.create(profile=profile_id, achievement=achievement)
-
-@db.atomic()
-def get_achievements():
-    print('bae')
-    achi = Achievement.get()
-    # for a in achi:
-    # print(a.name)
-    return achi

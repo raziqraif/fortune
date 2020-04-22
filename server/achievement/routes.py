@@ -7,7 +7,7 @@ import pytz
 from auth.decorators import require_authentication
 from db import Achievement, AchievementProfile
 from .serializers import AchievementProfile, AchievementSerializer
-from .services import get_achievement_profile_by_profile_id, get_achievement_by_achievement_id, add_achievement_by_achievement_id_and_profile_id, get_achievements
+from .services import get_achievement_profile_by_profile_id, get_achievement_by_achievement_id, add_achievement_by_achievement_id_and_profile_id
 
 achievement_bp = Blueprint('achievement', __name__, url_prefix='/achievement')
 

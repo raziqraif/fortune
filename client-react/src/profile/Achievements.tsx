@@ -12,6 +12,11 @@ interface AchievementsProps {
     achievementProfile: Array<AchievementProfile>;
 }
 
+interface myAchievements {
+    achievement: Achievement;
+    achieved?: string;
+}
+
 class Achievements extends React.Component<AchievementsProps> {
 
     componentDidMount() {
@@ -20,6 +25,25 @@ class Achievements extends React.Component<AchievementsProps> {
     }
 
     render() {
+        // determine which achievements the player has
+        const myAchievements: Array<myAchievements> = [];
+        outerLoop:
+        for (let i = 0; i < this.props.achievements.length; i++) {
+            const achievement = this.props.achievements[i];
+            for (let j = 0; j < this.props.achievementProfile.length; j++) {
+                const profile = this.props.achievementProfile[j];
+                if (achievement.name === profile.achievement.name) {
+                    // player has current achievement
+                    const myAchievement = {achievement: achievement, achieved: 'Yes'};
+                    myAchievements.push(myAchievement);
+                    continue outerLoop;
+                }
+            }
+            // player does not have the current achievement
+            const myAchievement = {achievement: achievement, achieved: 'No'};
+            myAchievements.push(myAchievement);
+        }
+
         return (
             <div>
                 <Table striped bordered hover>
@@ -32,11 +56,11 @@ class Achievements extends React.Component<AchievementsProps> {
                     </thead>
                     <tbody>
                         {
-                            this.props.achievements.map(achievement => (
-                                <tr>
-                                    <td>{achievement.name}</td>
-                                    <td>{achievement.description}</td>
-                                    <td>yes</td>
+                            myAchievements.map((achievement, i) => (
+                                <tr key={i}>
+                                    <td>{achievement.achievement.name}</td>
+                                    <td>{achievement.achievement.description}</td>
+                                    <td>{achievement.achieved}</td>
                                 </tr>
                             ))
                         }
@@ -49,7 +73,7 @@ class Achievements extends React.Component<AchievementsProps> {
 
 const mapStateToProps = (state: RootState) => ({
     achievements: state.achievement.achievements,
-    achievementProfile: state.achievement.achievements,
+    achievementProfile: state.achievement.achievementProfile,
 })
 
 const mapDispatchToProps = {
