@@ -30,7 +30,7 @@ export const acceptFriendRequest = (requester, requestee, status) => {
   }
 }
 
-export const getFriendRequests = (username) => {
+export const getPending = (username) => {
   return async (dispatch: Dispatch<Action>) => {
     // try {
     //   await fetchAuthToken();

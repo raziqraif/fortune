@@ -8,7 +8,7 @@ import PendingListItem from './PendingListItem'
 import Friend from '../../redux/reducers/FriendsReducer'
 
 interface PendingListProps {
-  getFriendRequests: (username) => void;
+  getPending: (username) => void;
   username?: string;
   pendingFriends: Array<Friend>;
 }
@@ -19,7 +19,7 @@ interface PendingListState {
 class PendingList extends Component<PendingListProps, PendingListState>{
 
   componentDidMount(){
-    this.props.getFriendRequests(this.props.username)
+    this.props.getPending(this.props.username)
   }
 
   private createItems() {
@@ -52,7 +52,7 @@ const mapStateToProps = (state: RootState) => ({
 })
 
 const mapDispatchToProps = {
-  getFriendRequests: Actions.friends.getFriendRequests,
+  getPending: Actions.friends.getPending,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PendingList);
