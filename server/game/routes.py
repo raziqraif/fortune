@@ -6,6 +6,8 @@ import string
 import random
 from werkzeug.exceptions import BadRequest
 import pytz
+import datetime
+import time
 
 from auth.decorators import require_authentication
 from db import Game, GameProfile, Coin, GameCoin, db
@@ -257,7 +259,8 @@ def create_message(profile, game_id):
     resp = CreateMessageResponse()
     resp.id = message.id
     resp.authorId = message.profile.id
-    resp.createdOn = message.created_on
+    # resp.createdOn = message.created_on
+    resp.createdOn = int(time.mktime(message.created_on.timetuple())) * 1000
     resp.message = message.content
 
     return jsonify(
@@ -295,7 +298,8 @@ def get_messages_data(profile, game_id):
         message = Message()
         message.id = msg.id
         message.authorID = msg.profile.id
-        message.createdOn = msg.created_on
+        # https://stackoverflow.com/questions/5022447/converting-date-from-python-to-javascript
+        message.createdOn = int(time.mktime(msg.created_on.timetuple())) * 1000
         message.message = msg.content
         resp.messages.append(message)
     resp.hasOlderMessages = has_older_messages

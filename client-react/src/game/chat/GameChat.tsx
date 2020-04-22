@@ -1,16 +1,13 @@
 import React from 'react';
 import './GameChat.css'
-import {ChatFeed, Message, Author, ChatBubbleProps, ChatFeedApi, ChatBubble, ChatInput} from 'react-bell-chat';
+import {ChatFeed, Message, Author, ChatBubbleProps, ChatFeedApi, ChatBubble} from 'react-bell-chat';
 
-// import * as React from 'react';
-import { render } from 'react-dom';
 import {ChatFeedStyles} from "react-bell-chat/src/lib/ChatFeed";
 import {ChatScrollAreaStyles} from "react-bell-chat/src/lib/ChatScrollArea";
 import {ChatBubbleStyles} from "react-bell-chat/src/lib/ChatBubble/styles";
 import {RootState} from "../../redux/reducers";
 import Actions from "../../redux/actions";
 import {connect} from "react-redux";
-// import {ThemedProvider} from '@livechat/ui-kit'
 
 const styles: { [key: string]: React.CSSProperties } = {
     button: {
@@ -36,7 +33,7 @@ const styles: { [key: string]: React.CSSProperties } = {
 
 const chatBubbleStyles: ChatBubbleStyles = {
     // TODO: Update this to make sure text is wrapped properly in the chat bubbles
-}
+};
 
 const chatFeedStyles: ChatFeedStyles = {
     chatPanel: {
@@ -102,70 +99,70 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
     private chat: ChatFeedApi;
     gameID = this.props.gameID;
 
-    getPlayersData() {
-        // TODO: Use real API
-        return {
-            players: [
-                {
-                    id: 0,
-                    name: 'You',
-                },
-                {
-                    id: 1,
-                    name: 'Mark',
-                },
-                {
-                    id: 2,
-                    name: 'Evan',
-                }],
-            currentPlayerID: 0,
-        }
-    }
+    // getPlayersData() {
+    //     // TODO: Use real API
+    //     return {
+    //         players: [
+    //             {
+    //                 id: 0,
+    //                 name: 'You',
+    //             },
+    //             {
+    //                 id: 1,
+    //                 name: 'Mark',
+    //             },
+    //             {
+    //                 id: 2,
+    //                 name: 'Evan',
+    //             }],
+    //         currentPlayerID: 0,
+    //     }
+    // }
 
-    getMessagesData() {
-         // TODO: Use real API
-         return {
-             messages: [
-                 {
-                     id: 0,
-                     authorId: 1,
-                     message: 'Hey guys!!',
-                     createdOn: new Date(2018, 2, 27, 18, 32, 24),
-                 },
-                 {
-                     id: 3,
-                     authorId: 2,
-                     message: 'Long group.',
-                     createdOn: new Date(2018, 2, 28, 18, 13, 24),
-                },
-                {
-                    id: 4,
-                    authorId: 0,
-                    message: 'My message.',
-                    createdOn: new Date(2018, 2, 29, 19, 32, 24),
-                },
-                {
-                    id: 5,
-                    authorId: 0,
-                    message: 'One more.',
-                    createdOn: new Date(2018, 2, 29, 19, 33, 24),
-                },
-                {
-                    id: 6,
-                    authorId: 2,
-                    message: 'One more group to see the scroll.',
-                    createdOn: new Date(2018, 2, 29, 19, 35, 24),
-                },
-                {
-                    id: 7,
-                    authorId: 2,
-                    message: 'I said group.',
-                    createdOn: new Date(2018, 2, 29, 19, 35, 24),
-                },
-            ],
-            hasOlderMessages: true
-        }
-    }
+    // getMessagesData() {
+    //      // TODO: Use real API
+    //      return {
+    //          messages: [
+    //              {
+    //                  id: 0,
+    //                  authorId: 1,
+    //                  message: 'Hey guys!!',
+    //                  createdOn: new Date(2018, 2, 27, 18, 32, 24),
+    //              },
+    //              {
+    //                  id: 3,
+    //                  authorId: 2,
+    //                  message: 'Long group.',
+    //                  createdOn: new Date(2018, 2, 28, 18, 13, 24),
+    //             },
+    //             {
+    //                 id: 4,
+    //                 authorId: 0,
+    //                 message: 'My message.',
+    //                 createdOn: new Date(2018, 2, 29, 19, 32, 24),
+    //             },
+    //             {
+    //                 id: 5,
+    //                 authorId: 0,
+    //                 message: 'One more.',
+    //                 createdOn: new Date(2018, 2, 29, 19, 33, 24),
+    //             },
+    //             {
+    //                 id: 6,
+    //                 authorId: 2,
+    //                 message: 'One more group to see the scroll.',
+    //                 createdOn: new Date(2018, 2, 29, 19, 35, 24),
+    //             },
+    //             {
+    //                 id: 7,
+    //                 authorId: 2,
+    //                 message: 'I said group.',
+    //                 createdOn: new Date(2018, 2, 29, 19, 35, 24),
+    //             },
+    //         ],
+    //         hasOlderMessages: true
+    //     }
+    // }
 
     constructor(props: GameChatProps) {
         super(props);
@@ -189,6 +186,11 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
         };
     }
 
+    componentDidMount(): void {
+        this.props.getPlayersData(this.gameID);
+        this.props.getMessagesData(this.gameID, -1, -1, true);
+    }
+
     onMessageSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         if (this.state.messageText !== '') {
@@ -196,10 +198,11 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
             this.setState(previousState => ({
                 messageText: '',
             }), () => this.chat && this.chat.onMessageSend());
-            setTimeout(() => {
+            // setTimeout(() => {
                 // this.setState(previousState => ({ messages: previousState.messages.map(m => m.id === id ? { ...m, isSend: true } : m) }));
-            }, 2000);
+            // }, 2000);
         }
+        this.props.getMessagesData(this.gameID, -1, -1, true)
         return true;
     }
 
@@ -214,7 +217,7 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
             <ChatBubble
                 message={props.message}
                 author={props.author}
-                yourAuthorId={0}
+                yourAuthorId={this.props.currentPlayerID}
                 styles={{
                     ...props.styles,
                     text: {
@@ -266,7 +269,7 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
                     ref={(e:any) => this.chat = e}
                     showIsTyping={false}
                     showRecipientLastSeenMessage={false}
-                    showDateRow={true}
+                    showDateRow={false}
                     showLoadingMessages={false}
                     hasOldMessages={this.props.hasOlderMessages}
                     // onLoadOldMessages={() => new Promise(resolve => setTimeout(() => {

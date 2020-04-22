@@ -167,9 +167,13 @@ export default (state = initialState, action: Action) => {
         case Type.GET_PLAYERS_DATA_FAILED:
             return state;
         case Type.GET_MESSAGES_DATA:
+            let newMessages = action.payload.messages;
+            for (let i = 0; i < newMessages.length; i++) {
+                newMessages[i].createdOn = new Date(newMessages[i].createdOn)
+            }
             return {
                 ...state,
-                messages: action.payload.messages,
+                messages: newMessages,
                 hasOlderMessages: action.payload.hasOlderMessages,
             };
         case Type.GET_MESSAGES_DATA_FAILED:

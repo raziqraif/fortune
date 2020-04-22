@@ -93,14 +93,16 @@ class CreateMessageResponse(BaseSerializer):
     id = fields.Int(required=True)
     authorId = fields.Int(required=True)
     message = fields.Str(required=True)
-    createdOn = fields.DateTime(required=True)
+    # createdOn = fields.DateTime(required=True)
+    createdOn = fields.Int(required=True)
 
 
 class Message(BaseSerializer):
     id = fields.Int(required=True)
     authorID = fields.Int(required=True)
     message = fields.Str(required=True)
-    createdOn = fields.DateTime(required=True)
+    # createdOn = fields.DateTime(required=True)
+    createdOn = fields.Int(required=True)
 
 
 class MessagesDataResponse(BaseSerializer):
