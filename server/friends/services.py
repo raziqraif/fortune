@@ -10,15 +10,21 @@ def create_request(requester_name, requestee_name, status):
     if requester_profile is None:
         raise BadRequest('Could not find requester')
     if requestee_profile is None:
+        send_notification(requester_profile, f'User {requestee_name} does not exist.')
         raise BadRequest('Could not find requestee')
+    if requester_profile == requestee_profile:
+        send_notification(requester_profile, f'Cannot friend yourself!')
+        raise BadRequest('Cannot friend self')
     check_duplicates = Friends.get_or_none((Friends.requester == requester_profile and Friends.requestee == requestee_profile)
                                     or (Friends.requester == requestee_profile and Friends.requestee == requester_profile))
     if check_duplicates is not None:
+        send_notification(requester_profile, f'Friend request to {requestee_profile.username} has already been created')
         raise BadRequest('Friend request has already been made')
     req = Friends.create(
         requester=requester_profile,
         requestee=requestee_profile,
         status=status)
+    send_notification(requester_profile, f'Friend request to {requester_profile.username} has been sent!')
     send_notification(requestee_profile, f'{requester_profile.username} has sent you a friend request!')
     return req
 
