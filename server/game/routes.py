@@ -97,6 +97,7 @@ def get(profile, game_id):
 def get_coins():
     return jsonify(CoinsResponse.serialize(Coin.select(), many=True))
 
+
 @game_bp.route('/<game_id>/coins', methods=['GET'])
 @require_authentication
 def get_game_coins(profile, game_id):
@@ -212,7 +213,7 @@ def randomString(length):
     return ''.join(random.choice(options) for i in range(length))
 
 
-@game_bp.route('<game_id>/chat/players', methods=['GET'])
+@game_bp.route('<game_id>/chat/players', methods=['POST'])
 @require_authentication
 def players_data_for_chat(profile, game_id):
     try:
@@ -255,7 +256,7 @@ def create_message(profile, game_id):
 
     resp = CreateMessageResponse()
     resp.id = message.id
-    resp.authorId = message.profile
+    resp.authorId = message.profile.id
     resp.createdOn = message.created_on
     resp.message = message.content
 
@@ -293,7 +294,7 @@ def get_messages_data(profile, game_id):
     for msg in messages:
         message = Message()
         message.id = msg.id
-        message.authorID = msg.profile
+        message.authorID = msg.profile.id
         message.createdOn = msg.created_on
         message.message = msg.content
         resp.messages.append(message)

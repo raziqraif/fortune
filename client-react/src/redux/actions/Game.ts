@@ -134,7 +134,7 @@ export const clearErrorMessages = () => {
 };
 
 export const getMessagesData = (
-    gameID: string,
+    gameID: number,
     oldestID: number,
     newestID: number,
     getNewMessages: boolean,
@@ -153,7 +153,7 @@ export const getMessagesData = (
 };
 
 export const createMessage= (
-    gameID: string,
+    gameID: number,
     message: string,
 ) => {
   return async (dispatch: Dispatch<Action>) => {
@@ -170,11 +170,12 @@ export const createMessage= (
 };
 
 export const getPlayersData = (
-    gameID: string,
+    gameID: number,
 ) => {
   return async (dispatch: Dispatch<Action>) => {
     try {
       await fetchAuthToken();
+      console.log("Enter get Players API")
       const res = await axios.post(`http://localhost:5000/game/${gameID}/chat/players`);
       console.log("Get Players API: ", res.data)
       dispatch({type: Type.GET_PLAYERS_DATA, payload: res.data})

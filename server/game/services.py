@@ -258,22 +258,23 @@ def create_chat_message(profile_id, game_id, message):
     return message
 
 
-@db.atomic
+@db.atomic()
 def get_chat_messages_data(game_id: int, oldest_id: int, newest_id: int, newer_messages: bool):
     older_message = Message.get_or_none(Message.id < oldest_id)
     has_older_message = older_message is not None
 
+    # Note: oldest_id and newest_id could be  -1
+
     if newer_messages:
         # TODO: Limit result of newer messages too, if frontend has been optimized
-        messages = Message.select().where(Message.game == game_id, Message.id > newest_id).execute()
+        messages = Message.select().where((Message.game == game_id) & (Message.id > newest_id)).execute()
     else:
-        messages = Message.select().where(Message.game == game_id, Message.id < oldest_id).limit(30).execute()
+        messages = Message.select().where((Message.game == game_id) & (Message.id < oldest_id)).limit(30).execute()
 
     return messages, has_older_message
 
 
-@db.atomic
+@db.atomic()
 def get_players_in_a_game(game_id: int):
     game_profiles = GameProfile.select(GameProfile, Profile).join(Profile).where(GameProfile.game == game_id).execute()
     return [gp.profile for gp in game_profiles]
-

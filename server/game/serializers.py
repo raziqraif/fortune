@@ -104,7 +104,7 @@ class Message(BaseSerializer):
 
 
 class MessagesDataResponse(BaseSerializer):
-    messages = fields.List(Message, required=True)
+    messages = fields.List(fields.Nested(Message), required=True)
     hasOlderMessages = fields.Bool(required=True)
 
 
@@ -114,5 +114,5 @@ class Player(BaseSerializer):
 
 
 class PlayersDataResponse(BaseSerializer):
-    players = fields.List(Player, required=True)
+    players = fields.List(fields.Nested(Player), required=True)
     currentPlayerId = fields.Int(required=True)

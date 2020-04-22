@@ -1,3 +1,4 @@
+import pytz
 import datetime
 
 import peewee
@@ -106,7 +107,8 @@ class GameProfileCoin(BaseModel):
 class Message(BaseModel):
     game = peewee.ForeignKeyField(Game)
     profile = peewee.ForeignKeyField(Profile)
-    created_on = peewee.DateTimeField(default=datetime.datetime.utcnow)
+    # datetime(year=2022, month=1, day=1, hour=1, minute=1, second=0).replace(tzinfo=pytz.utc)
+    created_on = peewee.DateTimeField(default=lambda: datetime.datetime.now().replace(tzinfo=pytz.utc))
     content = peewee.TextField()
 
 
