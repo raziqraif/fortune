@@ -4,11 +4,14 @@ export type State = typeof initialState;
 const initialState = {
   pending: [],
   friendsList: [],
+
+  errorMessage: '',
 }
 
 export type FriendsState = {
   pending: Array<Friend>;
   friendsList: Array<Friend>;
+  errorMessage: string;
 }
 
 type FriendsRequest = {
@@ -43,6 +46,11 @@ export default (state = initialState, action: Action) => {
       return {
         ...state,
         friendsList: action.payload.friendsList
+      }
+    case Type.GET_PENDING_FAILED:
+      return {
+        ...state,
+        errorMessage: action.payload
       }
     default:
       return state;

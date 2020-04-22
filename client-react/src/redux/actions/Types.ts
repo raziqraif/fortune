@@ -61,4 +61,5 @@ export enum Type {
     FRIEND_FAILED,
     GET_PENDING,
     GET_FRIENDS,
+    GET_PENDING_FAILED,
 }
