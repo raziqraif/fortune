@@ -39,12 +39,18 @@ def accept(profile):
         return "Failed to accept request: {}".format(str(e))
     return jsonify(FriendsSerializer.serialize(accept))
 
-@friends_bp.route('/list/<username>', methods=['GET'])
-def get_friends(username):
+@friends_bp.route('/list', methods=['GET'])
+@require_authentication
+def get_friends(profile):
+    validated_data: dict = Friend.deserialize(request.json)
+    username = validated_data['username']
     friends = get_friends_by_username(username)
     return jsonify(FriendsList.serialize({'friendsList': friends,}))
 
-@friends_bp.route('/pending/<username>', methods=['GET'])
-def get_pending(username):
+@friends_bp.route('/pending', methods=['GET'])
+@require_authentication
+def get_pending(profile):
+    validated_data: dict = Friend.deserialize(request.json)
+    username = validated_data['username']
     pending = get_pending_by_username(username)
     return jsonify(PendingList.serialize({'pending': pending,}))

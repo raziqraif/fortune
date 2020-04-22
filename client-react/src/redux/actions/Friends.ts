@@ -32,29 +32,25 @@ export const acceptFriendRequest = (requester, requestee, status) => {
 
 export const getPending = (username) => {
   return async (dispatch: Dispatch<Action>) => {
-    // try {
-    //   await fetchAuthToken();
-    //   const res = await axios.put('http://localhost:5000/friends/accept', {requester, requestee, status});
-    //   dispatch({type: Type.ACCEPT_FRIEND_REQUEST, payload: res })
-    // } catch (e) {
-    //   handleAxiosError(e, dispatch, Type.FRIEND_FAILED);
-    // }
-    const res = {pending: [{username:'pending1'},{username:'pending2'}]}
-    dispatch({type: Type.GET_PENDING, payload: res })
+    try {
+      await fetchAuthToken();
+      const res = await axios.get('http://localhost:5000/friends/pending/', {username});
+      dispatch({type: Type.GET_PENDING, payload: res })
+    } catch (e) {
+      handleAxiosError(e, dispatch, Type.FRIEND_FAILED);
+    }
   }
 }
 
 export const getFriendsList = (username) => {
   return async (dispatch: Dispatch<Action>) => {
-    // try {
-    //   await fetchAuthToken();
-    //   const res = await axios.put('http://localhost:5000/friends/accept', {requester, requestee, status});
-    //   dispatch({type: Type.ACCEPT_FRIEND_REQUEST, payload: res })
-    // } catch (e) {
-    //   handleAxiosError(e, dispatch, Type.FRIEND_FAILED);
-    // }
-    const res = {friendsList: [{username:'friend1'},{username:'friend2'}]}
-    dispatch({type: Type.GET_FRIENDS, payload: res })
+    try {
+      await fetchAuthToken();
+      const res = await axios.get('http://localhost:5000/friends/list/', {username});
+      dispatch({type: Type.GET_FRIENDS, payload: res })
+    } catch (e) {
+      handleAxiosError(e, dispatch, Type.FRIEND_FAILED);
+    }
   }
 }
 
