@@ -116,10 +116,10 @@ class PriceAlert(BaseModel):
     strike_price = peewee.DecimalField(max_digits=20, decimal_places=8)
     hit = peewee.BooleanField(default=False)
 
-class Friend(BaseModel):
+class Friends(BaseModel):
     requester = peewee.ForeignKeyField(Profile)
     requestee = peewee.ForeignKeyField(Profile)
     status = peewee.IntegerField() # 0 = pending, 1 = accept, 2 = reject
 
 MODELS = [Profile, AuthToken, Game, GameProfile, Coin,
-    GameCoin, Ticker, Trade, GameProfileCoin, Notification, PriceAlert, Friend]
+    GameCoin, Ticker, Trade, GameProfileCoin, Notification, PriceAlert, Friends]

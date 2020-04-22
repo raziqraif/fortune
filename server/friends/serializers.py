@@ -17,13 +17,7 @@ class BaseSerializer(Schema):
         """
         return cls().load(obj, many=many)
 
-class FriendsRequest(BaseSerializer):
-    requester = fields.Int()
-    requestee = fields.Int()
+class FriendsSerializer(BaseSerializer):
+    requester = fields.Str()
+    requestee = fields.Str()
     status = fields.Int()
-
-class FriendsResponse(BaseSerializer):
-    requester = fields.Int()
-    requestee = fields.Int()
-    status = fields.Int()
-
