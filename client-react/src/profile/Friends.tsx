@@ -4,6 +4,8 @@ import { RootState } from '../redux/reducers';
 import Actions from '../redux/actions';
 import { connect } from 'react-redux';
 
+import PendingList from './friends/PendingList'
+
 interface FriendsProps {
   sendFriendRequest: (requester_name, requestee_name, status) => void;
   acceptFriendRequest: (requester_name, requestee_name, status) => void;
@@ -14,7 +16,7 @@ interface FriendsState {
   usernameToFriend: string;
 }
 
-class Friends  extends React.Component<FriendsProps, FriendsState> {
+class Friends  extends Component<FriendsProps, FriendsState> {
 
 constructor(props){
   super(props)
@@ -32,6 +34,9 @@ private handleChange = (event: any) => {
       [event.currentTarget.name]: event.currentTarget.value
     })
 }
+private acceptRequest(requester_name, requestee_name) {
+  this.props.acceptFriendRequest(requester_name,requestee_name, 1)
+}
 
     render() {
         return (
@@ -48,12 +53,8 @@ private handleChange = (event: any) => {
               </InputGroup.Append>
             </InputGroup>
 
-              <div style={{paddingTop: 15}}>
-                <h3>Pending:</h3>
-                <ListGroup>
-                  <ListGroup.Item>usrname</ListGroup.Item>
-                </ListGroup>
-              </div>
+            <PendingList/>
+
               <div style={{paddingTop: 15}}>
                 <h3>Friends:</h3>
                 <ListGroup>

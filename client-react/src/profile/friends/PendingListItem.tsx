@@ -1,0 +1,41 @@
+import React, { Component } from 'react';
+import {Button, ListGroup, ButtonGroup} from 'react-bootstrap';
+import { RootState } from '../../redux/reducers';
+import Actions from '../../redux/actions';
+import { connect } from 'react-redux';
+
+interface PendingListItemProps {
+  friendUsername: string;
+  username?: string;
+}
+
+interface PendingListItemState {
+  username: string;
+}
+
+class PendingListItem extends Component<PendingListItemProps> {
+
+  private acceptRequest(requester_name, requestee_name) {
+    this.props.acceptFriendRequest(requester_name, requestee_name, 1)
+  }
+    render() {
+        return (
+          <ListGroup.Item>
+          {this.props.friendUsername}
+          <ButtonGroup style={{paddingLeft: 25}}>
+            <Button onClick={() => this.acceptRequest(this.props.username, this.props.friendUsername)}>Accept</Button>
+          </ButtonGroup>
+          </ListGroup.Item>
+
+        )
+    }
+}
+const mapStateToProps = (state: RootState) => ({
+  username: state.auth.username,
+})
+
+const mapDispatchToProps = {
+  acceptFriendRequest: Actions.friends.acceptFriendRequest,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PendingListItem);

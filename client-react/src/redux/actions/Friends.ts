@@ -29,3 +29,17 @@ export const acceptFriendRequest = (requester, requestee, status) => {
     }
   }
 }
+
+export const getFriendRequests = (username) => {
+  return async (dispatch: Dispatch<Action>) => {
+    // try {
+    //   await fetchAuthToken();
+    //   const res = await axios.put('http://localhost:5000/friends/accept', {requester, requestee, status});
+    //   dispatch({type: Type.ACCEPT_FRIEND_REQUEST, payload: res })
+    // } catch (e) {
+    //   handleAxiosError(e, dispatch, Type.FRIEND_FAILED);
+    // }
+    const res = {pending: [{username:'ryan'},{username:'fortune'}]}
+    dispatch({type: Type.GET_PENDING, payload: res })
+  }
+}

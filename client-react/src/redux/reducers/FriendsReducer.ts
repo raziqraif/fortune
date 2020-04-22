@@ -2,15 +2,23 @@ import { Type } from '../actions/Types'
 
 export type State = typeof initialState;
 const initialState = {
-  requester: '',
-  requestee: '',
-  status: '',
+  pending: [],
+  list: [],
 }
 
 export type FriendsState = {
+  pending: Array<Friend>;
+  list: Array<Friend>;
+}
+
+type FriendsRequest = {
   requester: string;
   requestee: string;
   status: number;
+}
+
+export type Friend = {
+  username: string;
 }
 
 export type Action = {
@@ -21,11 +29,16 @@ export type Action = {
 export default (state = initialState, action: Action) => {
   switch (action.type) {
     case Type.SET_FRIEND_REQUEST:
-      return action.payload;
+      return state;
       case Type.ACCEPT_FRIEND_REQUEST:
-        return action.payload;
+        return state;
     case Type.FRIEND_FAILED:
-      return initialState;
+      return state;
+    case Type.GET_PENDING:
+      return {
+        ...state,
+        pending: action.payload.pending
+      }
     default:
       return state;
   }
