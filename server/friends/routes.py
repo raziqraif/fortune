@@ -33,7 +33,7 @@ def accept(profile):
         raise BadRequest('Could not accept request')
 
     try:
-        q = Friends.update({Friends.status: accept.status}).where(Friends.id == accept.id)
+        q = Friends.update({Friends.status: 1}).where(Friends.id == accept.id)
         q.execute()
     except Exception as e:
         return "Failed to accept request: {}".format(str(e))
