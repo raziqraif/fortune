@@ -21,7 +21,7 @@ export const getAchievementProfile = () => {
         try {
             await fetchAuthToken();
             const res = await axios.get('http://localhost:5000/achievement/profile');
-            dispatch({type: Type.SET_ACHIEVEMENT_PROFILE, payload: res.data});
+            dispatch({type: Type.SET_ACHIEVEMENT_PROFILE, payload: res.data.achievementProfile });
         } catch (e) {
             handleAxiosError(e, dispatch, Type.SET_ACHIEVEMENTS_FAILED);
         }

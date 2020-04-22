@@ -4,11 +4,6 @@ from db import db, Achievement, AchievementProfile, Profile
 @db.atomic()
 def get_achievement_profile_by_profile_id(profile_id):
     achievementProfile = AchievementProfile.select().join(Profile).where(Profile.id == profile_id)
-
-    # if a user exists, but has no achievements, achievement profile will be None, so come back to this
-    # if not achievementProfile:
-    #     raise BadRequest('User does not exist')
-
     return achievementProfile
 
 @db.atomic()
@@ -25,3 +20,14 @@ def add_achievement_by_achievement_id_and_profile_id(achievement_id, profile_id)
 
     #TODO - figure out way to skip this if player has already gotten it
     AchievementProfile.create(profile=profile_id, achievement=achievement)
+
+# takes starting cash of a game, a player's current net worth, and their profile ID
+# and determines if they should be awarded the double net worth achievement
+@db.atomic()
+def add_double_net_worth_achievement_if_necessary(net_worth, starting_cash, profile_id):
+    print('net worth: ', net_worth)
+    print('starting cash: ', starting_cash)
+    print('profile: ', profile_id)
+
+    if net_worth >= 2 * starting_cash:
+        add_achievement_by_achievement_id_and_profile_id(1, profile_id) 
