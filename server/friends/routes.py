@@ -3,7 +3,7 @@ from werkzeug.exceptions import BadRequest
 
 from auth.decorators import require_authentication
 from db import Profile, Friends
-from .services import create_request, get_friends_by_username, accept_request, get_pending_by_username
+from .services import create_request, get_friends_by_profile, accept_request, get_pending_by_profile
 from .serializers import FriendsSerializer, FriendsList, PendingList, Friend
 
 
@@ -42,15 +42,11 @@ def accept(profile):
 @friends_bp.route('/list', methods=['GET'])
 @require_authentication
 def get_friends(profile):
-    validated_data: dict = Friend.deserialize(request.json)
-    username = validated_data['username']
-    friends = get_friends_by_username(username)
+    friends = get_friends_by_profile(profile)
     return jsonify(FriendsList.serialize({'friendsList': friends,}))
 
 @friends_bp.route('/pending', methods=['GET'])
 @require_authentication
 def get_pending(profile):
-    validated_data: dict = Friend.deserialize(request.json)
-    username = validated_data['username']
-    pending = get_pending_by_username(username)
+    pending = get_pending_by_profile(profile)
     return jsonify(PendingList.serialize({'pending': pending,}))

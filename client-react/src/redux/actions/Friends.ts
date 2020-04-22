@@ -34,7 +34,7 @@ export const getPending = (username) => {
   return async (dispatch: Dispatch<Action>) => {
     try {
       await fetchAuthToken();
-      const res = await axios.get('http://localhost:5000/friends/pending/', {username});
+      const res = await axios.get('http://localhost:5000/friends/pending/');
       dispatch({type: Type.GET_PENDING, payload: res })
     } catch (e) {
       handleAxiosError(e, dispatch, Type.FRIEND_FAILED);
@@ -46,7 +46,7 @@ export const getFriendsList = (username) => {
   return async (dispatch: Dispatch<Action>) => {
     try {
       await fetchAuthToken();
-      const res = await axios.get('http://localhost:5000/friends/list/', {username});
+      const res = await axios.get('http://localhost:5000/friends/list/');
       dispatch({type: Type.GET_FRIENDS, payload: res })
     } catch (e) {
       handleAxiosError(e, dispatch, Type.FRIEND_FAILED);
