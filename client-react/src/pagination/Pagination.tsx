@@ -97,11 +97,13 @@ export default class Pagination extends React.Component <PaginationProps> {
 
         paginationItems.push(
             <ReactPagination.First
+                key={-2}
                 onClick={() => {this.setPageNumber(1)}}
             />
         );
         paginationItems.push(
             <ReactPagination.Prev
+                key={-1}
                 onClick={() => {this.setPageNumber(Math.max(1, pager.currentPage - 1))}}
             />
         );
@@ -110,6 +112,7 @@ export default class Pagination extends React.Component <PaginationProps> {
             let pageNum = pager.pages[i];
             paginationItems.push((
                 <ReactPagination.Item
+                    key={i}
                     active={pager.currentPage === pageNum}
                     onClick={this.handlePageClick}
                 >{pageNum}
@@ -119,11 +122,13 @@ export default class Pagination extends React.Component <PaginationProps> {
 
         paginationItems.push(
             <ReactPagination.Next
+                key={-3}
                 onClick={() => {this.setPageNumber(Math.min(pager.totalPages, pager.currentPage + 1))}}
             />
         );
         paginationItems.push(
             <ReactPagination.Last
+                key={-4}
                 onClick={() => {this.setPageNumber(pager.totalPages)}}
             />
         );

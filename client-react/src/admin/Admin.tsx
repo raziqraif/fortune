@@ -5,6 +5,7 @@ import actions from '../redux/actions';
 import { connect } from 'react-redux';
 import NotifyUserForm from './NotifyUserForm';
 import UserActionForm from './UserActionForm';
+import ReportPagination from './ReportPagination';
 
 interface AdminProps {
     usersError: string;
@@ -31,6 +32,8 @@ class Admin extends Component<AdminProps> {
                     <NotifyUserForm />
                     <hr />
                     <UserActionForm />
+                    <hr />
+                    <ReportPagination />
                 </div>
             </div>
         )

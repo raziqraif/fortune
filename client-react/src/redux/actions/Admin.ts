@@ -84,3 +84,131 @@ export const issueBan = (userId: number) => {
         }
     }
 }
+
+export const getReports = (page: number, numPerPage: number = 9) => {
+    return async (dispatch: Dispatch<Action>, store: () => RootState) => {
+        try {
+            await fetchAuthToken();
+            const res = await axios.get(
+                'http://localhost:5000/reports',
+                { params: { sortByStatusSescending: true, numPerPage, page } }
+            );
+            // const reports = [
+            //     {
+            //         id: 3,
+            //         createdAt: new Date(),
+            //         game: {
+            //             id: 1,
+            //             title: 'Global',
+            //         },
+            //         issuer: {
+            //             id: 1,
+            //             username: 'Sample'
+            //         },
+            //         offender: {
+            //             id: 3,
+            //             username: 'Blake'
+            //         },
+            //         flaggedMessage: '[toxicity]',
+            //         resolved: false,
+            //         takenAction: '',
+            //     },
+            //     {
+            //         id: 4,
+            //         createdAt: new Date(),
+            //         game: {
+            //             id: 1,
+            //             title: 'Global',
+            //         },
+            //         issuer: {
+            //             id: 2,
+            //             username: 'Next'
+            //         },
+            //         offender: {
+            //             id: 1,
+            //             username: 'Sample'
+            //         },
+            //         flaggedMessage: 'I\'m reporting you',
+            //         resolved: false,
+            //         takenAction: '',
+            //     },
+            //     {
+            //         id: 1,
+            //         createdAt: new Date(),
+            //         game: {
+            //             id: 1,
+            //             title: 'Global',
+            //         },
+            //         issuer: {
+            //             id: 1,
+            //             username: 'Sample'
+            //         },
+            //         offender: {
+            //             id: 2,
+            //             username: 'Next'
+            //         },
+            //         flaggedMessage: 'n-word',
+            //         resolved: true,
+            //         takenAction: 'warning',
+            //     },
+            //     {
+            //         id: 2,
+            //         createdAt: new Date(),
+            //         game: {
+            //             id: 1,
+            //             title: 'Global',
+            //         },
+            //         issuer: {
+            //             id: 3,
+            //             username: 'Blake'
+            //         },
+            //         offender: {
+            //             id: 2,
+            //             username: 'Next'
+            //         },
+            //         flaggedMessage: 'n-word',
+            //         resolved: true,
+            //         takenAction: 'ban',
+            //     },
+            // ]
+
+            // const res = {
+            //     data: {
+            //         reports: reports,
+            //         totalItems: 4
+            //     }
+            // }
+
+            dispatch({type: Type.GET_REPORTS_SUCCESS, payload: res.data});
+        } catch (e) {
+            handleAxiosError(e, dispatch, Type.GET_REPORTS_FAILED);
+        }
+    }
+}
+
+export const updateReport = (
+    reportId: number,
+    selectedAction: 'None' | 'Warning' | 'Ban',
+    warningMessage?: string
+) => {
+    return async (dispatch: Dispatch<Action>, store: () => RootState) => {
+        if (selectedAction === 'Warning' && !warningMessage) {
+            dispatch({type: Type.UPDATE_REPORT_FAILED, payload: 'Warnings must have a message.'});
+            return;
+        }
+        try {
+            await fetchAuthToken();
+            await axios.put(
+                `http://localhost:5000/reports/${reportId}`,
+                {
+                    userAction: selectedAction.toLowerCase(),
+                    message: warningMessage
+                }
+            );
+
+            dispatch({type: Type.UPDATE_REPORT_SUCCESS});
+        } catch (e) {
+            handleAxiosError(e, dispatch, Type.UPDATE_REPORT_FAILED);
+        }
+    }
+}

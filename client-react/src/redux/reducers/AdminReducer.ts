@@ -1,9 +1,25 @@
 import { Type } from '../actions/Types';
 
-export type UsersType = Array<{
+export type UsersType = Array<UserType>
+export type UserType = {
     id: number;
     username: string;
-}>
+}
+
+export type ReportsType = Array<ReportType>;
+export type ReportType = {
+    id: number,
+    createdAt: Date,
+    game: {
+        id: number,
+        title: string,
+    },
+    issuer: UserType,
+    offender: UserType,
+    flaggedMessage: string,
+    resolved: boolean,
+    takenAction: string,
+}
 
 export type AdminState = typeof initialState;
 const initialState = {
@@ -11,6 +27,9 @@ const initialState = {
     usersErrorMessage: '',
     userActionErrorMessage: '',
     notifyErrorMessage: '',
+    reports: [] as ReportsType,
+    numberOfReports: 0,
+    reportsErrorMessage: '',
 }
 
 export type Action = {
@@ -50,6 +69,28 @@ export default (state = initialState, action: Action) => {
             return {
                 ...state,
                 userActionErrorMessage: action.payload,
+            }
+        case Type.GET_REPORTS_SUCCESS:
+            return {
+                ...state,
+                reports: action.payload.reports,
+                numberOfReports: action.payload.totalItems,
+                reportsErrorMessage: '',
+            }
+        case Type.GET_REPORTS_FAILED:
+            return {
+                ...state,
+                reportsErrorMessage: action.payload,
+            }
+        case Type.UPDATE_REPORT_SUCCESS:
+            return {
+                ...state,
+                reportsErrorMessage: '',
+            }
+        case Type.UPDATE_REPORT_FAILED:
+            return {
+                ...state,
+                reportsErrorMessage: action.payload,
             }
         default:
             return state;
