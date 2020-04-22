@@ -2,6 +2,10 @@ import { Type } from '../actions/Types'
 import { CoinsAndPrices } from '../actions/Coins';
 
 export type CoinState = typeof initialState;
+export type Coin = {
+  id: string;
+  name: string;
+}
 const initialState = {
   simpleCoins: [] as Array<{id: string, name: string}>,
   coins: [] as CoinsAndPrices,
@@ -43,6 +47,8 @@ export default (state = initialState, action: Action) => {
       }
     case Type.SET_CURRENT_PRICES:
       return setCurrentPrices(state, action.payload);
+    case Type.LOGOUT:
+      return initialState
     default:
       return state;
   }
@@ -56,7 +62,7 @@ const setCurrentPrices = (state = initialState, currentPrices: currentPricesType
   const newCoins = previousCoins.map(coinAndPrices => {
     const newPrice = currentPrices.find(
       (currentPrice: currentPrice) => {
-        return currentPrice.coin.id.toString() === coinAndPrices.coin.id;
+        return currentPrice.coin.id === coinAndPrices.coin.id;
       }
     );
     if (newPrice) {

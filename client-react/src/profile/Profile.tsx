@@ -35,14 +35,14 @@ class Profile extends Component<ProfileProps> {
 
     render() {
         return (
-            <div className="container">
-                <div className="row col-lg-12" style={{paddingTop: 10}}>
-                    <h1 className="col-lg-6" style={{alignItems: 'left'}}>{this.props.username ? this.props.username : 'Profile'}</h1>
-                    <div className="col-lg-6" style={{textAlign: 'right'}}>
-                        <Button onClick={this.navigateTo('/play')}>
-                            My Games
-                        </Button>
-                    </div>
+            <div className="row col-lg-12" style={{paddingTop: 10}}>
+                <h1 className="col-lg-6" style={{alignItems: 'left'}}>{this.props.username ? this.props.username : 'Profile'}</h1>
+                <div className="col-lg-6" style={{textAlign: 'right'}}>
+                    <Button onClick={this.navigateTo('/play')}>
+                        My Games
+                    </Button>
+                </div>
+                <div className="col-lg-12">
                     {this.renderTabs()}
                 </div>
             </div>
