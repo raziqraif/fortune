@@ -25,8 +25,8 @@ def up(db):
                         ends_at=None)
 
         # insert achievements into database
-        Achievement.create(name="win", description="finish in first place in a private game")
-        Achievement.create(name="double net worth", description="achieved by doubling your net worth in a game")
+        Achievement.create(name="Win", description="Finish in first place in a private game")
+        Achievement.create(name="Double net worth", description="Achieved by doubling your net worth in a game")
         
         all_coins = Coin.select()
         for coin in all_coins:
