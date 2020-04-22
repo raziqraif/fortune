@@ -79,7 +79,7 @@ private createCoinRows = (coins: CoinsAndPrices) => {
 			oneCoinTickers = coinAndPrices.prices
 		}
 	});
-
+	oneCoinTickers.pop(); //pop oldest ticker to make graph appear that it is moving
 	return oneCoinTickers;
 }
 

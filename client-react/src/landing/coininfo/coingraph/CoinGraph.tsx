@@ -21,7 +21,6 @@ export default class CoinGraph extends React.Component<CoinGraphProps> {
     let nColor = state.color
     let erroneous = false;
     if(props.oneDayTickers.length > 0) {
-      props.oneDayTickers.pop()
       props.oneDayTickers.forEach(ticker => {
         if(!ticker.price || ticker.price <= 0 ) { erroneous = true }
         nData.push(ticker.price)
