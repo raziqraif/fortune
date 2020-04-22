@@ -4,7 +4,7 @@ import { Sparklines, SparklinesLine } from 'react-sparklines';
 interface CoinGraphProps {
   id: Number;
   change: Number;
-  oneDayTickers: Array<{tickers: currentPricesType}>;
+  oneDayTickers: Ticker;
 }
 
 export default class CoinGraph extends React.Component<CoinGraphProps> {
@@ -17,24 +17,26 @@ export default class CoinGraph extends React.Component<CoinGraphProps> {
   }
 
   static getDerivedStateFromProps(props,state){
-    let nData = state.data
+    let nData = []
     let nColor = state.color
     let erroneous = false;
-    if(props.oneDayTickers.length > 0 && Number(state.data.length) === 0) {
+    if(props.oneDayTickers.length > 0) {
       props.oneDayTickers.forEach(ticker => {
-        if(!ticker.price || ticker.price === 0 || ticker.coin.symbol === "CO3") { erroneous = true }
-          nData.push(ticker.price)
+        if(!ticker.price || ticker.price <= 0 ) { erroneous = true }
+        nData.push(ticker.price)
       });
     }
     nColor = (props.change < 0) ? 'red' : 'green'
     if (erroneous) { nData = [] }
+    nData.reverse();
     return{ data: nData,
             color: nColor }
   }
 
     render() {
+      //limit is 24 for one ticker per hour. it will look wonky with < 24 tickers in the db
         return (
-          <Sparklines data={this.state.data}>
+          <Sparklines data={this.state.data} limit={24}>
             <SparklinesLine color={this.state.color} />
           </Sparklines>
         )

@@ -10,6 +10,9 @@ const initialState = {
   registrationLoading: false,
   loginErrorMessage: '',
   loginLoading: false,
+  usernameErrorMessage: '',
+  passwordErrorMessage: '',
+  passwordSuccessMessage: '',
   socket: null,
 }
 
@@ -27,6 +30,9 @@ export type Auth = {
   registrationLoading: boolean;
   loginErrorMessage: string;
   loginLoading: boolean;
+  usernameErrorMessage: string;
+  passwordErrorMessage: string;
+  passwordSuccessMessage: string;
   socket: SocketIOClient.Socket;
 }
 
@@ -86,6 +92,29 @@ export default (state = initialState, action: Action) => {
         ...state,
         username: action.payload.username,
         profileId: action.payload.id,
+      }
+    case Type.CHANGE_USERNAME_SUCCEEDED:
+      return {
+        ...state,
+        username: action.payload.username,
+        usernameErrorMessage: ''
+      }
+    case Type.SET_CHANGE_USERNAME_FAILED:
+      return {
+        ...state,
+        usernameErrorMessage: action.payload
+      }
+    case Type.CHANGE_PASSWORD_SUCCEEDED:
+      return {
+        ...state,
+        passwordSuccessMessage: 'Password change successful',
+        passwordErrorMessage: '',
+      }
+    case Type.SET_CHANGE_PASSWORD_FAILED:
+      return {
+        ...state,
+        passwordSuccessMessage: '',
+        passwordErrorMessage: action.payload,
       }
     default:
       return state
