@@ -16,6 +16,8 @@ class BaseSerializer(Schema):
         """
         return cls().load(obj, many=many)
 
+# Achievement serializers
+
 class AchievementSerializer(BaseSerializer):
     name = fields.Str(required=True)
     description = fields.Str(required=True)
@@ -29,3 +31,19 @@ class AchievementProfileAchievement(AchievementSerializer):
 
 class AchievementProfile(BaseSerializer):
     achievementProfile = fields.List(fields.Nested(AchievementProfileAchievement))
+
+# Goal serializers
+
+class GoalSerializer(BaseSerializer):
+    name = fields.Str(required=True)
+    description = fields.Str(required=True)
+
+class Goals(GoalSerializer):
+    goals: fields.List(fields.Nested(GoalSerializer))
+
+class GoalProfileGoal(GoalSerializer):
+    goal = fields.Nested(GoalSerializer)
+    achieved_at = fields.DateTime(required=True)
+
+class GoalProfile(BaseSerializer):
+    goalProfile = fields.List(fields.Nested(GoalProfileGoal))

@@ -27,3 +27,26 @@ export const getAchievementProfile = () => {
         }
     }
 };
+
+export const getGoals = () => {
+    return async (dispatch: Dispatch<Action>) => {
+        try {
+            const res = await axios.get('http://localhost:5000/goal');
+            dispatch({type: Type.SET_GOALS, payload: res.data});
+        } catch (e) {
+            handleAxiosError(e, dispatch, Type.SET_ACHIEVEMENTS_FAILED);
+        }
+    }
+}
+
+export const getGoalProfile = () => {
+    return async (dispatch: Dispatch<Action>) => {
+        try {
+            await fetchAuthToken();
+            const res = await axios.get('http://localhost:5000/goal/profile');
+            dispatch({type: Type.SET_GOAL_PROFILE, payload: res.data.goalProfile });
+        } catch (e) {
+            handleAxiosError(e, dispatch, Type.SET_ACHIEVEMENTS_FAILED);
+        }
+    }
+};
