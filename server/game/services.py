@@ -260,18 +260,24 @@ def create_chat_message(profile_id, game_id, message):
 
 @db.atomic()
 def get_chat_messages_data(game_id: int, oldest_id: int, newest_id: int, newer_messages: bool):
-    older_message = Message.get_or_none(Message.id < oldest_id)
+    older_message = Message.get_or_none((Message.game == game_id) & (Message.id < oldest_id))
     has_older_message = older_message is not None
 
-    # Note: oldest_id and newest_id could be  -1
-
     if newer_messages:
-        # TODO: Limit result of newer messages too, if frontend has been optimized
-        messages = Message.select().where((Message.game == game_id) & (Message.id > newest_id)).execute()
+        messages = Message.select().where((Message.game == game_id) & (Message.id > newest_id)).order_by(-Message.id)\
+            .limit(50).execute()
     else:
-        messages = Message.select().where((Message.game == game_id) & (Message.id < oldest_id)).limit(30).execute()
+        messages = Message.select().where((Message.game == game_id) & (Message.id < oldest_id)).order_by(-Message.id)\
+            .limit(50).execute()
+        # TODO: Update has_older_messages here too
 
-    return messages, has_older_message
+    # Note: oldest_id and newest_id could be -1 when frontend has no messages at all
+    if oldest_id == -1:
+        oldest_id_in_query = messages[0].id
+        has_older_message = Message.select().where(Message.id < oldest_id_in_query).count() > 0
+
+    reversed_messages = [messages[len(messages) - i - 1] for i in range(len(messages))]
+    return reversed_messages, has_older_message
 
 
 @db.atomic()

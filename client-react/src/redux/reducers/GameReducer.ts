@@ -26,6 +26,8 @@ const initialState = {
     },
     setGameErrorMessage: '',
     transactionErrorMessage: '',
+    messages: [] as Array<Message>,
+    hasOlderMessages: false
 };
 
 export type Action = {
@@ -159,19 +161,40 @@ export default (state = initialState, action: Action) => {
         case Type.LOGOUT:
             return initialState;
         case Type.GET_PLAYERS_DATA:
-            console.log("Updating players")
             return {
                 ...state,
                 players: action.payload.players,
-                currentPlayerID: action.payload.currentPlayerID,
+                currentPlayerID: action.payload.currentPlayerId,
             };
         case Type.GET_PLAYERS_DATA_FAILED:
             return state;
         case Type.GET_MESSAGES_DATA:
             let newMessages = action.payload.messages;
+            if (newMessages.length == 0) {
+                return {
+                    ...state,
+                    hasOlderMessages: action.payload.hasOlderMessages,
+                }
+            }
+
             for (let i = 0; i < newMessages.length; i++) {
                 newMessages[i].createdOn = new Date(newMessages[i].createdOn)
             }
+            let prevOldestID = (state.messages.length > 0)? state.messages.length : -1;
+            let curOldestID = newMessages[0].id;
+
+            const MAX_MESSAGES_AT_AT_TIME = 20;
+            if (curOldestID < prevOldestID) {
+                newMessages = newMessages.concat(state.messages);
+                newMessages = newMessages.slice(0, MAX_MESSAGES_AT_AT_TIME);
+            }
+            else {
+                newMessages = state.messages.concat(newMessages);
+                let startIndex = Math.max(newMessages.length - MAX_MESSAGES_AT_AT_TIME, 0);
+                let endIndex = newMessages.length;
+                newMessages = newMessages.slice(startIndex, endIndex);
+            }
+
             return {
                 ...state,
                 messages: newMessages,

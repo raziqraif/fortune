@@ -188,7 +188,32 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
 
     componentDidMount(): void {
         this.props.getPlayersData(this.gameID);
-        this.props.getMessagesData(this.gameID, -1, -1, true);
+        // @ts-ignore
+        this.props.getMessagesData(this.gameID, this.oldestMessageID(), this.newestMessageID(), true);
+    }
+
+    newestMessageID() {
+        if (!this.props.messages) {
+            return -1;
+        }
+
+        let len = this.props.messages.length;
+        if (len == 0) {
+            return -1;
+        }
+        return this.props.messages[len - 1].id;
+    }
+
+    oldestMessageID() {
+        if (!this.props.messages) {
+            return -1;
+        }
+
+        let len = this.props.messages.length;
+        if (len == 0) {
+            return -1;
+        }
+        return this.props.messages[0].id;
     }
 
     onMessageSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -198,11 +223,9 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
             this.setState(previousState => ({
                 messageText: '',
             }), () => this.chat && this.chat.onMessageSend());
-            // setTimeout(() => {
-                // this.setState(previousState => ({ messages: previousState.messages.map(m => m.id === id ? { ...m, isSend: true } : m) }));
-            // }, 2000);
         }
-        this.props.getMessagesData(this.gameID, -1, -1, true)
+        // @ts-ignore
+        this.props.getMessagesData(this.gameID, this.oldestMessageID(), this.newestMessageID(), true);
         return true;
     }
 
@@ -284,9 +307,9 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
                     //        } as Message)).concat(previousState.messages)
                     //    }), () => resolve());
                     // }, 1000))}
-                    // onLoadOldMessages={() => new Promise(resolve => setTimeout(() => {
-                        // this.props.getMessagesData()
-                    //}, 1000))}
+                    onLoadOldMessages={() => new Promise(resolve => setTimeout(() => {
+                        this.props.getMessagesData(this.gameID, this.oldestMessageID(), this.newestMessageID(), false)
+                    }, 1000))}
                 />
 
                 <form

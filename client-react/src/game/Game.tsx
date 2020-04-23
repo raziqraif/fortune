@@ -43,7 +43,12 @@ class Game extends React.Component<GameProps, GameState> {
 
 	constructor(props: GameProps) {
 		super(props);
-		this.gameID = 1	 // TODO: REMOVE THIS
+		if (!props.gameId) {
+			this.gameID = 1;
+		}
+		else {
+			this.gameID = parseInt(props.gameId)
+		}
 		this.state = {
 			priceOrder: priceOrder.MINIMUM,
 		}
