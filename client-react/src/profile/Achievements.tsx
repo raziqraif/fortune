@@ -84,6 +84,7 @@ class Achievements extends React.Component<AchievementsProps> {
 
             return (
                 <div>
+                    <h3>Achievements</h3>
                     <Table striped bordered hover>
                         <thead>
                             <tr>
@@ -105,6 +106,7 @@ class Achievements extends React.Component<AchievementsProps> {
                         </tbody>
                     </Table>
 
+                    <h3>Weekly Goals</h3>
                     <Table striped bordered hover>
                         <thead>
                             <tr>
