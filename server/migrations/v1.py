@@ -30,7 +30,7 @@ def up(db):
         Achievement.create(name="Identity Crisis", description="Change your username")
         
         # insert goals into database
-        Goal.create(name="Entrepeneur", description="Create a private game")
+        Goal.create(name="Entrepreneur", description="Create a private game")
 
         all_coins = Coin.select()
         for coin in all_coins:
