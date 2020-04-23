@@ -46,7 +46,7 @@ export const issueWarning = (userId: number, message: string) => {
         }
         try {
             await fetchAuthToken();
-            await axios.put(`http://localhost:5000/notification/${userId}`, {message});
+            await axios.put(`http://localhost:5000/users/${userId}`, {message});
             dispatch({type: Type.USER_ACTION_SUCCESS});
         } catch (e) {
             handleAxiosError(e, dispatch, Type.USER_ACTION_FAILED);
@@ -58,7 +58,7 @@ export const issueBan = (userId: number) => {
     return async (dispatch: Dispatch<Action>, store: () => RootState) => {
         try {
             await fetchAuthToken();
-            await axios.delete(`http://localhost:5000/notification/${userId}`);
+            await axios.delete(`http://localhost:5000/users/${userId}`);
             dispatch(getUsers() as any);
             dispatch({type: Type.USER_ACTION_SUCCESS});
         } catch (e) {
