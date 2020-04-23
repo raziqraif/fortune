@@ -1,0 +1,36 @@
++----------------------------------------------------------------------------------------------------------------------------------------+
+|                                                         Front End Stress Tests                                                         |
++--------+-----------------------+-----------------------------------------------+-------------------------------------------------------+
+| test # | test scenario         | test data / procedure                         | expected results                                      |
++--------+-----------------------+-----------------------------------------------+-------------------------------------------------------+
+|    1   | Rapid Navigation      | Changing between different pages sporadically | Frontend will change pages seamlessly and not crash.  |
++--------+-----------------------+-----------------------------------------------+-------------------------------------------------------+
+|    2   | Rapid Button pressing | Clicking buttons on the screen quickly        | Buttons will continue to work and application will    |
+|        |                       |                                               | not crash.                                            |
++--------+-----------------------+-----------------------------------------------+-------------------------------------------------------+
+|    3   | Rapid Refresh         | Pressing the refresh button multiple times    | The page will be rerendered each time but the         |
+|        |                       |                                               | application will not crash.                           |
++--------+-----------------------+-----------------------------------------------+-------------------------------------------------------+
+|    4   | Rapid text input      | Pressing keys into a text box very quickly    | Text will be displayed into the text box as they are  |
+|        |                       |                                               | being typed and the application will not crash.       |
++--------+-----------------------+-----------------------------------------------+-------------------------------------------------------+
+
++-----------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                                Back End Stress Tests                                                                |
++--------+---------------------------------------------+------------------------------------------------+---------------------------------------------+
+| test # | test scenario                               | test data / procedure                          | expected results                            |
++--------+---------------------------------------------+------------------------------------------------+---------------------------------------------+
+|    1   | Multiple requests for landing page coins    | Navigating to landing page multiple times      | Coins will promptly be sent from the        |
+|        |                                             | (by refreshing, clicking 'Fortune' link, etc.) | backend and the server will not crash.      |
++--------+---------------------------------------------+------------------------------------------------+---------------------------------------------+
+|    2   | Multiple requests of user's active games    | Navigating to play page multiple times         | A player's active games will promptly       |
+|        |                                             | (via refreshing, etc.) in rapid succession     | be sent from the backend each time and the  |
+|        |                                             |                                                | server will not crash.                      |
++--------+---------------------------------------------+------------------------------------------------+---------------------------------------------+
+|    3   | Multiple requests for game page information | Navigate to a game page multiple times in      | Game specific information (amount of coins, |
+|        |                                             | rapid succession                               | net worth, etc) will promptly be displayed  |
+|        |                                             |                                                | each rendering.                             |
++--------+---------------------------------------------+------------------------------------------------+---------------------------------------------+
+|    4   | Multiple requests for profile data          | Visiting a user's profile multiple times in    | Friends data will promptly be sent and      |
+|        |                                             | rapid succession                               | rendered into their respective tabs.        |
++--------+---------------------------------------------+------------------------------------------------+---------------------------------------------+

@@ -31,7 +31,7 @@ services:
     stdin_open: true
     environment:
       - PORT=5000
-      - FLASK_ENV=development
+      - FLASK_ENV=development #PSA: If changing to production, you must downgrade to python 3.6 in /server/Dockerfile.dev
       - DB_HOST=postgres
       - DB_USER=postgres
       - DB_PORT=5432
@@ -40,4 +40,4 @@ services:
       # NOTE do this
       - PYTHONPATH=/app
       - HTTP_HOST=http://localhost:5000
-      - NOMICS_API_KEY=foo
+      - NOMICS_API_KEY=foo #Must remove seeded Coins CO3-5 to prevent errors with getting prices.
