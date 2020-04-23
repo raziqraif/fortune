@@ -10,9 +10,9 @@ from .services import get_users_except_admins
 users_bp = Blueprint('users', __name__, url_prefix='/users')
 
 
-@users_bp.route('/users', methods=['GET'])
+@users_bp.route('/', methods=['GET'])
 @require_authentication
-def users_for_admin(profile):
+def users_for_admin_page(profile):
     if not profile.is_admin:
         raise Unauthorized("You don't have permission")   # FIXME: This redirects to Login page. We probably dont want
         # that

@@ -162,7 +162,7 @@ export const fetchAuthToken = () => {
       dispatch({type: Type.LOGIN_SUCCEEDED, payload: token})
     }
   }
-}
+};
 
 export const initializeSocketConnection = (authToken: string) => {
   return async (dispatch: Dispatch<Action>) => {
@@ -179,5 +179,19 @@ export const initializeSocketConnection = (authToken: string) => {
       toast(data)
     });
     await dispatch({type: Type.SET_SOCKET, payload: socket})
+  }
+};
+
+
+export const checkIfAdmin = () => {
+  return async (dispatch: Dispatch<Action>) => {
+    try {
+      await fetchAuthToken();
+      const res = await axios.get('http://localhost:5000/auth/admin');
+      dispatch({type: Type.GET_IS_ADMIN, payload: res.data.isAdmin});
+    }
+    catch (e) {
+      handleAxiosError(e, dispatch, Type.GET_IS_ADMIN_FAILED);
+    }
   }
 }

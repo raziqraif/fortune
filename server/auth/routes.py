@@ -36,6 +36,7 @@ def register_route():
     auth_token = register(username, password)
     return jsonify(AuthTokenSerializer.serialize(auth_token))
 
+
 @auth_bp.route('/verify', methods=['POST'])
 def verify_route():
     auth = request.headers.get('Authorization')
@@ -53,6 +54,15 @@ def verify_route():
         'id': profile.id,
         'username': profile.username,
     }))
+
+
+@auth_bp.route('/admin')
+@require_authentication
+def check_if_admin(profile):
+    return jsonify({
+        'isAdmin': profile.is_admin
+    })
+
 
 @auth_bp.route('/username', methods=['PUT'])
 @require_authentication
