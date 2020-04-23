@@ -15,19 +15,26 @@ interface FriendsListProps {
 
 interface FriendsListState {
   listErrorMessage: string;
+  friendsList: Array<Friend>;
 }
 
 class FriendsList extends Component<FriendsListProps, FriendsListState>{
-
+  constructor(props) {
+    super(props)
+    this.state = {
+      listErrorMessage: '',
+      friendsList: [],
+    }
+  }
   componentDidMount(){
     this.props.getFriendsList(this.props.username)
   }
 
   private createItems() {
     var items = [];
-    if(this.props.friendsList) {
+    if(this.props.friendsList.friendsList) {
       var index = 0
-      this.props.friendsList.forEach(friend => {
+      this.props.friendsList.friendsList.forEach(friend => {
         items.push(<FriendsListItem key={index++} friendUsername={friend.username}/>)
       });
     }
@@ -36,7 +43,7 @@ class FriendsList extends Component<FriendsListProps, FriendsListState>{
 
     render() {
       var list = [];
-      if(this.props.friendsList.length > 0) {
+      if(this.props.friendsList.friendsList && this.props.friendsList.friendsList.length > 0) {
         list =    <ListGroup>
                     {this.createItems()}
                   </ListGroup>

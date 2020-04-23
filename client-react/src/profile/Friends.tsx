@@ -28,6 +28,7 @@ constructor(props){
 
 private sendRequest = () => {
   this.props.sendFriendRequest(this.props.username, this.state.usernameToFriend, 0)
+  this.setState({usernameToFriend:'',})
 }
 
 private handleChange = (event: any) => {

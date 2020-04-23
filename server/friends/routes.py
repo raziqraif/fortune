@@ -19,7 +19,8 @@ def send(profile):
     friend_req = create_request(requester_name, requestee_name, status)
     if friend_req is None:
         raise BadRequest('Could not create request')
-    return jsonify(FriendsSerializer.serialize(friend_req))
+    pending = get_pending_by_profile(Profile.get_or_none(Profile.username == requestee_name))
+    return jsonify(PendingList.serialize({'pending': pending,}))
 
 @friends_bp.route('/accept', methods=['PUT'])
 @require_authentication
@@ -37,7 +38,8 @@ def accept(profile):
         q.execute()
     except Exception as e:
         return "Failed to accept request: {}".format(str(e))
-    return jsonify(FriendsSerializer.serialize(accept))
+    friends = get_friends_by_profile(profile)
+    return jsonify(FriendsList.serialize({'friendsList': friends,}))
 
 @friends_bp.route('/list', methods=['GET'])
 @require_authentication

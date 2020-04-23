@@ -36,7 +36,10 @@ export default (state = initialState, action: Action) => {
     case Type.SET_FRIEND_REQUEST:
       return state;
       case Type.ACCEPT_FRIEND_REQUEST:
-        return state;
+        return {
+          ...state,
+          friendsList: action.payload
+        };
     case Type.FRIEND_FAILED:
       return state;
     case Type.GET_PENDING:
@@ -47,7 +50,7 @@ export default (state = initialState, action: Action) => {
     case Type.GET_FRIENDS:
       return {
         ...state,
-        friendsList: action.payload.friendsList
+        friendsList: action.payload
       }
     case Type.GET_PENDING_FAILED:
       return {
