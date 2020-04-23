@@ -220,26 +220,14 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
                     showDateRow={false}
                     showLoadingMessages={false}
                     hasOldMessages={this.props.hasOlderMessages}
-                    // NOTE: This is from demo
-                    // onLoadOldMessages={() => new Promise(resolve => setTimeout(() => {
-                    //     this.setState(previousState => ({
-                    //         messages: (
-                    //             new Array(10).fill(1)).map((e, i) => ({
-                    //                 id: Number(new Date()),
-                    //                 createdOn: new Date(2017, 1, 1),
-                    //                 message: 'Old message ' + (i + 1).toString(),
-                    //                 authorId: Math.round(Math.random() + 1)
-                    //        } as Message)).concat(previousState.messages)
-                    //    }), () => resolve());
-                    // }, 1000))}
 
                     // NOTE: Not working
-                    // onLoadOldMessages={() => new Promise(resolve => setTimeout(() => {
+                    onLoadOldMessages={() => new Promise(resolve => setTimeout(() => {
                         // @ts-ignore
-                        // this.props.getMessagesData(this.gameID, this.oldestMessageID(), this.newestMessageID(),
-                        //     false)
-                        // this.setState({showLoading: false})
-                    //}, 1000))}
+                        this.props.getMessagesData(this.gameID, this.oldestMessageID(), this.newestMessageID(),
+                            false).then(resolve)
+                        this.setState({showLoading: false})
+                    }, 1000))}
                 />
 
                 <form
