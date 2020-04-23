@@ -18,7 +18,7 @@ interface CoinInfoProps {
 	) => void;
 }
 
-class CoinInfo extends React.Component<CoinInfoProps> {
+export class CoinInfo extends React.Component<CoinInfoProps> {
 
   componentDidMount() {
       this.props.getCoins(1, 1, 1, 1, 10);
@@ -28,7 +28,7 @@ class CoinInfo extends React.Component<CoinInfoProps> {
     const { allCoins } = this.props;
     if(allCoins) {
       for (let i = 0; i < allCoins.length; i++) {
-        if (allCoins[i].coin.id == id.toString())
+        if (allCoins[i].coin.id === id)
           return <div> ${Number(allCoins[i].prices[0].price).toFixed(2)}</div>
       }
       return <div>Retrieving...</div>
@@ -40,11 +40,15 @@ class CoinInfo extends React.Component<CoinInfoProps> {
     const { allCoins } = this.props;
     if(allCoins) {
       for (let i = 0; i < allCoins.length; i++) {
-        if (allCoins[i].coin.id == id.toString()) {
+        if (allCoins[i].coin.id === id) {
           var style = {color:'green'}
           var change = Number(allCoins[i].prices[0].price_change_day_pct) * 100
           if (change < 0) { style = {color:'red'} }
-          return <div style={style}>{Number(change).toFixed(2)}%</div>
+          if (!isNaN(change)){
+            return <div style={style}>{Number(change).toFixed(2)}%</div>
+          } else {
+            return <div>Fetching...</div>
+          }
         }
       }
       return <div>Retrieving...</div>
@@ -56,8 +60,8 @@ class CoinInfo extends React.Component<CoinInfoProps> {
     const { allCoins } = this.props;
     if(allCoins) {
       for (let i = 0; i < allCoins.length; i++) {
-        if(allCoins[i].coin.id == id.toString()){
-          return parseInt(allCoins[i].prices[0].price_change_day_pct)
+        if(allCoins[i].coin.id === id){
+          return parseFloat(allCoins[i].prices[0].price_change_day_pct)
         }
       }
     }
@@ -77,22 +81,10 @@ class CoinInfo extends React.Component<CoinInfoProps> {
   }
 
   private parseTickers(id:Number) {
-    let oneCoinTickers: Array<{ticker: Ticker}> = [];
+    let oneCoinTickers: Ticker
     this.props.allCoins.forEach(coinAndPrices => {
       if(Number(coinAndPrices.coin.id) === id){
-        oneCoinTickers.push({ 
-          tickers: [{ 
-            price_change_day_pct: coinAndPrices.prices[0].price_change_day_pct,
-            coin: {
-              id: parseInt(coinAndPrices.coin.id),
-              name: coinAndPrices.coin.name,
-              symbol: coinAndPrices.coin.name
-            },
-            captured_at: coinAndPrices.prices[0].captured_at.toString(),
-            id: parseInt(coinAndPrices.prices[0].id),
-            price: coinAndPrices.prices[0].price.toString(),
-          }]
-        })
+        oneCoinTickers = coinAndPrices.prices
       }
     });
 
@@ -113,6 +105,9 @@ private dynamicRowRender() {
                                            <td>{this.showChange(parseInt(coin.coin.id))}</td>
                                            </tr> );
     rows = rows.slice(0,10) //only show first 10 coins - in reality need to filter through rows for certain coins
+  }
+  if(rows.length === 0){
+    rows = <tr key={0}><td>No coins available to display</td></tr>
   }
   return rows
 }

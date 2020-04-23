@@ -34,6 +34,7 @@ from .services import (
     buy_coin,
     sell_coin
 )
+from achievement.services import add_double_net_worth_achievement_if_necessary
 
 game_bp = Blueprint('game', __name__, url_prefix='/game')
 
@@ -151,6 +152,10 @@ def buy_or_sell(profile, game_id):
     else:
         new_coin_amount = sell_coin(coin_id, -1 * coin_amount, game_profile)
     game_profile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
+
+    # check if player has earned the double net worth achievement
+    game = get_game_by_id(game_id)
+    add_double_net_worth_achievement_if_necessary(game_profile.cash, game.starting_cash, profile)
     return jsonify(TradeResponse.serialize({
         'new_amount': new_coin_amount,
         'new_cash': game_profile.cash,

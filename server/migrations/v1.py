@@ -1,8 +1,9 @@
+from datetime import datetime, timedelta
 from decimal import Decimal
 
 from playhouse.migrate import PostgresqlMigrator, migrate
 
-from db import MODELS, Coin, Game, GameProfile, Profile, GameCoin
+from db import MODELS, Coin, Game, GameProfile, Profile, GameCoin, Achievement
 
 def up(db):
     with db.atomic():
@@ -22,8 +23,22 @@ def up(db):
                         shareable_link='INDEF',
                         shareable_code='INDEF',
                         ends_at=None)
-        GameCoin.create(game=global_indef, coin=Coin.get())
 
+        # insert achievements into database
+        Achievement.create(name="Win", description="Finish in first place in a private game")
+        Achievement.create(name="Double net worth", description="Achieved by doubling your net worth in a game")
+        
+        all_coins = Coin.select()
+        for coin in all_coins:
+            GameCoin.create(game=global_indef, coin=coin)
+
+        global_timed = Game.create(name='Global Timed',
+                        starting_cash=10000.00,
+                        shareable_link='TIMED',
+                        shareable_code='TIMED',
+                        ends_at=datetime.utcnow() + timedelta(minutes=1))
+        # CHANGEME for devel purposes, making it 1 min for now
+        GameCoin.create(game=global_timed, coin=Coin.get())
 
 def down(db):
     with db.atomic():
