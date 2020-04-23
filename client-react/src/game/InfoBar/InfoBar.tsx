@@ -19,6 +19,7 @@ interface InfoBarProps {
 	netWorth: string
 	coins: CoinsAndPrices,
 	gameProfile: any,
+	loading: boolean,
 	liquefy: (gameId: string) => void,
 	changePriceOrder: (priceOrder: priceOrder) => void,
 	changeTimeSpan: (timespan: number) => void,
@@ -69,7 +70,7 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 	}
 
 	render() {
-		let { cash, netWorth } = this.props;
+		let { cash, netWorth, loading } = this.props;
 		// format cash values to have 2 numbers past decimal
 		cash = Number(cash).toFixed(2);
 		netWorth = Number(netWorth).toFixed(2);
@@ -87,7 +88,7 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 					</Col>
 
 					<Col>
-						<Button variant="primary" onClick={this.liquefy}>Liquefy</Button>
+						<Button variant="primary" onClick={this.liquefy} disabled={loading}>Liquefy</Button>
 					</Col>
 
 					<Col>
@@ -117,6 +118,7 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 const mapStateToProps = (state: RootState) => ({
 	netWorth: state.game.game.gameProfile.netWorth,
 	cash: state.game.game.gameProfile.cash,
+	loading: state.game.loading,
 })
 const mapDispatchToProps = {
 	liquefy: Actions.game.liquefy,

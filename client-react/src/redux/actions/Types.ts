@@ -59,4 +59,7 @@ export enum Type {
     CREATE_PRICE_ALERT_FAILED,
 
     SET_SOCKET,
+
+    SET_LOADING,
+    CLEAR_LOADING,
 }
