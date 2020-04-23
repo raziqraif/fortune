@@ -34,16 +34,16 @@ class AchievementProfile(BaseSerializer):
 
 # Goal serializers
 
-class AchievementSerializer(BaseSerializer):
+class GoalSerializer(BaseSerializer):
     name = fields.Str(required=True)
     description = fields.Str(required=True)
 
-class Achievements(AchievementSerializer):
-    achievements: fields.List(fields.Nested(AchievementSerializer))
+class Goals(GoalSerializer):
+    goals: fields.List(fields.Nested(GoalSerializer))
 
-class AchievementProfileAchievement(AchievementSerializer):
-    achievement = fields.Nested(AchievementSerializer)
+class GoalProfileGoal(GoalSerializer):
+    goal = fields.Nested(GoalSerializer)
     achieved_at = fields.DateTime(required=True)
 
-class AchievementProfile(BaseSerializer):
-    achievementProfile = fields.List(fields.Nested(AchievementProfileAchievement))
+class GoalProfile(BaseSerializer):
+    goalProfile = fields.List(fields.Nested(GoalProfileGoal))
