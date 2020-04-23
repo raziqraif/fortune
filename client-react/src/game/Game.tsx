@@ -15,7 +15,7 @@ interface GameProps {
 	) => void;
 	getCoins: (
 		gameId: number,
-		timeSpan?: number,
+		timeSpan: number,
 		sortBy?: number,
 		pageNum?: number,
 		numPerPage?: number
@@ -29,6 +29,7 @@ interface GameProps {
 
 interface GameState {
 	priceOrder: priceOrder;
+	timeSpan: number;
 }
 
 export enum priceOrder {
@@ -43,27 +44,46 @@ class Game extends React.Component<GameProps, GameState> {
 
 		this.state = {
 			priceOrder: priceOrder.MINIMUM,
+			timeSpan: 0,
 		}
 	}
 
 	componentDidMount() {
-		const { gameId } = this.props;
-		if (!gameId) { // global game
-			this.props.getGame(1);
-			this.props.getCoins(1);
-		} else {
-			const id = parseInt(gameId);
-			if (isNaN(id)) this.props.history.push('/'); // non-numerical ID
-			else {
-				this.props.getGame(id); // private game
-				this.props.getCoins(id);
-			}
-		}
+		this.getGameData()
+		this.getCoinData()
+	}
 
+	private getGameData() {
+		const { gameId } = this.props;
+		const id = parseInt(gameId);
+		if (isNaN(id)) {
+			this.props.history.push('/'); // non-numerical ID
+		} else {
+			this.props.getGame(id); // private game
+		}
+	}
+
+	private getCoinData() {
+		const { gameId } = this.props;
+		const id = parseInt(gameId);
+		if (isNaN(id)){
+			this.props.history.push('/'); // non-numerical ID
+		} else {
+			this.props.getCoins(id,this.state.timeSpan);
+		}
 	}
 
 	private changePriceOrder = (priceOrder: priceOrder) => {
-		this.setState({ priceOrder });
+		this.setState({ priceOrder: priceOrder });
+	}
+
+	private setTimespan = (timespan:number) => {
+		this.props.getCoins(this.props.gameId,timespan)
+		this.setState({timeSpan: timespan})
+	}
+
+	private refetchCoinData = () => {
+		this.getCoinData()
 	}
 
 	render() {
@@ -84,13 +104,15 @@ class Game extends React.Component<GameProps, GameState> {
 					<InfoBar
 						gameId={gameId ? gameId : '1'}
 						gameProfile={game.gameProfile}
-						coins={coinsAndPrices}
 						changePriceOrder={this.changePriceOrder}
+						changeTimeSpan={this.setTimespan}
 					/>
-					{/* <Cointable
+					<Cointable
+						gameId={gameId}
 						coins={coinsAndPrices}
 						priceOrder={priceOrder}
-					/> */}
+						refetchCoinData={this.refetchCoinData}
+					/>
 				</Container>
 			</div>
 		)

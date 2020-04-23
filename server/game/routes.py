@@ -77,12 +77,12 @@ def get(profile, game_id):
     game = get_game_by_id(game_id)
     gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
     netWorth = get_net_worth_by_game_profile_id(gameProfile.id)
-    
+
     return jsonify(GetGameResponse.serialize({
         'game': game,
         'gameProfile': {
             'cash': gameProfile.cash,
-            'netWorth': netWorth,
+            'net_worth': netWorth,
         },
     }))
 
@@ -124,8 +124,8 @@ def get_game_coins(profile, game_id):
     for coin_and_prices in coins_and_prices:
         coin_number = 0
         for game_profile_coin in game_profile_coins:
-            if game_profile_coin.coin == coin_and_prices['coin'].id:
-                coin_number = game_profile_coin.number
+            if game_profile_coin.coin.id == coin_and_prices['coin'].id:
+                coin_number = game_profile_coin.coin_amount
                 break
         coin_and_prices['coin'].number = coin_number
 
