@@ -32,6 +32,7 @@ def up(db):
         for coin in all_coins:
             GameCoin.create(game=global_indef, coin=coin)
 
+
         global_timed = Game.create(name='Global Timed',
                         starting_cash=10000.00,
                         shareable_link='TIMED',

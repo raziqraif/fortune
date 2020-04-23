@@ -1,0 +1,16 @@
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                                           Game Page Graph Tests                                                                          |
++--------+-------------------------------------------------+-----------------------------------------+---------------------------------------------------------------------+
+| test # | test scenario                                   | test data                               | expected results                                                    |
++--------+-------------------------------------------------+-----------------------------------------+---------------------------------------------------------------------+
+|    1   | Visiting the game page will render graphs       | A running game with coins               | Every coin will have a graph in its respective row.                 |
++--------+-------------------------------------------------+-----------------------------------------+---------------------------------------------------------------------+
+|    2   | Percent change updates will in turn change the  | A +/- % change value from the websocket | The graph will be red when negative and green when positive         |
+|        | color of the graphs                             |                                         |                                                                     |
++--------+-------------------------------------------------+-----------------------------------------+---------------------------------------------------------------------+
+|    3   | Coins have varying time stamps that do not all  | Pricing data in the database where the  | The graph will start from the left of the graph regardless of       |
+|        | line up with each other                         | captured_at times are not all the same  | the inconsistent time span of the data trying to be plotted.        |
++--------+-------------------------------------------------+-----------------------------------------+---------------------------------------------------------------------+
+|    4   | User chooses 1 year option for graphing         | 1 year of pricing data in the database  | The graph will accurately display one year's worth of pricing data  |
+|        |                                                 | for a particular coin                   | (verify with external sites such as Google)                         |
++--------+-------------------------------------------------+-----------------------------------------+---------------------------------------------------------------------+
