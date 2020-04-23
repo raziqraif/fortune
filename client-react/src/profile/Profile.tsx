@@ -4,6 +4,7 @@ import Options from './Options';
 import { RootState } from '../redux/reducers';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
+import Achievements from './Achievements'
 
 interface ProfileProps {
     profileId: string;
@@ -18,7 +19,7 @@ const tabs = [
     },
     {
         title: 'Achievements',
-        component: <div className="col-lg-12">Achievements</div>
+        component: <Achievements />
     },
     {
         title: 'Friends',
