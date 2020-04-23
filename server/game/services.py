@@ -263,13 +263,14 @@ def get_chat_messages_data(game_id: int, oldest_id: int, newest_id: int, newer_m
     older_message = Message.get_or_none((Message.game == game_id) & (Message.id < oldest_id))
     has_older_message = older_message is not None
 
+    MESSAGE_LIMIT = 25
     if newer_messages:
         messages = Message.select().where((Message.game == game_id) & (Message.id > newest_id)).order_by(-Message.id)\
-            .limit(50).execute()
+            .limit(MESSAGE_LIMIT).execute()
     else:
         messages = Message.select().where((Message.game == game_id) & (Message.id < oldest_id)).order_by(-Message.id)\
-            .limit(50).execute()
-        # TODO: Update has_older_messages here too
+            .limit(MESSAGE_LIMIT).execute()
+        # TODO: Update has_older_messages here too if frontend can support that
 
     # Note: oldest_id and newest_id could be -1 when frontend has no messages at all
     if oldest_id == -1:

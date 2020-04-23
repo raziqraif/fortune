@@ -9,27 +9,27 @@ import {RootState} from "../../redux/reducers";
 import Actions from "../../redux/actions";
 import {connect} from "react-redux";
 
-const styles: { [key: string]: React.CSSProperties } = {
-    button: {
-        backgroundColor: '#fff',
-        borderColor: '#1D2129',
-        borderStyle: 'solid',
-        borderRadius: 20,
-        borderWidth: 2,
-        color: '#1D2129',
-        fontSize: 18,
-        fontWeight: 300,
-        paddingTop: 8,
-        paddingBottom: 8,
-        paddingLeft: 16,
-        paddingRight: 16,
-    },
-    selected: {
-        color: '#fff',
-        backgroundColor: '#0084FF',
-        borderColor: '#0084FF',
-    },
-};
+// const styles: { [key: string]: React.CSSProperties } = {
+//     button: {
+//         backgroundColor: '#fff',
+//         borderColor: '#1D2129',
+//         borderStyle: 'solid',
+//         borderRadius: 20,
+//         borderWidth: 2,
+//         color: '#1D2129',
+//         fontSize: 18,
+//         fontWeight: 300,
+//         paddingTop: 8,
+//         paddingBottom: 8,
+//         paddingLeft: 16,
+//         paddingRight: 16,
+//     },
+//     selected: {
+//         color: '#fff',
+//         backgroundColor: '#0084FF',
+//         borderColor: '#0084FF',
+//     },
+// };
 
 const chatBubbleStyles: ChatBubbleStyles = {
     // TODO: Update this to make sure text is wrapped properly in the chat bubbles
@@ -93,96 +93,35 @@ interface GameChatProps {
 
 interface GameChatState {
     messageText: string;
+    showLoading: boolean;
 }
 
 class GameChat extends React.Component<GameChatProps, GameChatState> {
     private chat: ChatFeedApi;
     gameID = this.props.gameID;
 
-    // getPlayersData() {
-    //     // TODO: Use real API
-    //     return {
-    //         players: [
-    //             {
-    //                 id: 0,
-    //                 name: 'You',
-    //             },
-    //             {
-    //                 id: 1,
-    //                 name: 'Mark',
-    //             },
-    //             {
-    //                 id: 2,
-    //                 name: 'Evan',
-    //             }],
-    //         currentPlayerID: 0,
-    //     }
-    // }
-
-    // getMessagesData() {
-    //      // TODO: Use real API
-    //      return {
-    //          messages: [
-    //              {
-    //                  id: 0,
-    //                  authorId: 1,
-    //                  message: 'Hey guys!!',
-    //                  createdOn: new Date(2018, 2, 27, 18, 32, 24),
-    //              },
-    //              {
-    //                  id: 3,
-    //                  authorId: 2,
-    //                  message: 'Long group.',
-    //                  createdOn: new Date(2018, 2, 28, 18, 13, 24),
-    //             },
-    //             {
-    //                 id: 4,
-    //                 authorId: 0,
-    //                 message: 'My message.',
-    //                 createdOn: new Date(2018, 2, 29, 19, 32, 24),
-    //             },
-    //             {
-    //                 id: 5,
-    //                 authorId: 0,
-    //                 message: 'One more.',
-    //                 createdOn: new Date(2018, 2, 29, 19, 33, 24),
-    //             },
-    //             {
-    //                 id: 6,
-    //                 authorId: 2,
-    //                 message: 'One more group to see the scroll.',
-    //                 createdOn: new Date(2018, 2, 29, 19, 35, 24),
-    //             },
-    //             {
-    //                 id: 7,
-    //                 authorId: 2,
-    //                 message: 'I said group.',
-    //                 createdOn: new Date(2018, 2, 29, 19, 35, 24),
-    //             },
-    //         ],
-    //         hasOlderMessages: true
-    //     }
-    // }
-
     constructor(props: GameChatProps) {
         super(props);
-        // TODO: What's thissss??
+
+        // NOTE: I couldn't really comprehend how to implement this from the docs. Couldn't find any demo, so this is a
+        // dummy.
         this.chat = {
             onMessageSend: ()=>{},
             scrollApi: {
                 scrolledToBottom: ()=> true,
-                scrollTo: (a:number)=> {},
+                scrollTo: (a:number)=> {console.log("chat api:", a)},
                 scrolledToLoadThreshold: () => true,
-                scrollHeight: () => {return 100000;},
+                scrollHeight: () => {return 1;},
                 scrollToBottom: ()=>{},
-                scrollTop: ()=>{return 1000000;},
-                clientHeight: ()=>{return 1000000;},
+                scrollTop: ()=>{return 1;},
+                clientHeight: ()=>{return 1;},
             }
         };
 
         // TODO: Handle newly-registered authors, if given time
         this.state = {
             messageText: '',
+            showLoading: false,
         };
     }
 
@@ -225,6 +164,7 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
             }), () => this.chat && this.chat.onMessageSend());
         }
         // @ts-ignore
+        // TODO: Remove this after implementing websocket
         this.props.getMessagesData(this.gameID, this.oldestMessageID(), this.newestMessageID(), true);
         return true;
     }
@@ -255,29 +195,12 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
                     } as React.CSSProperties,
                 }}
             />
+        //    TODO: Return a button too for report feature
         )
         // }
     };
 
-    updateEarlierMessages(resolve: any) {
-        // TODO: Call get messages API
-        // Combine messages
-        // Slice messages after threshold
-        // Get earliest id
-
-        // this.setState(previousState => ({
-        //     messages: (
-        //         new Array(10).fill(1)).map((e, i) => ({
-        //             id: Number(new Date()),
-        //             createdOn: new Date(2017, 1, 1),
-        //             message: 'Old message ' + (i + 1).toString(),
-        //             authorId: Math.round(Math.random() + 1)
-        //    } as Message)).concat(previousState.messages)
-       // }), () => resolve());
-    }
-
     render() {
-        console.log("New authors:", this.props.players)
         return (
             <div className="chatfeed-wrapper">
                 <h2 style={{margin: "0px 0px 15px", }}>Chat</h2>
@@ -287,15 +210,16 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
                     yourAuthorId={this.props.currentPlayerID}
                     authors={this.props.players}
                     customChatBubble={this.customBubble}
-                    chatBubbleStyles={styles}
+                    chatBubbleStyles={chatBubbleStyles}
                     messages={this.props.messages}
                     showRecipientAvatar={true}
                     ref={(e:any) => this.chat = e}
                     showIsTyping={false}
                     showRecipientLastSeenMessage={false}
-                    showDateRow={true}
+                    showDateRow={false}
                     showLoadingMessages={false}
                     hasOldMessages={this.props.hasOlderMessages}
+                    // NOTE: This is from demo
                     // onLoadOldMessages={() => new Promise(resolve => setTimeout(() => {
                     //     this.setState(previousState => ({
                     //         messages: (
@@ -307,9 +231,14 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
                     //        } as Message)).concat(previousState.messages)
                     //    }), () => resolve());
                     // }, 1000))}
-                    onLoadOldMessages={() => new Promise(resolve => setTimeout(() => {
-                        this.props.getMessagesData(this.gameID, this.oldestMessageID(), this.newestMessageID(), false)
-                    }, 1000))}
+
+                    // NOTE: Not working
+                    // onLoadOldMessages={() => new Promise(resolve => setTimeout(() => {
+                        // @ts-ignore
+                        // this.props.getMessagesData(this.gameID, this.oldestMessageID(), this.newestMessageID(),
+                        //     false)
+                        // this.setState({showLoading: false})
+                    //}, 1000))}
                 />
 
                 <form

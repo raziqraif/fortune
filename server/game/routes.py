@@ -279,11 +279,12 @@ def get_messages_data(profile, game_id):
     oldest_id = request.args.get('oldestID')
     newest_id = request.args.get('newestID')
     get_new_messages = request.args.get('getNewMessages')
-
+    get_new_messages = get_new_messages == 'true'   # convert from string
+    print("type, value: ", type(get_new_messages), get_new_messages)
     try:
         oldest_id = int(oldest_id)
         newest_id = int(newest_id)
-        get_new_messages = bool(get_new_messages)
+        get_new_messages = get_new_messages
     except:
         raise BadRequest('Parameters not in correct form')
 

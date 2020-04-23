@@ -183,7 +183,7 @@ export default (state = initialState, action: Action) => {
             let prevOldestID = (state.messages.length > 0)? state.messages.length : -1;
             let curOldestID = newMessages[0].id;
 
-            const MAX_MESSAGES_AT_AT_TIME = 20;
+            const MAX_MESSAGES_AT_AT_TIME = 500;
             if (curOldestID < prevOldestID) {
                 newMessages = newMessages.concat(state.messages);
                 newMessages = newMessages.slice(0, MAX_MESSAGES_AT_AT_TIME);
