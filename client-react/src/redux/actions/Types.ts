@@ -44,6 +44,8 @@ export enum Type {
     // achievement types
     SET_ACHIEVEMENTS,
     SET_ACHIEVEMENT_PROFILE,
+    SET_GOALS,
+    SET_GOAL_PROFILE,
     SET_ACHIEVEMENTS_FAILED,
     
     // notification types
