@@ -36,6 +36,8 @@ export type GoalProfile = {
 export type AchievementState = {
   achievements: Array<Achievement>;
   achievementProfile: Array<AchievementProfile>;
+  goals: Array<Goal>;
+  goalProfile: Array<GoalProfile>
 }
 
 export default (state = initialState, action: Action) => {

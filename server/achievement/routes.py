@@ -13,7 +13,7 @@ from .services import (
 )
 
 achievement_bp = Blueprint('achievement', __name__, url_prefix='/achievement')
-goal_bp = Blueprint('goal', __name__, url_prefix='/goal'))
+goal_bp = Blueprint('goal', __name__, url_prefix='/goal')
 
 # Achievement routes
 
