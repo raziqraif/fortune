@@ -2,13 +2,14 @@ from decimal import Decimal
 import math
 
 from flask import Blueprint, request, jsonify
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, Unauthorized
 
 from auth.decorators import require_authentication
 from db import AuthToken, Profile, Coin
-from .services import get_notifications, get_price_alerts, create_price_alert, get_notifications_count
-from .serializers import NotificationSerializer, CreatePriceAlertRequestSerializer, PriceAlertSerializer, PagedNotificationResponse
-
+from .services import get_notifications, get_price_alerts, create_price_alert, get_notifications_count, \
+    send_notification_to_all, send_notification, get_profile_to_notify
+from .serializers import NotificationSerializer, CreatePriceAlertRequestSerializer, PriceAlertSerializer, \
+    PagedNotificationResponse, SendNotificationRequest
 
 notification_bp = Blueprint('notification', __name__, url_prefix='/notification')
 
@@ -35,8 +36,36 @@ def get_notifications_route(profile):
 
 @notification_bp.route('/', methods=['POST'])
 @require_authentication
-def send_notification_route():
-    raise NotImplementedError
+def notify_all(profile):
+    if not profile.is_admin:
+        raise Unauthorized
+
+    validated_data: dict = SendNotificationRequest.deserialize(request.json)
+    try:
+        message = validated_data['message']
+    except:
+        raise BadRequest("Invalid parameter")
+    send_notification_to_all(message)
+
+    return jsonify({})
+
+
+@notification_bp.route('/<user_id>', methods=['POST'])
+@require_authentication
+def notify_user(profile, user_id):
+    if not profile.is_admin:
+        raise Unauthorized
+
+    validated_data: dict = SendNotificationRequest.deserialize(request.json)
+    try:
+        message = validated_data['message']
+    except:
+        raise BadRequest("Invalid parameter")
+
+    to_profile = get_profile_to_notify(user_id)
+    send_notification(to_profile, message)
+
+    return jsonify({})
 
 
 alert_bp = Blueprint('alert', __name__, url_prefix='/alert')
