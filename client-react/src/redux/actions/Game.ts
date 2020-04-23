@@ -175,9 +175,7 @@ export const getPlayersData = (
   return async (dispatch: Dispatch<Action>) => {
     try {
       await fetchAuthToken();
-      console.log("Enter get Players API")
-      const res = await axios.post(`http://localhost:5000/game/${gameID}/chat/players`);
-      console.log("Get Players API: ", res.data)
+      const res = await axios.get(`http://localhost:5000/game/${gameID}/chat/players`);
       dispatch({type: Type.GET_PLAYERS_DATA, payload: res.data})
     } catch (e) {
       handleAxiosError(e, dispatch, Type.GET_PLAYERS_DATA_FAILED)

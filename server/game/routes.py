@@ -215,7 +215,7 @@ def randomString(length):
     return ''.join(random.choice(options) for i in range(length))
 
 
-@game_bp.route('<game_id>/chat/players', methods=['POST'])
+@game_bp.route('<game_id>/chat/players', methods=['GET'])
 @require_authentication
 def players_data_for_chat(profile, game_id):
     try:
