@@ -10,7 +10,7 @@ export const getUsers = () => {
     return async (dispatch: Dispatch<Action>, store: () => RootState) => {
         try {
             await fetchAuthToken();
-            const res = await axios.get('http://localhost:5000/admin/users');
+            const res = await axios.get('http://localhost:5000/users');
 
             dispatch({type: Type.SET_USERS, payload: res.data});
         } catch (e) {

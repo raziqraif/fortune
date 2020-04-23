@@ -7,6 +7,6 @@ from db import db, Game, GameCoin, Coin, GameProfile, GameProfileCoin, Ticker, P
 
 
 @db.atomic()
-def get_users():
+def get_users_except_admins():
     users = Profile.select().where(~Profile.is_admin).execute()
     return users
