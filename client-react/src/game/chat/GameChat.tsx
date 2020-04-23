@@ -9,27 +9,6 @@ import {RootState} from "../../redux/reducers";
 import Actions from "../../redux/actions";
 import {connect} from "react-redux";
 
-// const styles: { [key: string]: React.CSSProperties } = {
-//     button: {
-//         backgroundColor: '#fff',
-//         borderColor: '#1D2129',
-//         borderStyle: 'solid',
-//         borderRadius: 20,
-//         borderWidth: 2,
-//         color: '#1D2129',
-//         fontSize: 18,
-//         fontWeight: 300,
-//         paddingTop: 8,
-//         paddingBottom: 8,
-//         paddingLeft: 16,
-//         paddingRight: 16,
-//     },
-//     selected: {
-//         color: '#fff',
-//         backgroundColor: '#0084FF',
-//         borderColor: '#0084FF',
-//     },
-// };
 
 const chatBubbleStyles: ChatBubbleStyles = {
     // TODO: Update this to make sure text is wrapped properly in the chat bubbles
@@ -93,7 +72,6 @@ interface GameChatProps {
 
 interface GameChatState {
     messageText: string;
-    showLoading: boolean;
 }
 
 class GameChat extends React.Component<GameChatProps, GameChatState> {
@@ -118,10 +96,8 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
             }
         };
 
-        // TODO: Handle newly-registered authors, if given time
         this.state = {
             messageText: '',
-            showLoading: false,
         };
     }
 
@@ -166,7 +142,7 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
         // @ts-ignore
         // TODO: Remove these after implementing websocket
         this.props.getMessagesData(this.gameID, this.oldestMessageID(), this.newestMessageID(), true);
-        this.props.getPlayersData(this.gameID)
+        this.props.getPlayersData(this.gameID);
         return true;
     }
 
@@ -217,16 +193,14 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
                     ref={(e:any) => this.chat = e}
                     showIsTyping={false}
                     showRecipientLastSeenMessage={false}
-                    showDateRow={false}
+                    showDateRow={true}
                     showLoadingMessages={false}
                     hasOldMessages={this.props.hasOlderMessages}
 
-                    // NOTE: Not working
                     onLoadOldMessages={() => new Promise(resolve => setTimeout(() => {
                         // @ts-ignore
                         this.props.getMessagesData(this.gameID, this.oldestMessageID(), this.newestMessageID(),
                             false).then(resolve)
-                        this.setState({showLoading: false})
                     }, 1000))}
                 />
 
