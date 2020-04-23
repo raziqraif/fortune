@@ -31,6 +31,8 @@ class Achievements extends React.Component<AchievementsProps> {
     componentDidMount() {
         this.props.getAchievements();
         this.props.getAchievementProfile();
+        this.props.getGoals();
+        this.props.getGoalProfile();
     }
 
     private getMyAchievements = () => {
@@ -114,7 +116,7 @@ class Achievements extends React.Component<AchievementsProps> {
                         <tbody>
                             {
                                 myGoals.map((goal, i) => (
-                                    <tr>
+                                    <tr key={i}>
                                         <td>{goal.goal.name}</td>
                                         <td>{goal.goal.description}</td>
                                         <td>{goal.achieved}</td>

@@ -5,7 +5,7 @@ from werkzeug.exceptions import BadRequest
 import pytz
 
 from auth.decorators import require_authentication
-from db import Achievement, AchievementProfile
+from db import Achievement, AchievementProfile, Goal, GoalProfile
 from .serializers import AchievementProfile, AchievementSerializer, GoalSerializer, GoalProfile
 from .services import (
     get_achievement_profile_by_profile_id,
