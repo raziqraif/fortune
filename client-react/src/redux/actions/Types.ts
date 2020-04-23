@@ -33,6 +33,7 @@ export enum Type {
     SET_GAME_FAILED,
     SET_GAME_PROFILE,
     SET_CASH,
+    ZERO_COIN_AMOUNT,
     LIQUIFY_FAILED,
     TRANSACTION,
     TRANSACTION_FAILED,
@@ -58,4 +59,7 @@ export enum Type {
     CREATE_PRICE_ALERT_FAILED,
 
     SET_SOCKET,
+
+    SET_LOADING,
+    CLEAR_LOADING,
 }

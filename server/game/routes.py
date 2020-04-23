@@ -172,6 +172,7 @@ def liquefy(profile, game_id):
     gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
     gameProfileCoins = get_game_profile_coins_by_game_profile_id(gameProfile.id)
     for gameProfileCoin in gameProfileCoins:
+        gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
         sell_coin(gameProfileCoin.coin, gameProfileCoin.coin_amount, gameProfile)
     gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
     return jsonify(Cash.serialize({

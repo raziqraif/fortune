@@ -47,6 +47,15 @@ export default (state = initialState, action: Action) => {
       }
     case Type.SET_CURRENT_PRICES:
       return setCurrentPrices(state, action.payload);
+    case Type.ZERO_COIN_AMOUNT:
+      var newCoins = state.coins.map((coin) => {
+        coin.coin.number = "0";
+        return coin;
+      })
+      return {
+        ...state,
+        coins: newCoins,
+      }
     case Type.LOGOUT:
       return initialState
     default:

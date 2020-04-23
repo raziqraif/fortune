@@ -26,6 +26,7 @@ const initialState = {
   },
   setGameErrorMessage: '',
   transactionErrorMessage: '',
+  loading: false,
 }
 
 export type Action = {
@@ -39,6 +40,7 @@ export type GameState = {
   createGameLoading: boolean;
   setGameErrorMessage: string;
   transactionErrorMessage: string;
+  loading: boolean;
 }
 
 export default (state = initialState, action: Action) => {
@@ -139,6 +141,16 @@ export default (state = initialState, action: Action) => {
         transactionErrorMessage: '',
         setGameErrorMessage: '',
         createGameErrorMessage: '',
+      }
+    case Type.SET_LOADING:
+      return {
+        ...state,
+        loading: true,
+      }
+    case Type.CLEAR_LOADING:
+      return {
+        ...state,
+        loading: false,
       }
     case Type.LOGOUT:
       return initialState
