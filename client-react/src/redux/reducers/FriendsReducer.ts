@@ -5,13 +5,15 @@ const initialState = {
   pending: [],
   friendsList: [],
 
-  errorMessage: '',
+  pendingErrorMessage: '',
+  listErrorMessage: '',
 }
 
 export type FriendsState = {
   pending: Array<Friend>;
   friendsList: Array<Friend>;
   errorMessage: string;
+  listErrorMessage: string;
 }
 
 type FriendsRequest = {
@@ -50,7 +52,12 @@ export default (state = initialState, action: Action) => {
     case Type.GET_PENDING_FAILED:
       return {
         ...state,
-        errorMessage: action.payload
+        pendingErrorMessage: action.payload
+      }
+    case Type.GET_LIST_FAILED:
+      return {
+        ...state,
+        listErrorMessage: action.payload
       }
     default:
       return state;

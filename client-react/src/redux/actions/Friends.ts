@@ -49,7 +49,7 @@ export const getFriendsList = (username) => {
       const res = await axios.get('http://localhost:5000/friends/list/');
       dispatch({type: Type.GET_FRIENDS, payload: res.data })
     } catch (e) {
-      handleAxiosError(e, dispatch, Type.FRIEND_FAILED);
+      handleAxiosError(e, dispatch, Type.GET_LIST_FAILED);
     }
   }
 }

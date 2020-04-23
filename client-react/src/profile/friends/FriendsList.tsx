@@ -14,6 +14,7 @@ interface FriendsListProps {
 }
 
 interface FriendsListState {
+  listErrorMessage: string;
 }
 
 class FriendsList extends Component<FriendsListProps, FriendsListState>{
@@ -34,12 +35,18 @@ class FriendsList extends Component<FriendsListProps, FriendsListState>{
   }
 
     render() {
+      var list = [];
+      if(this.props.friendsList.length > 0) {
+        list =    <ListGroup>
+                    {this.createItems()}
+                  </ListGroup>
+      } else {
+        list = <span> This user has no friends! Type a name above to send a request! </span>
+      }
         return (
           <div style={{paddingTop: 15}}>
             <h3>Friends:</h3>
-            <ListGroup>
-            {this.createItems()}
-            </ListGroup>
+            {list}
           </div>
 
         )
@@ -49,6 +56,7 @@ class FriendsList extends Component<FriendsListProps, FriendsListState>{
 const mapStateToProps = (state: RootState) => ({
   username: state.auth.username,
   friendsList: state.friends.friendsList,
+  listErrorMessage: state.friends.listErrorMessage,
 })
 
 const mapDispatchToProps = {

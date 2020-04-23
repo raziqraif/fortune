@@ -22,9 +22,6 @@ class FriendsListItem extends Component<FriendsListItemProps> {
         return (
           <ListGroup.Item>
           {this.props.friendUsername}
-          <ButtonGroup style={{paddingLeft: 25}}>
-            <Button onClick={() => this.acceptRequest(this.props.username, this.props.friendUsername)}>Accept</Button>
-          </ButtonGroup>
           </ListGroup.Item>
 
         )
