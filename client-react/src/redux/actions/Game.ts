@@ -97,7 +97,7 @@ export const liquefy = (gameId: string) => {
 
       // I'm thinking this method's response will contain a player's new gameProfile and gameCoins after liquifying
       dispatch({type: Type.SET_CASH, payload: res.data});
-
+      dispatch({type: Type.ZERO_COIN_AMOUNT})
     } catch (e) {
       handleAxiosError(e, dispatch, Type.LIQUIFY_FAILED);
     }
