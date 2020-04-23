@@ -84,6 +84,7 @@ class MenuBar extends React.Component<MenuBarProps, MenuBarState> {
     }
 
     private renderLoginOrUsername = () => {
+        this.props.checkIfAdmin();
         if (this.props.loggedIn) {
             return (
                 <NavDropdown title={this.props.username} id="basic-nav-dropdown" alignRight>

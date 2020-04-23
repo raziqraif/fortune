@@ -74,6 +74,7 @@ def change_username_route(profile):
         'username': new_username
     }))
 
+
 @auth_bp.route('/password', methods=['PUT'])
 @require_authentication
 def change_password_route(profile):
