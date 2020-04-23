@@ -36,7 +36,7 @@ export const notifyUser = (message: string, userId?: number) => {
             handleAxiosError(e, dispatch, Type.NOTIFY_USER_FAILED);
         }
     }
-}
+};
 
 export const issueWarning = (userId: number, message: string) => {
     return async (dispatch: Dispatch<Action>, store: () => RootState) => {
@@ -52,7 +52,7 @@ export const issueWarning = (userId: number, message: string) => {
             handleAxiosError(e, dispatch, Type.USER_ACTION_FAILED);
         }
     }
-}
+};
 
 export const issueBan = (userId: number) => {
     return async (dispatch: Dispatch<Action>, store: () => RootState) => {
@@ -61,12 +61,11 @@ export const issueBan = (userId: number) => {
             await axios.delete(`http://localhost:5000/users/${userId}`);
             dispatch(getUsers() as any);
             dispatch({type: Type.USER_ACTION_SUCCESS});
-            localStorage.removeItem('token')
         } catch (e) {
             handleAxiosError(e, dispatch, Type.USER_ACTION_FAILED);
         }
     }
-}
+};
 
 export const getReports = (page: number, numPerPage: number = 9) => {
     return async (dispatch: Dispatch<Action>, store: () => RootState) => {
@@ -188,9 +187,6 @@ export const updateReport = (
                     message: warningMessage
                 }
             );
-            if (selectedAction == "Ban") {
-                localStorage.removeItem('token')
-            }
 
             dispatch({type: Type.UPDATE_REPORT_SUCCESS});
         } catch (e) {

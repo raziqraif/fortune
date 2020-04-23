@@ -18,6 +18,10 @@ class BaseSerializer(Schema):
         return cls().load(obj, many=many)
 
 
+class WarningRequest(BaseSerializer):
+    message = fields.Str(required=True)
+
+
 class User(BaseSerializer):
     id = fields.Int(required=True)
     username = fields.Str(required=True)

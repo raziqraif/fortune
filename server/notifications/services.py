@@ -4,8 +4,7 @@ from marshmallow import fields
 from peewee import chunked
 from werkzeug.exceptions import BadRequest
 
-from db import db, Notification, Profile, PriceAlert, Coin
-
+from db import db, Notification, Profile, PriceAlert, Coin, Game, GameProfile
 
 socketio = None
 
@@ -30,6 +29,39 @@ def send_notification(to: Profile, text: str):
     if not to.socket_id:
         return
     socketio.emit('notification', text, room=to.socket_id)
+
+
+@db.atomic()
+def broadcast(to: Profile, topic: str, text: str, as_notification=False):
+    if socketio is None:
+        raise Exception('Tried to emit but socketio is not initialized!')
+    if as_notification:
+        send_notification(to, text)
+
+    if not to.socket_id:
+        return
+    socketio.emit(topic, text, room=to.socket_id)
+
+
+@db.atomic()
+def broadcast_in_a_game(game: Game, topic: str, text: str, as_notification=False):
+    if socketio is None:
+        raise Exception('Tried to emit but socketio is not initialized!')
+
+    profiles = Profile.select().join(GameProfile).where(GameProfile.game == game.id).execute()
+
+    if as_notification:
+        notifications = [(profile.id, text) for profile in profiles]
+        for batch in chunked(notifications, 100):
+            Notification.insert_many(batch, fields=[Notification.profile, Notification.content]).execute()
+
+    # LOOKATME: Seems slow
+    for profile in profiles:
+        if not profile.socket_id:
+            continue
+        if as_notification:
+            socketio.emit('notification', text, room=profile.socket_id)
+        socketio.emit(topic, text, room=profile.socket_id)
 
 
 @db.atomic()

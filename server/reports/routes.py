@@ -13,7 +13,6 @@ reports_bp = Blueprint('reports', __name__, url_prefix='/reports')
 @reports_bp.route('/', methods=['GET'])
 @require_authentication
 def reports_route(profile):
-    print("REACHED HERE")
     if not profile.is_admin:
         raise Unauthorized("You don't have permission")   # FIXME: This redirects to Login page. We probably dont want
         # that

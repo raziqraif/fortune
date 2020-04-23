@@ -41,6 +41,8 @@ def login(username: str, password: str):
     profile = Profile.get_or_none(Profile.username == username)
     if profile is None:
         raise BadRequest('A user with this username does not exist')
+    if profile.is_banned:
+        raise BadRequest("This user has been banned.")
     if not bcrypt.checkpw(password.encode(), profile.hashed_password.encode()):
         raise BadRequest('Incorrect password')
     return create_auth_token(profile)
