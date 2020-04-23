@@ -1,0 +1,20 @@
++--------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                             Backend friendship tests                                                             |
++--------+-----------------------------------+--------------------------------------+--------------------------------------------------------------+
+| test # | test scenario                     | test data                            | expected results                                             |
++--------+-----------------------------------+--------------------------------------+--------------------------------------------------------------+
+|    1   | Friend request is sent            | Two created profiles                 | A row will be created in the Friends table                   |
+|        |                                   | (Example: A and B)                   | denoting profile A has a friendship to B and                 |
+|        |                                   |                                      | the status of the friendship is 'pending'.                   |
++--------+-----------------------------------+--------------------------------------+--------------------------------------------------------------+
+|    2   | Friend request is accepted        | A created friend request             | The status of the friend request will be updated             |
+|        |                                   |                                      | from 'pending' to 'accepted' and another accepted            |
+|        |                                   |                                      | friendship row will be created, denoting profile B           |
+|        |                                   |                                      | has a friendship to profile A.                               |
++--------+-----------------------------------+--------------------------------------+--------------------------------------------------------------+
+|    3   | Friend list is requested          | A profile that has multiple accepted | A list of usernames of the friendships that have             |
+|        |                                   | friendships associated with it       | the status of 'accepted' with that profile will be returned. |
++--------+-----------------------------------+--------------------------------------+--------------------------------------------------------------+
+|    4   | Pending request list is requested | A profile that has multiple pending  | A list of usernames of the friendships that have             |
+|        |                                   | friendships associated with it       | the status of 'pending' with that profile will be returned.  |
++--------+-----------------------------------+--------------------------------------+--------------------------------------------------------------+

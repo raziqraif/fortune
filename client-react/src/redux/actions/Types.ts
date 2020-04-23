@@ -48,7 +48,7 @@ export enum Type {
     SET_GOALS,
     SET_GOAL_PROFILE,
     SET_ACHIEVEMENTS_FAILED,
-    
+
     // notification types
     GET_NOTIFICATIONS,
     GET_NOTIFICATIONS_SUCCEEDED,
@@ -62,6 +62,14 @@ export enum Type {
 
     SET_SOCKET,
 
+    // friends Types
+    SET_FRIEND_REQUEST,
+    ACCEPT_FRIEND_REQUEST,
+    FRIEND_FAILED,
+    GET_PENDING,
+    GET_FRIENDS,
+    GET_PENDING_FAILED,
+    GET_LIST_FAILED,
     SET_LOADING,
     CLEAR_LOADING,
 }
