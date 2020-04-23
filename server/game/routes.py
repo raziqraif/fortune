@@ -34,7 +34,7 @@ from .services import (
     buy_coin,
     sell_coin
 )
-from achievement.services import add_double_net_worth_achievement_if_necessary
+from achievement.services import add_double_net_worth_achievement_if_necessary, add_goal_by_goal_id_and_profile_id
 
 game_bp = Blueprint('game', __name__, url_prefix='/game')
 
@@ -64,6 +64,9 @@ def create(profile):
         active_coins,
         profile=profile,
     )
+
+    # satisfy the "create game" weekly goal
+    add_goal_by_goal_id_and_profile_id(1, profile.id)
     return jsonify(GameResponse.serialize(game))
 
 
