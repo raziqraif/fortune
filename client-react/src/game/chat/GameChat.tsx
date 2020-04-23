@@ -164,8 +164,9 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
             }), () => this.chat && this.chat.onMessageSend());
         }
         // @ts-ignore
-        // TODO: Remove this after implementing websocket
+        // TODO: Remove these after implementing websocket
         this.props.getMessagesData(this.gameID, this.oldestMessageID(), this.newestMessageID(), true);
+        this.props.getPlayersData(this.gameID)
         return true;
     }
 
