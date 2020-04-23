@@ -53,6 +53,7 @@ export const login = (username: string, password: string) => {
       dispatch({type: Type.LOGIN_SUCCEEDED, payload: res.data.token})
       const pushAction: any = push('/')
       dispatch(pushAction)
+      dispatch(checkIfAdmin() as any)
     } catch (e) {
       handleAxiosError(e, dispatch, Type.LOGIN_FAILED)
       return

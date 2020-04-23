@@ -61,6 +61,7 @@ export const issueBan = (userId: number) => {
             await axios.delete(`http://localhost:5000/users/${userId}`);
             dispatch(getUsers() as any);
             dispatch({type: Type.USER_ACTION_SUCCESS});
+            localStorage.removeItem('token')
         } catch (e) {
             handleAxiosError(e, dispatch, Type.USER_ACTION_FAILED);
         }
@@ -72,8 +73,8 @@ export const getReports = (page: number, numPerPage: number = 9) => {
         try {
             await fetchAuthToken();
             const res = await axios.get(
-                'http://localhost:5000/reports',
-                { params: { sortByStatusSescending: true, numPerPage, page } }
+                'http://localhost:5000/reports/',
+                { params: { sortByStatusDescending: true, numPerPage: numPerPage, page: page } }
             );
             // const reports = [
             //     {
@@ -187,6 +188,9 @@ export const updateReport = (
                     message: warningMessage
                 }
             );
+            if (selectedAction == "Ban") {
+                localStorage.removeItem('token')
+            }
 
             dispatch({type: Type.UPDATE_REPORT_SUCCESS});
         } catch (e) {

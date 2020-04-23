@@ -120,5 +120,15 @@ class PriceAlert(BaseModel):
     hit = peewee.BooleanField(default=False)
 
 
+class Report(BaseModel):
+    create_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
+    game = peewee.ForeignKeyField(Game)
+    issuer = peewee.ForeignKeyField(Profile)
+    offender = peewee.ForeignKeyField(Profile)
+    flagged_message: peewee.TextField()
+    resolved = peewee.BooleanField(default=False)
+    takenAction = peewee.TextField(null=True)
+
+
 MODELS = [Profile, AuthToken, Game, GameProfile, Coin,
-          GameCoin, Ticker, Trade, GameProfileCoin, Notification, PriceAlert]
+          GameCoin, Ticker, Trade, GameProfileCoin, Notification, PriceAlert, Report]
