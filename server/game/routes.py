@@ -34,6 +34,7 @@ from .services import (
     buy_coin,
     sell_coin
 )
+from achievement.services import add_double_net_worth_achievement_if_necessary, add_goal_by_goal_id_and_profile_id
 
 game_bp = Blueprint('game', __name__, url_prefix='/game')
 
@@ -63,6 +64,9 @@ def create(profile):
         active_coins,
         profile=profile,
     )
+
+    # satisfy the "create game" weekly goal
+    add_goal_by_goal_id_and_profile_id(1, profile.id)
     return jsonify(GameResponse.serialize(game))
 
 
@@ -76,12 +80,12 @@ def get(profile, game_id):
     game = get_game_by_id(game_id)
     gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
     netWorth = get_net_worth_by_game_profile_id(gameProfile.id)
-    
+
     return jsonify(GetGameResponse.serialize({
         'game': game,
         'gameProfile': {
             'cash': gameProfile.cash,
-            'netWorth': netWorth,
+            'net_worth': netWorth,
         },
     }))
 
@@ -123,8 +127,8 @@ def get_game_coins(profile, game_id):
     for coin_and_prices in coins_and_prices:
         coin_number = 0
         for game_profile_coin in game_profile_coins:
-            if game_profile_coin.coin == coin_and_prices['coin'].id:
-                coin_number = game_profile_coin.number
+            if game_profile_coin.coin.id == coin_and_prices['coin'].id:
+                coin_number = game_profile_coin.coin_amount
                 break
         coin_and_prices['coin'].number = coin_number
 
@@ -151,6 +155,10 @@ def buy_or_sell(profile, game_id):
     else:
         new_coin_amount = sell_coin(coin_id, -1 * coin_amount, game_profile)
     game_profile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
+
+    # check if player has earned the double net worth achievement
+    game = get_game_by_id(game_id)
+    add_double_net_worth_achievement_if_necessary(game_profile.cash, game.starting_cash, profile)
     return jsonify(TradeResponse.serialize({
         'new_amount': new_coin_amount,
         'new_cash': game_profile.cash,
@@ -167,6 +175,7 @@ def liquefy(profile, game_id):
     gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
     gameProfileCoins = get_game_profile_coins_by_game_profile_id(gameProfile.id)
     for gameProfileCoin in gameProfileCoins:
+        gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
         sell_coin(gameProfileCoin.coin, gameProfileCoin.coin_amount, gameProfile)
     gameProfile = get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
     return jsonify(Cash.serialize({
