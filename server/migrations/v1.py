@@ -3,7 +3,7 @@ from decimal import Decimal
 
 from playhouse.migrate import PostgresqlMigrator, migrate
 
-from db import MODELS, Coin, Game, GameProfile, Profile, GameCoin, Achievement
+from db import MODELS, Coin, Game, GameProfile, Profile, GameCoin, Achievement, Goal
 
 def up(db):
     with db.atomic():
@@ -27,7 +27,11 @@ def up(db):
         # insert achievements into database
         Achievement.create(name="Win", description="Finish in first place in a private game")
         Achievement.create(name="Double net worth", description="Achieved by doubling your net worth in a game")
+        Achievement.create(name="Identity Crisis", description="Change your username")
         
+        # insert goals into database
+        Goal.create(name="Entrepeneur", description="Create a private game")
+
         all_coins = Coin.select()
         for coin in all_coins:
             GameCoin.create(game=global_indef, coin=coin)
