@@ -35,7 +35,7 @@ def register(username: str, password: str):
         profile=profile,
         cash=global_game.starting_cash
     )
-    send_notification(profile, f'Welcome to Fortune, {profile.username}!')
+    send_notification(profile, 'Welcome to Fortune!')
     send_notification(profile, 'Click the Play button in the menubar on top to create a new game.')
     send_notification(profile, 'To adjust account options, see achiements, and add friends, click on your username on the top and select Profile')
     return create_auth_token(profile)
