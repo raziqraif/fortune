@@ -1,9 +1,12 @@
+from datetime import datetime
 from decimal import Decimal
+from functools import wraps
+import json
 import os
 from unittest.mock import patch, Mock, MagicMock
 
-from db import Ticker, Coin, PriceAlert, Profile, Notification
-from scripts.service import ping
+from db import Ticker, Coin, PriceAlert, Profile, Notification, Game, GameProfile
+from scripts.service import ping, check_global_timed_game
 from tests.utils import DbTest
 
 
@@ -101,3 +104,40 @@ class TestService(DbTest):
         with self.assertRaises(Exception):
             ping('FOO')
 
+    def test_check_global_timed_game_creates_new_game_upon_expiration(self):
+        game_before_check = Game.get(Game.name == 'Global Timed')
+        game_before_check.ends_at = datetime.utcnow()
+        game_before_check.save()
+        check_global_timed_game()
+        self.assertEqual(0, Game.select().where(Game.id == game_before_check.id).count())
+        Game.get(Game.name == 'Global Timed')
+    
+    def test_user_automatically_joins_new_global_time_game(self):
+        # register user
+        res = self.client.post('/auth/register', data=json.dumps({
+            'username': 'randomusername',
+            'password': 'randompassword',
+            'password': 'randompassword',
+        }), headers={
+            'Content-Type': 'application/json'
+        })
+        self.assertEqual(200, res._status_code)
+        game_before_check = Game.get(Game.name == 'Global Timed')
+        game_before_check.ends_at = datetime.utcnow()
+        game_before_check.save()
+        # assert deletes old GameProfile
+        profile = Profile.get_by_id(1)
+        qry = GameProfile.select().join(Game).where((GameProfile.profile == profile) & (Game.name == 'Global Timed'))
+        self.assertEqual(2, len(profile.game_profiles)) # should have 2: global timed and indefinite
+        self.assertEqual(1, qry.count()) # just to make sure
+        gp_old = qry.get()
+
+        check_global_timed_game()
+
+        # assert creates new GameProfile
+        qry = GameProfile.select().join(Game).where((GameProfile.profile == profile) & (Game.name == 'Global Timed'))
+        self.assertEqual(1, qry.count())
+        gp_new = qry.get()
+
+        # but the ids should not be the same
+        self.assertNotEqual(gp_old.id, gp_new.id)

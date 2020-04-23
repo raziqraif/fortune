@@ -18,7 +18,7 @@ const tabs = [
     },
     {
         title: 'Achievements',
-        component: <div>Achievements</div>
+        component: <div className="col-lg-12">Achievements</div>
     },
     {
         title: 'Friends',
@@ -34,14 +34,14 @@ class Profile extends Component<ProfileProps> {
 
     render() {
         return (
-            <div className="container">
-                <div className="row col-lg-12" style={{paddingTop: 10}}>
-                    <h1 className="col-lg-6" style={{alignItems: 'left'}}>{this.props.username ? this.props.username : 'Profile'}</h1>
-                    <div className="col-lg-6" style={{textAlign: 'right'}}>
-                        <Button onClick={this.navigateTo('/play')}>
-                            My Games
-                        </Button>
-                    </div>
+            <div className="row col-lg-12" style={{paddingTop: 10}}>
+                <h1 className="col-lg-6" style={{alignItems: 'left'}}>{this.props.username ? this.props.username : 'Profile'}</h1>
+                <div className="col-lg-6" style={{textAlign: 'right'}}>
+                    <Button onClick={this.navigateTo('/play')}>
+                        My Games
+                    </Button>
+                </div>
+                <div className="col-lg-12">
                     {this.renderTabs()}
                 </div>
             </div>
@@ -52,7 +52,7 @@ class Profile extends Component<ProfileProps> {
         return (
             <Tabs defaultActiveKey={tabs[0].title} id="profile-tabbing" style={{width: '100%', marginTop: 10}}>
                 {tabs.map((tab) => 
-                    <Tab eventKey={tab.title} title={tab.title}>
+                    <Tab key={tab.title} eventKey={tab.title} title={tab.title}>
                         {tab.component}
                     </Tab>
                 )}
