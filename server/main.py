@@ -18,6 +18,7 @@ from notifications.routes import notification_bp, alert_bp
 from scripts.routes import tickers_bp
 from play.routes import play_bp
 from join.routes import join_bp
+from admin.routes import admin_bp
 from db import * # FIXME get rid of * when you have db migrations
 from notifications.services import register_socketio
 from scripts.service import begin
@@ -46,6 +47,7 @@ def create_app():
     app.register_blueprint(tickers_bp)
     app.register_blueprint(play_bp)
     app.register_blueprint(join_bp)
+    app.register_blueprint(admin_bp)
 
     @app.route('/')
     def hello():

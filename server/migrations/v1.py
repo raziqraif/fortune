@@ -1,9 +1,11 @@
 from datetime import datetime, timedelta
 from decimal import Decimal
 
+import bcrypt
 from playhouse.migrate import PostgresqlMigrator, migrate
 
 from db import MODELS, Coin, Game, GameProfile, Profile, GameCoin
+
 
 def up(db):
     with db.atomic():
@@ -19,22 +21,37 @@ def up(db):
             Coin.create(name='Coin 5', symbol='CO5')
 
         global_indef = Game.create(name='Global Indefinite',
-                        starting_cash=10000.00,
-                        shareable_link='INDEF',
-                        shareable_code='INDEF',
-                        ends_at=None)
+                                   starting_cash=10000.00,
+                                   shareable_link='INDEF',
+                                   shareable_code='INDEF',
+                                   ends_at=None)
 
         all_coins = Coin.select()
         for coin in all_coins:
             GameCoin.create(game=global_indef, coin=coin)
 
         global_timed = Game.create(name='Global Timed',
-                        starting_cash=10000.00,
-                        shareable_link='TIMED',
-                        shareable_code='TIMED',
-                        ends_at=datetime.utcnow() + timedelta(minutes=1))
+                                   starting_cash=10000.00,
+                                   shareable_link='TIMED',
+                                   shareable_code='TIMED',
+                                   ends_at=datetime.utcnow() + timedelta(minutes=1))
         # CHANGEME for devel purposes, making it 1 min for now
         GameCoin.create(game=global_timed, coin=Coin.get())
+
+        # from auth.services import register
+        hashed = bcrypt.hashpw("admin".encode(), bcrypt.gensalt()).decode()
+        admin = Profile.create(
+            username="admin",
+            hashed_password=hashed,
+            is_admin=True
+        )
+        # Required so that admin can still view graphs in the landing page
+        GameProfile.create(
+            profile=admin,
+            game=global_indef,
+            cash=0.0
+        )
+
 
 def down(db):
     with db.atomic():

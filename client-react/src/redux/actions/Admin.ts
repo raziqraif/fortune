@@ -10,25 +10,7 @@ export const getUsers = () => {
     return async (dispatch: Dispatch<Action>, store: () => RootState) => {
         try {
             await fetchAuthToken();
-            const res = await axios.get('http://localhost:5000/users');
-            // const res = {
-            //     data: {
-            //         users: [
-            //             {
-            //                 id: 1,
-            //                 username: 'Sample',
-            //             },
-            //             {
-            //                 id: 2,
-            //                 username: 'Next',
-            //             },
-            //             {
-            //                 id: 3,
-            //                 username: 'Blake',
-            //             },
-            //         ]
-            //     }
-            // }
+            const res = await axios.get('http://localhost:5000/admin/users');
 
             dispatch({type: Type.SET_USERS, payload: res.data});
         } catch (e) {

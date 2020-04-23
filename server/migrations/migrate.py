@@ -6,12 +6,13 @@ from db import DATABASE
 
 from playhouse.migrate import PostgresqlDatabase
 
+
 def migrate(up_or_down, version):
     db = PostgresqlDatabase(
         DATABASE['NAME'],
         user=DATABASE['USER'],
         password=DATABASE['PASSWORD'],
-        host = DATABASE['HOST'],
+        host=DATABASE['HOST'],
     )
     if up_or_down == 'up':
         mod = importlib.import_module(version)
@@ -21,6 +22,7 @@ def migrate(up_or_down, version):
         mod.down(db)
     else:
         raise Exception('Must specify "up" or "down" for migration')
+
 
 if __name__ == '__main__':
     migrate(*sys.argv[1:])

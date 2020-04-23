@@ -17,13 +17,14 @@ DATABASE = {
 }
 
 db = PooledPostgresqlDatabase(
-	DATABASE['NAME'],
-	max_connections=None,
-	stale_timeout=300,
-	timeout=None,
-	user=DATABASE['USER'],
-	password=DATABASE['PASSWORD'],
-	host = DATABASE['HOST'])
+    DATABASE['NAME'],
+    max_connections=None,
+    stale_timeout=300,
+    timeout=None,
+    user=DATABASE['USER'],
+    password=DATABASE['PASSWORD'],
+    host=DATABASE['HOST'])
+
 
 class BaseModel(peewee.Model):
     class Meta:
@@ -35,6 +36,8 @@ class Profile(BaseModel):
     username = peewee.TextField(unique=True)
     hashed_password = peewee.TextField()
     socket_id = peewee.TextField(unique=True, null=True)
+    is_admin = peewee.BooleanField(default=False)
+    is_banned = peewee.BooleanField(default=False)
 
 
 class AuthToken(BaseModel):
@@ -53,10 +56,10 @@ class Game(BaseModel):
     @property
     def coins(self):
         return list(Coin
-            .select()
-            .join(GameCoin)
-            .join(Game)
-            .where(GameCoin.game_id == self.id))
+                    .select()
+                    .join(GameCoin)
+                    .join(Game)
+                    .where(GameCoin.game_id == self.id))
 
 
 class GameProfile(BaseModel):
@@ -84,7 +87,7 @@ class Ticker(BaseModel):
     price = peewee.DecimalField(max_digits=20, decimal_places=8)
     captured_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
     # don't want to take up precious db space?, just making a float
-    price_change_day_pct =  peewee.DecimalField(max_digits=20, decimal_places=8, null=True)
+    price_change_day_pct = peewee.DecimalField(max_digits=20, decimal_places=8, null=True)
 
 
 class Trade(BaseModel):
@@ -118,4 +121,4 @@ class PriceAlert(BaseModel):
 
 
 MODELS = [Profile, AuthToken, Game, GameProfile, Coin,
-    GameCoin, Ticker, Trade, GameProfileCoin, Notification, PriceAlert]
+          GameCoin, Ticker, Trade, GameProfileCoin, Notification, PriceAlert]
