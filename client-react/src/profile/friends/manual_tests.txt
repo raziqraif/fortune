@@ -1,0 +1,20 @@
++--------------------------------------------------------------------------------------------------------------------------+
+|                                                Frontend Friends List Tests                                               |
++--------+---------------------------+---------------------------------------+---------------------------------------------+
+| test # | test scenario             | test data                             | expected results                            |
++--------+---------------------------+---------------------------------------+---------------------------------------------+
+|    1   | User has friends          | A profile that has accepted           | The page will accurately list the friends   |
+|        |                           | friend requests                       | a user has to an account.                   |
++--------+---------------------------+---------------------------------------+---------------------------------------------+
+|    2   | A user has no friends     | An profile with no accepted           | The friends list will be replaced with a    |
+|        |                           | friend requests                       | message about the user having no friends    |
+|        |                           |                                       | and mention the add friends bar above.      |
++--------+---------------------------+---------------------------------------+---------------------------------------------+
+|    3   | User has pending requests | A profile that has had other          | The pending list will show the username of  |
+|        |                           | profiles send it requests, but        | the profile sending the request and an      |
+|        |                           | has not accepted those requests       | accept button to accept the request.        |
++--------+---------------------------+---------------------------------------+---------------------------------------------+
+|    4   | User clicks accept        | A profile that has pending friend     | The row of the accepted friend request will |
+|        |                           | requests that have yet been accepted. | disappear and the name will be added to the |
+|        |                           |                                       | friend list.                                |
++--------+---------------------------+---------------------------------------+---------------------------------------------+

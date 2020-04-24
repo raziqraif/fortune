@@ -5,7 +5,6 @@ from werkzeug.exceptions import BadRequest, Unauthorized
 
 from db import db, Profile, AuthToken, Game, GameProfile
 
-
 def create_auth_token(profile: Profile):
     return AuthToken.create(
         profile=profile,

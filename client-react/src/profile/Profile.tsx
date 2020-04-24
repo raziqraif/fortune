@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Tabs, Tab, Button } from 'react-bootstrap';
 import Options from './Options';
+import Friends from './Friends';
 import { RootState } from '../redux/reducers';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
+import Achievements from './Achievements'
 
 interface ProfileProps {
     profileId: string;
@@ -18,11 +20,11 @@ const tabs = [
     },
     {
         title: 'Achievements',
-        component: <div className="col-lg-12">Achievements</div>
+        component: <Achievements />
     },
     {
         title: 'Friends',
-        component: <div>Friends</div>
+        component: <Friends />
     }
 
 ]
@@ -51,7 +53,7 @@ class Profile extends Component<ProfileProps> {
     renderTabs = () => {
         return (
             <Tabs defaultActiveKey={tabs[0].title} id="profile-tabbing" style={{width: '100%', marginTop: 10}}>
-                {tabs.map((tab) => 
+                {tabs.map((tab) =>
                     <Tab key={tab.title} eventKey={tab.title} title={tab.title}>
                         {tab.component}
                     </Tab>

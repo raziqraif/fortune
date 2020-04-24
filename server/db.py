@@ -105,6 +105,28 @@ class GameProfileCoin(BaseModel):
     coin_amount = peewee.DecimalField(max_digits=20, decimal_places=8)
 
 
+class Achievement(BaseModel):
+    name = peewee.TextField(unique=True)
+    description = peewee.TextField(unique=True)
+
+
+class AchievementProfile(BaseModel):
+    achievement = peewee.ForeignKeyField(Achievement)
+    profile = peewee.ForeignKeyField(Profile, backref='achievement_profiles')
+    achieved_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
+
+
+class Goal(BaseModel):
+    name = peewee.TextField(unique=True)
+    description = peewee.TextField(unique=True)
+
+
+class GoalProfile(BaseModel):
+    goal = peewee.ForeignKeyField(Goal)
+    profile = peewee.ForeignKeyField(Profile, backref='goal_profiles')
+    achieved_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
+
+
 class Notification(BaseModel):
     profile = peewee.ForeignKeyField(Profile)
     content = peewee.TextField()
@@ -120,6 +142,12 @@ class PriceAlert(BaseModel):
     hit = peewee.BooleanField(default=False)
 
 
+class Friends(BaseModel):
+    requester = peewee.ForeignKeyField(Profile)
+    requestee = peewee.ForeignKeyField(Profile)
+    status = peewee.IntegerField() # 0 = pending, 1 = accept, 2 = reject
+
+
 class Report(BaseModel):
     create_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
     game = peewee.ForeignKeyField(Game)
@@ -131,4 +159,5 @@ class Report(BaseModel):
 
 
 MODELS = [Profile, AuthToken, Game, GameProfile, Coin,
-          GameCoin, Ticker, Trade, GameProfileCoin, Notification, PriceAlert, Report]
+          GameCoin, Ticker, Trade, GameProfileCoin, Achievement, AchievementProfile, Notification, PriceAlert, Goal,
+          GoalProfile, Friends, Report]

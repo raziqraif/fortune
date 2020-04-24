@@ -173,10 +173,10 @@ def get_net_worth_by_game_profile_id(game_profile_id):
         raise BadRequest('User not in game')
 
     netWorth = gameProfile.cash
-    
+
     gameProfileCoins = get_game_profile_coins_by_game_profile_id(game_profile_id)
     for gameProfileCoin in gameProfileCoins:
-        ticker = Ticker.select().where(gameProfileCoin.coin == Ticker.coin).order_by(Ticker.captured_at.desc())
+        ticker = Ticker.select().where(Ticker.coin == gameProfileCoin.coin).order_by(Ticker.captured_at.desc())
         if ticker.count() == 0:
             raise BadRequest('One coin did not have prices')
         ticker = ticker.get()

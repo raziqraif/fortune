@@ -8,6 +8,7 @@ from .serializers import (
     ChangeUsername,
     ChangePassword
 )
+from achievement.services import add_achievement_by_achievement_id_and_profile_id
 from .services import register, login, change_username, change_password
 from .decorators import get_auth_token, require_authentication
 from werkzeug.exceptions import BadRequest, Unauthorized
@@ -70,6 +71,9 @@ def change_username_route(profile):
     validated_data: dict = ChangeUsername.deserialize(request.json)
     new_username = validated_data['username'].strip()
     change_username(profile.id, new_username)
+
+    # satisfy the "change username" achivement
+    add_achievement_by_achievement_id_and_profile_id(3, profile.id)
     return jsonify(ChangeUsername.serialize({
         'username': new_username
     }))

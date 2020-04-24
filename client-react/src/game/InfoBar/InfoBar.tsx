@@ -14,12 +14,15 @@ const styles: { [name: string]: CSS.Properties } = {
 };
 
 interface InfoBarProps {
+	gameId: string,
 	cash: string,
 	netWorth: string
 	coins: CoinsAndPrices,
 	gameProfile: any,
-	liquify: () => void,
+	loading: boolean,
+	liquefy: (gameId: string) => void,
 	changePriceOrder: (priceOrder: priceOrder) => void,
+	changeTimeSpan: (timespan: number) => void,
 }
 
 interface InfoBarState {
@@ -44,6 +47,7 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 	}
 
 	private changeTimeSpan = (timeSpan: timeSpan) => {
+		this.props.changeTimeSpan(timeSpan);
 		this.setState({ timeSpan });
 	}
 
@@ -51,8 +55,8 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 		this.props.changePriceOrder(priceOrder);
 	}
 
-	private liquify = () => {
-		this.props.liquify();
+	private liquefy = () => {
+		this.props.liquefy(this.props.gameId);
 	}
 
 	// TODO - get price of coins to calculate current net worth
@@ -66,7 +70,7 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 	}
 
 	render() {
-		let { cash, netWorth } = this.props;
+		let { cash, netWorth, loading } = this.props;
 		// format cash values to have 2 numbers past decimal
 		cash = Number(cash).toFixed(2);
 		netWorth = Number(netWorth).toFixed(2);
@@ -84,7 +88,7 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 					</Col>
 
 					<Col>
-						<Button variant="primary" onClick={this.liquify}>Liquify</Button>
+						<Button variant="primary" onClick={this.liquefy} disabled={loading}>Liquefy</Button>
 					</Col>
 
 					<Col>
@@ -114,9 +118,10 @@ class InfoBar extends React.Component<InfoBarProps, InfoBarState> {
 const mapStateToProps = (state: RootState) => ({
 	netWorth: state.game.game.gameProfile.netWorth,
 	cash: state.game.game.gameProfile.cash,
+	loading: state.game.loading,
 })
 const mapDispatchToProps = {
-	liquify: Actions.game.liquify,
+	liquefy: Actions.game.liquefy,
 };
 
 // no mapStateToProps, so pass null as first arg
