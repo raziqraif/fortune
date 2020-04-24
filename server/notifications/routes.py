@@ -11,6 +11,8 @@ from .services import get_notifications, get_price_alerts, create_price_alert, g
 from .serializers import NotificationSerializer, CreatePriceAlertRequestSerializer, PriceAlertSerializer, \
     PagedNotificationResponse, SendNotificationRequest
 
+PAGE_SIZE = 6
+
 notification_bp = Blueprint('notification', __name__, url_prefix='/notification')
 
 
@@ -23,10 +25,12 @@ def get_notifications_route(profile):
             page = int(page_str)
         else:
             page = 0
+        if page < 0:
+            raise Exception
     except:
         raise BadRequest('Invalid page number')
-    notifications = get_notifications(profile, 16, page)
-    notifications_count = math.ceil(get_notifications_count(profile) / 16)
+    notifications = get_notifications(profile, PAGE_SIZE, page)
+    notifications_count = math.ceil(get_notifications_count(profile) / PAGE_SIZE)
     return jsonify(PagedNotificationResponse.serialize({
         'page': page,
         'pages': notifications_count,
@@ -83,6 +87,8 @@ def create_price_alert_route(profile):
     validated_data: dict = CreatePriceAlertRequestSerializer.deserialize(request.json)
     try:
         strike_price = Decimal(validated_data['strike_price'])
+        if strike_price < 0:
+            raise BadRequest('The strike price cannot be negative')
     except:
         raise BadRequest('Invalid decimal number for strike price')
     coin_id = validated_data['coin_id']
