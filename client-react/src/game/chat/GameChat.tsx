@@ -1,7 +1,8 @@
 import React from 'react';
 import './GameChat.css'
 import {ChatFeed, Message, Author, ChatBubbleProps, ChatFeedApi, ChatBubble} from 'react-bell-chat';
-
+import {Button} from 'react-bootstrap'
+import {Icon } from 'semantic-ui-react'
 import {ChatFeedStyles} from "react-bell-chat/src/lib/ChatFeed";
 import {ChatScrollAreaStyles} from "react-bell-chat/src/lib/ChatScrollArea";
 import {ChatBubbleStyles} from "react-bell-chat/src/lib/ChatBubble/styles";
@@ -69,6 +70,8 @@ interface GameChatProps {
     createMessage: (gameID: number, message: string) => void,
     getMessagesData: (gameID: number, oldestID: number, newestID: number, getNewMessages: boolean) => void,
     getPlayersData: (gameID: number) => void,
+    createReport: (messageID: number) => void,
+    socket: any,
 }
 
 interface GameChatState {
@@ -78,6 +81,12 @@ interface GameChatState {
 class GameChat extends React.Component<GameChatProps, GameChatState> {
     private chat: ChatFeedApi;
     gameID = this.props.gameID;
+    socket_handler = (data: any) => {
+        console.log("CHAT RECEIVED");
+        this.props.getPlayersData(this.gameID);
+        // @ts-ignore
+        this.props.getMessagesData(this.gameID, this.oldestMessageID(), this.newestMessageID(), true);
+    };
 
     constructor(props: GameChatProps) {
         super(props);
@@ -100,12 +109,27 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
         this.state = {
             messageText: '',
         };
+
+        if (this.props.socket) {
+            console.log("SOCKET ON");
+            this.props.socket.on(
+                'chat', this.socket_handler
+            )
+        }
     }
 
     componentDidMount(): void {
         this.props.getPlayersData(this.gameID);
         // @ts-ignore
         this.props.getMessagesData(this.gameID, this.oldestMessageID(), this.newestMessageID(), true);
+    }
+
+    componentWillUnmount(): void {
+        if (this.props.socket) {
+            this.props.socket.off(
+                'chat', this.socket_handler
+            )
+        }
     }
 
     newestMessageID() {
@@ -154,7 +178,7 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
         //     <p>{props.author && (props.message.authorId !== props.yourAuthorId ? '' : '     ') +  props.message.message}</p>
         // </div>
         // if (props.author) {
-        return (
+        const bubble =
             <ChatBubble
                 message={props.message}
                 author={props.author}
@@ -172,10 +196,24 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
                         width: "100%",
                     } as React.CSSProperties,
                 }}
-            />
-        //    TODO: Return a button too for report feature
+            />;
+        if (props.author && props.author.id == this.props.currentPlayerID ) {
+            return bubble;
+        }
+        return (
+            // <div className={'BubbleButton-wrapper'}>
+            <div>
+                {bubble}
+                {props.author && props.author.id !== this.props.currentPlayerID &&
+                <Button variant={"outline-danger"} size={"sm"} onClick={() => {
+                    this.props.createReport(props.message.id? props.message.id: -1)
+                }}>
+                    <Icon name={'flag'} />     {/*No Idea Why is the flag not showing*/}
+                    Report
+                </Button>
+                }
+            </div>
         )
-        // }
     };
 
     render() {
@@ -232,12 +270,14 @@ const mapStateToProps = (state: RootState) => ({
     currentPlayerID: state.game.currentPlayerID,
     messages: state.game.messages,
     hasOlderMessages: state.game.hasOlderMessages,
+    socket: state.auth.socket,
 });
 
 const mapDispatchToProps = {
     getPlayersData: Actions.game.getPlayersData,
     getMessagesData: Actions.game.getMessagesData,
     createMessage: Actions.game.createMessage,
+    createReport: Actions.admin.createReport,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameChat);

@@ -75,6 +75,8 @@ class ReportPagination extends Component<ReportPaginationProps, ReportPagination
             this.props.updateReport(activeReport.id, selectedAction);
         }
         this.closeReportModal();
+
+        // FIXME: This doesn't really work as intended. I think it's cause updateReport returns later.
         this.props.getReports(this.state.page);
     }
 

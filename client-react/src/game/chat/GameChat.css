@@ -10,3 +10,12 @@
 .ChatBubble-wrapper {
     word-wrap: break-word;
 }
+
+.BubbleButton-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    max-width: 500px;
+    height: 100%;
+}
