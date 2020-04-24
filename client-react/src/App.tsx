@@ -28,7 +28,7 @@ function App() {
     <div className="App">
         <ToastContainer/>
         <MenuBar />
-        <div className="container">
+        <div className="App-container">
           <Switch>
             <Route path="/global" render={({match, history}) => {
               return <Game gameId={match.params.gameId} history={history}/>

@@ -1,21 +1,28 @@
-import { Type } from '../actions/Types'
-import { GameType } from '../actions/Game'
+import {Type} from '../actions/Types'
+import {GameType} from '../actions/Game'
 
 export type State = typeof initialState;
 const initialState = {
-  createGameErrorMessage: '',
-  createGameLoading: false,
-  game: {
-    data: {
-      name: '',
-      startingCash: '',
-      shareableLink: '',
-      shareableCode: '',
-      endsAt: new Date()
-    },
-    gameProfile: {
-      cash: '',
-      netWorth: '',
+    createGameErrorMessage: '',
+    createGameLoading: false,
+    game: {
+        data: {
+            name: '',
+            startingCash: '',
+            shareableLink: '',
+            shareableCode: '',
+            endsAt: new Date()
+        },
+        gameProfile: {
+            cash: '',
+            netWorth: '',
+        },
+        coins: [] as Array<{
+            id: string;
+            name: string;
+            symbol: string;
+            number: string;
+        }>,
     },
     coins: [] as Array<{
       id: string;
@@ -23,15 +30,17 @@ const initialState = {
       symbol: string;
       number: string;
     }>,
-  },
-  setGameErrorMessage: '',
-  transactionErrorMessage: '',
-  loading: false,
-}
+
+    setGameErrorMessage: '',
+    transactionErrorMessage: '',
+    loading: false,
+    messages: [] as Array<Message>,
+    hasOlderMessages: false
+};
 
 export type Action = {
-  type: Type;
-  payload?: any;
+    type: Type;
+    payload?: any;
 }
 
 export type GameState = {
@@ -41,14 +50,30 @@ export type GameState = {
   setGameErrorMessage: string;
   transactionErrorMessage: string;
   loading: boolean;
+  players: Player[];
+  currentPlayerID: number;
+  messages: Message[];
+  hasOlderMessages: boolean;
+}
+
+export type Player = {
+  id: number
+  name: string
+}
+
+export type Message = {
+  id: number;
+  authorID: number;
+  message: string;
+  createdOn: Date;
 }
 
 export default (state = initialState, action: Action) => {
   switch (action.type) {
     case Type.SET_COIN_AMOUNT:
-      var id = action.payload.id;
-      var amount = action.payload.newAmount;
-      var newCoins = state.game.coins.map((coin) => {
+      let id = action.payload.id;
+      let amount = action.payload.newAmount;
+      let newCoins = state.game.coins.map((coin) => {
         if (coin.id === id) {
           coin.number = amount;
         }
@@ -154,7 +179,53 @@ export default (state = initialState, action: Action) => {
       }
     case Type.LOGOUT:
       return initialState
+    case Type.GET_PLAYERS_DATA:
+      return {
+        ...state,
+        players: action.payload.players,
+        currentPlayerID: action.payload.currentPlayerId,
+      };
+    case Type.GET_PLAYERS_DATA_FAILED:
+      return state;
+    case Type.GET_MESSAGES_DATA:
+      let newMessages = action.payload.messages;
+      if (newMessages.length == 0) {
+        return {
+          ...state,
+          hasOlderMessages: action.payload.hasOlderMessages,
+          }
+      }
+
+      for (let i = 0; i < newMessages.length; i++) {
+        newMessages[i].createdOn = new Date(newMessages[i].createdOn)
+      }
+      let prevOldestID = (state.messages.length > 0)? state.messages.length : -1;
+      let curOldestID = newMessages[0].id;
+
+      const MAX_MESSAGES_AT_AT_TIME = 500;
+      if (curOldestID < prevOldestID) {
+        newMessages = newMessages.concat(state.messages);
+        newMessages = newMessages.slice(0, MAX_MESSAGES_AT_AT_TIME);
+      }
+      else {
+        newMessages = state.messages.concat(newMessages);
+        let startIndex = Math.max(newMessages.length - MAX_MESSAGES_AT_AT_TIME, 0);
+        let endIndex = newMessages.length;
+         newMessages = newMessages.slice(startIndex, endIndex);
+      }
+
+      return {
+        ...state,
+        messages: newMessages,
+        hasOlderMessages: action.payload.hasOlderMessages,
+      };
+    case Type.GET_MESSAGES_DATA_FAILED:
+      return state;
+    case Type.CREATE_MESSAGE:
+      return state;
+    case Type.CREATE_MESSAGE_FAILED:
+      return state;
     default:
       return state
-  }
+    }
 }

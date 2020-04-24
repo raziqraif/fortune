@@ -1,3 +1,4 @@
+import pytz
 import datetime
 
 import peewee
@@ -127,6 +128,14 @@ class GoalProfile(BaseModel):
     achieved_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
 
 
+class Message(BaseModel):
+    game = peewee.ForeignKeyField(Game)
+    profile = peewee.ForeignKeyField(Profile)
+    # datetime(year=2022, month=1, day=1, hour=1, minute=1, second=0).replace(tzinfo=pytz.utc)
+    created_on = peewee.DateTimeField(default=lambda: datetime.datetime.now().replace(tzinfo=pytz.utc))
+    content = peewee.TextField()
+
+
 class Notification(BaseModel):
     profile = peewee.ForeignKeyField(Profile)
     content = peewee.TextField()
@@ -160,4 +169,4 @@ class Report(BaseModel):
 
 MODELS = [Profile, AuthToken, Game, GameProfile, Coin,
           GameCoin, Ticker, Trade, GameProfileCoin, Achievement, AchievementProfile, Notification, PriceAlert, Goal,
-          GoalProfile, Friends, Report]
+          GoalProfile, Friends, Report, Message]
