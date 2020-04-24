@@ -282,6 +282,7 @@ def create_message(profile, game_id):
 @game_bp.route('/<game_id>/chat', methods=['GET'])
 @require_authentication
 def get_messages_data(profile, game_id):
+    print("REACHED HERE")
     try:
         int(game_id)
     except:
@@ -291,7 +292,6 @@ def get_messages_data(profile, game_id):
     newest_id = request.args.get('newestID')
     get_new_messages = request.args.get('getNewMessages')
     get_new_messages = get_new_messages == 'true'   # convert from string
-    print("type, value: ", type(get_new_messages), get_new_messages)
     try:
         oldest_id = int(oldest_id)
         newest_id = int(newest_id)
@@ -303,10 +303,11 @@ def get_messages_data(profile, game_id):
     # If doesn't exist, BadRequest was already thrown
 
     messages, has_older_messages = get_chat_messages_data(game_id, oldest_id, newest_id, get_new_messages)
-
+    count = 0
     resp = MessagesDataResponse()
     resp.messages = []
     for msg in messages:
+        count += 1
         message = Message()
         message.id = msg.id
         message.authorId = msg.profile.id

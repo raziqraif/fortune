@@ -52,9 +52,10 @@ const chatScrollAreaStyles: ChatScrollAreaStyles = {
         flexDirection: 'column',
         height: '50rem',
         maxHeight: '60rem',
-        width: '22rem',
+        width: '23rem',
         border: "thin solid grey",
-        borderRadius: 5,
+        scrollPaddingRight: 10,
+        // borderRadius: 5,
         // flexDirection: 'column-reverse'
     }
 };
@@ -180,7 +181,7 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
     render() {
         return (
             <div className="chatfeed-wrapper">
-                <h2 style={{margin: "0px 0px 15px", }}>Chat</h2>
+                <h2 style={{margin: "0px 0px 15px", }}>Chat Room</h2>
                 <ChatFeed
                     styles={chatFeedStyles}
                     chatScrollArea={chatScrollAreaStyles}

@@ -263,19 +263,21 @@ def get_chat_messages_data(game_id: int, oldest_id: int, newest_id: int, newer_m
     older_message = Message.get_or_none((Message.game == game_id) & (Message.id < oldest_id))
     has_older_message = older_message is not None
 
-    MESSAGE_LIMIT = 25
+    MESSAGE_LIMIT = 20
     if newer_messages:
         messages = Message.select().where((Message.game == game_id) & (Message.id > newest_id)).order_by(-Message.id)\
             .limit(MESSAGE_LIMIT).execute()
     else:
         messages = Message.select().where((Message.game == game_id) & (Message.id < oldest_id)).order_by(-Message.id)\
             .limit(MESSAGE_LIMIT).execute()
-        # TODO: Update has_older_messages here too if frontend can support that
 
     # Note: oldest_id and newest_id could be -1 when frontend has no messages at all
-    if oldest_id == -1:
+
+    if len(messages):  # Needed for when newer_messages is False
         oldest_id_in_query = messages[0].id
-        has_older_message = Message.select().where(Message.id < oldest_id_in_query).count() > 0
+        has_older_message = Message.get_or_none((Message.game == game_id)
+                                                & (Message.id < oldest_id_in_query))
+        has_older_message = has_older_message is not None
 
     reversed_messages = [messages[len(messages) - i - 1] for i in range(len(messages))]
     return reversed_messages, has_older_message

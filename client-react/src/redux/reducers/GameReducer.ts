@@ -199,21 +199,31 @@ export default (state = initialState, action: Action) => {
       for (let i = 0; i < newMessages.length; i++) {
         newMessages[i].createdOn = new Date(newMessages[i].createdOn)
       }
-      let prevOldestID = (state.messages.length > 0)? state.messages.length : -1;
+      let prevOldestID = (state.messages.length > 0)? state.messages[0].id : -1;
       let curOldestID = newMessages[0].id;
 
-      const MAX_MESSAGES_AT_AT_TIME = 500;
+      console.log("prev:", prevOldestID)
+      console.log("cur:", curOldestID)
+
+      // const MAX_MESSAGES_AT_AT_TIME = 500;
       if (curOldestID < prevOldestID) {
         newMessages = newMessages.concat(state.messages);
-        newMessages = newMessages.slice(0, MAX_MESSAGES_AT_AT_TIME);
+        // newMessages = newMessages.slice(0, MAX_MESSAGES_AT_AT_TIME
       }
       else {
         newMessages = state.messages.concat(newMessages);
-        let startIndex = Math.max(newMessages.length - MAX_MESSAGES_AT_AT_TIME, 0);
-        let endIndex = newMessages.length;
-         newMessages = newMessages.slice(startIndex, endIndex);
+        // let startIndex = Math.max(newMessages.length - MAX_MESSAGES_AT_AT_TIME, 0);
+        // let endIndex = newMessages.length;
+        //  newMessages = newMessages.slice(startIndex, endIndex);
       }
 
+      // https://www.usefuldev.com/post/Typescript:%20filtering%20an%20array%20for%20distinct%20values
+      // make sure messages are distinct
+      newMessages = newMessages.filter(
+          (msg: Message, index: number, arr: Message[]) => arr.findIndex((t) => t.id === msg.id)
+              === index
+      );
+      console.log("newMessages:", newMessages);
       return {
         ...state,
         messages: newMessages,
