@@ -5,7 +5,8 @@ import Friends from './Friends';
 import { RootState } from '../redux/reducers';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
-import Achievements from './Achievements'
+import Achievements from './achievements/Achievements'
+import Goals from './goals/Goals'
 
 interface ProfileProps {
     profileId: string;
@@ -23,10 +24,13 @@ const tabs = [
         component: <Achievements />
     },
     {
+        title: 'Goals',
+        component: <Goals />
+    },
+    {
         title: 'Friends',
         component: <Friends />
     }
-
 ]
 
 class Profile extends Component<ProfileProps> {
