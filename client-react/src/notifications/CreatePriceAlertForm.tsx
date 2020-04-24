@@ -50,8 +50,13 @@ class CreatePriceAlertForm extends React.Component<CreatePriceAlertProps, Create
     }
 
     submit() {
-        if (isNaN(parseFloat(this.state.strikePrice))) {
+        const num = parseFloat(this.state.strikePrice)
+        if (isNaN(num)) {
             alert('Please enter a valid number for strike price');
+            return;
+        }
+        if (num < 0) {
+            alert('The strike price cannot be negative');
             return;
         }
         this.props.submit(
