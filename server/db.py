@@ -1,3 +1,4 @@
+import pytz
 import datetime
 
 import peewee
@@ -17,13 +18,14 @@ DATABASE = {
 }
 
 db = PooledPostgresqlDatabase(
-	DATABASE['NAME'],
-	max_connections=None,
-	stale_timeout=300,
-	timeout=None,
-	user=DATABASE['USER'],
-	password=DATABASE['PASSWORD'],
-	host = DATABASE['HOST'])
+    DATABASE['NAME'],
+    max_connections=None,
+    stale_timeout=300,
+    timeout=None,
+    user=DATABASE['USER'],
+    password=DATABASE['PASSWORD'],
+    host=DATABASE['HOST'])
+
 
 class BaseModel(peewee.Model):
     class Meta:
@@ -35,6 +37,8 @@ class Profile(BaseModel):
     username = peewee.TextField(unique=True)
     hashed_password = peewee.TextField()
     socket_id = peewee.TextField(unique=True, null=True)
+    is_admin = peewee.BooleanField(default=False)
+    is_banned = peewee.BooleanField(default=False)
 
 
 class AuthToken(BaseModel):
@@ -53,10 +57,10 @@ class Game(BaseModel):
     @property
     def coins(self):
         return list(Coin
-            .select()
-            .join(GameCoin)
-            .join(Game)
-            .where(GameCoin.game_id == self.id))
+                    .select()
+                    .join(GameCoin)
+                    .join(Game)
+                    .where(GameCoin.game_id == self.id))
 
 
 class GameProfile(BaseModel):
@@ -84,7 +88,7 @@ class Ticker(BaseModel):
     price = peewee.DecimalField(max_digits=20, decimal_places=8)
     captured_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
     # don't want to take up precious db space?, just making a float
-    price_change_day_pct =  peewee.DecimalField(max_digits=20, decimal_places=8, null=True)
+    price_change_day_pct = peewee.DecimalField(max_digits=20, decimal_places=8, null=True)
 
 
 class Trade(BaseModel):
@@ -101,23 +105,36 @@ class GameProfileCoin(BaseModel):
     coin = peewee.ForeignKeyField(Coin)
     coin_amount = peewee.DecimalField(max_digits=20, decimal_places=8)
 
+
 class Achievement(BaseModel):
     name = peewee.TextField(unique=True)
     description = peewee.TextField(unique=True)
+
 
 class AchievementProfile(BaseModel):
     achievement = peewee.ForeignKeyField(Achievement)
     profile = peewee.ForeignKeyField(Profile, backref='achievement_profiles')
     achieved_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
 
+
 class Goal(BaseModel):
     name = peewee.TextField(unique=True)
     description = peewee.TextField(unique=True)
+
 
 class GoalProfile(BaseModel):
     goal = peewee.ForeignKeyField(Goal)
     profile = peewee.ForeignKeyField(Profile, backref='goal_profiles')
     achieved_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
+
+
+class Message(BaseModel):
+    game = peewee.ForeignKeyField(Game)
+    profile = peewee.ForeignKeyField(Profile)
+    # datetime(year=2022, month=1, day=1, hour=1, minute=1, second=0).replace(tzinfo=pytz.utc)
+    created_on = peewee.DateTimeField(default=lambda: datetime.datetime.now().replace(tzinfo=pytz.utc))
+    content = peewee.TextField()
+
 
 class Notification(BaseModel):
     profile = peewee.ForeignKeyField(Profile)
@@ -133,10 +150,23 @@ class PriceAlert(BaseModel):
     strike_price = peewee.DecimalField(max_digits=20, decimal_places=8)
     hit = peewee.BooleanField(default=False)
 
+
 class Friends(BaseModel):
     requester = peewee.ForeignKeyField(Profile)
     requestee = peewee.ForeignKeyField(Profile)
     status = peewee.IntegerField() # 0 = pending, 1 = accept, 2 = reject
 
+
+class Report(BaseModel):
+    create_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
+    game = peewee.ForeignKeyField(Game)
+    issuer = peewee.ForeignKeyField(Profile)
+    offender = peewee.ForeignKeyField(Profile)
+    message = peewee.ForeignKeyField(Message)
+    resolved = peewee.BooleanField(default=False)
+    takenAction = peewee.TextField(null=True)
+
+
 MODELS = [Profile, AuthToken, Game, GameProfile, Coin,
-    GameCoin, Ticker, Trade, GameProfileCoin, Achievement, AchievementProfile, Notification, PriceAlert, Goal, GoalProfile, Friends]
+          GameCoin, Ticker, Trade, GameProfileCoin, Achievement, AchievementProfile, Notification, PriceAlert, Goal,
+          GoalProfile, Friends, Report, Message]

@@ -37,6 +37,7 @@ def register_route():
     auth_token = register(username, password)
     return jsonify(AuthTokenSerializer.serialize(auth_token))
 
+
 @auth_bp.route('/verify', methods=['POST'])
 def verify_route():
     auth = request.headers.get('Authorization')
@@ -55,6 +56,15 @@ def verify_route():
         'username': profile.username,
     }))
 
+
+@auth_bp.route('/admin')
+@require_authentication
+def check_if_admin(profile):
+    return jsonify({
+        'isAdmin': profile.is_admin
+    })
+
+
 @auth_bp.route('/username', methods=['PUT'])
 @require_authentication
 def change_username_route(profile):
@@ -67,6 +77,7 @@ def change_username_route(profile):
     return jsonify(ChangeUsername.serialize({
         'username': new_username
     }))
+
 
 @auth_bp.route('/password', methods=['PUT'])
 @require_authentication

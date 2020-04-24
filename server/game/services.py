@@ -3,7 +3,8 @@ from decimal import Decimal
 
 import pytz
 from werkzeug.exceptions import BadRequest
-from db import db, Game, GameCoin, Coin, GameProfile, GameProfileCoin, Ticker
+from notifications.services import broadcast_in_a_game
+from db import db, Game, GameCoin, Coin, GameProfile, GameProfileCoin, Ticker, Message, Profile
 
 
 @db.atomic()
@@ -166,6 +167,7 @@ def get_start_time_from_time_span(time_span_int):
         return datetime.utcnow() - timedelta(weeks=52)
     raise BadRequest("Time span invalid: {}".format(str(time_span_int)))
 
+
 @db.atomic()
 def get_net_worth_by_game_profile_id(game_profile_id):
     gameProfile = GameProfile.get_or_none(GameProfile.id == game_profile_id)
@@ -184,6 +186,7 @@ def get_net_worth_by_game_profile_id(game_profile_id):
             raise BadRequest('One coin did not exist')
         netWorth += ticker.price * gameProfileCoin.coin_amount
     return netWorth
+
 
 @db.atomic()
 def buy_coin(coin_id, coin_amount, game_profile):
@@ -235,3 +238,58 @@ def sell_coin(coin_id, coin_amount, game_profile):
     GameProfileCoin.update(coin_amount=new_coin_amount).where(GameProfileCoin.id == gameProfileCoin.id).execute()
     GameProfile.update(cash=new_cash).where(GameProfile.id == game_profile.id).execute()
     return new_coin_amount
+
+
+@db.atomic()
+def create_chat_message(profile_id, game_id, message):
+    try:
+        int(profile_id)
+        int(game_id)
+        assert len(message) > 0
+    except:
+        raise BadRequest("Invalid parameters to create chat message")
+
+    message = Message.create(
+        game=game_id,
+        profile=profile_id,
+        content=message,
+        # use default value for created_on
+    )
+
+    game = Game.get_or_none(Game.id == game_id)
+    if game is not None:
+        print("Broadcaseting to game")
+        broadcast_in_a_game(game, 'chat', '', False)
+
+    return message
+
+
+@db.atomic()
+def get_chat_messages_data(game_id: int, oldest_id: int, newest_id: int, newer_messages: bool):
+    older_message = Message.get_or_none((Message.game == game_id) & (Message.id < oldest_id))
+    has_older_message = older_message is not None
+
+    MESSAGE_LIMIT = 20
+    if newer_messages:
+        messages = Message.select().where((Message.game == game_id) & (Message.id > newest_id)).order_by(-Message.id)\
+            .limit(MESSAGE_LIMIT).execute()
+    else:
+        messages = Message.select().where((Message.game == game_id) & (Message.id < oldest_id)).order_by(-Message.id)\
+            .limit(MESSAGE_LIMIT).execute()
+
+    # Note: oldest_id and newest_id could be -1 when frontend has no messages at all
+
+    if len(messages):  # Needed for when newer_messages is False
+        oldest_id_in_query = messages[0].id
+        has_older_message = Message.get_or_none((Message.game == game_id)
+                                                & (Message.id < oldest_id_in_query))
+        has_older_message = has_older_message is not None
+
+    reversed_messages = [messages[len(messages) - i - 1] for i in range(len(messages))]
+    return reversed_messages, has_older_message
+
+
+@db.atomic()
+def get_players_in_a_game(game_id: int):
+    game_profiles = GameProfile.select(GameProfile, Profile).join(Profile).where(GameProfile.game == game_id).execute()
+    return [gp.profile for gp in game_profiles]

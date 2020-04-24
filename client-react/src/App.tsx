@@ -17,6 +17,7 @@ import Notifications from './notifications';
 
 import Landing from './landing';
 import Profile from './profile/Profile';
+import Admin from './admin/Admin';
 
 interface MatchParams {
   gameId?: string;
@@ -27,7 +28,7 @@ function App() {
     <div className="App">
         <ToastContainer/>
         <MenuBar />
-        <div className="container">
+        <div className="App-container">
           <Switch>
             <Route path="/global" render={({match, history}) => {
               return <Game gameId={match.params.gameId} history={history}/>
@@ -41,6 +42,7 @@ function App() {
             <Route path="/play" component={Play} />
             <Route path="/create" component={CreateGame} />
             <Route path="/notifications" component={Notifications} />
+            <Route path="/admin" component={Admin} />
             <Route path="/profile/:profileId" render={({match}) => {
               return <Profile profileId={match.params.profileId}/>
             }}/>

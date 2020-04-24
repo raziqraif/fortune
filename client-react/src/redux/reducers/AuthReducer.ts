@@ -14,7 +14,8 @@ const initialState = {
   passwordErrorMessage: '',
   passwordSuccessMessage: '',
   socket: null,
-}
+  isAdmin: false,
+};
 
 export type Action = {
   type: Type;
@@ -34,6 +35,7 @@ export type Auth = {
   passwordErrorMessage: string;
   passwordSuccessMessage: string;
   socket: SocketIOClient.Socket;
+  isAdmin: boolean;
 }
 
 export default (state = initialState, action: Action) => {
@@ -43,14 +45,14 @@ export default (state = initialState, action: Action) => {
         ...state,
         loginErrorMessage: '',
         loginLoading: true,
-      }
+      };
     case Type.LOGIN_FAILED:
       return {
         ...state,
         authToken: '',
         loginErrorMessage: action.payload,
         loginLoading: false,
-      }
+      };
     case Type.LOGIN_SUCCEEDED:
       return {
         ...state,
@@ -58,27 +60,27 @@ export default (state = initialState, action: Action) => {
         loginErrorMessage: '',
         loginLoading: false,
         loggedIn: true,
-      }
+      };
     case Type.SET_SOCKET:
       return {
         ...state,
         socket: action.payload,
-      }
+      };
     case Type.LOGOUT:
-      return initialState
+      return initialState;
     case Type.REGISTER:
       return {
         ...state,
         registrationErrorMessage: '',
         registrationLoading: true,
-      }
+      };
     case Type.REGISTER_FAILED:
       return {
         ...state,
         authToken: '',
         registrationErrorMessage: action.payload,
         registrationLoading: false,
-      }
+      };
     case Type.REGISTER_SUCCEEDED:
       return {
         ...state,
@@ -86,36 +88,43 @@ export default (state = initialState, action: Action) => {
         registrationErrorMessage: '',
         registrationLoading: false,
         loggedIn: true,
-      }
+      };
     case Type.VERIFY_AUTH_TOKEN_SUCCEEDED:
       return {
         ...state,
         username: action.payload.username,
         profileId: action.payload.id,
-      }
+      };
     case Type.CHANGE_USERNAME_SUCCEEDED:
       return {
         ...state,
         username: action.payload.username,
         usernameErrorMessage: ''
-      }
+      };
     case Type.SET_CHANGE_USERNAME_FAILED:
       return {
         ...state,
         usernameErrorMessage: action.payload
-      }
+      };
     case Type.CHANGE_PASSWORD_SUCCEEDED:
       return {
         ...state,
         passwordSuccessMessage: 'Password change successful',
         passwordErrorMessage: '',
-      }
+      };
     case Type.SET_CHANGE_PASSWORD_FAILED:
       return {
         ...state,
         passwordSuccessMessage: '',
         passwordErrorMessage: action.payload,
-      }
+      };
+    case Type.GET_IS_ADMIN:
+      return {
+        ...state,
+        isAdmin: action.payload,
+      };
+    case Type.GET_IS_ADMIN_FAILED:
+      return state;
     default:
       return state
   }

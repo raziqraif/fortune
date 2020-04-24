@@ -38,10 +38,16 @@ class CamelCaseSerializer(BaseSerializer):
 
 ####
 
+
+class SendNotificationRequest(BaseSerializer):
+    message = fields.Str()
+
+
 class NotificationSerializer(CamelCaseSerializer):
     id = fields.Int()
     content = fields.Str()
     created_at = fields.DateTime()
+
 
 class PagedNotificationResponse(CamelCaseSerializer):
     page = fields.Int()
