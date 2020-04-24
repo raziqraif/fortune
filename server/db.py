@@ -162,7 +162,7 @@ class Report(BaseModel):
     game = peewee.ForeignKeyField(Game)
     issuer = peewee.ForeignKeyField(Profile)
     offender = peewee.ForeignKeyField(Profile)
-    flagged_message: peewee.TextField()
+    message = peewee.ForeignKeyField(Message)
     resolved = peewee.BooleanField(default=False)
     takenAction = peewee.TextField(null=True)
 

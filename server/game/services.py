@@ -3,6 +3,7 @@ from decimal import Decimal
 
 import pytz
 from werkzeug.exceptions import BadRequest
+from notifications.services import broadcast_in_a_game
 from db import db, Game, GameCoin, Coin, GameProfile, GameProfileCoin, Ticker, Message, Profile
 
 
@@ -254,6 +255,11 @@ def create_chat_message(profile_id, game_id, message):
         content=message,
         # use default value for created_on
     )
+
+    game = Game.get_or_none(Game.id == game_id)
+    if game is not None:
+        print("Broadcaseting to game")
+        broadcast_in_a_game(game, 'chat', '', False)
 
     return message
 

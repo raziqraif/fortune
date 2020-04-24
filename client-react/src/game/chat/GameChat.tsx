@@ -110,12 +110,12 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
             messageText: '',
         };
 
-        if (this.props.socket) {
-            console.log("SOCKET ON");
-            this.props.socket.on(
-                'chat', this.socket_handler
-            )
-        }
+        // if (this.props.socket) {
+        //     console.log("SOCKET ON");
+        //     this.props.socket.on(
+        //         'chat', this.socket_handler
+        //     )
+        // }
     }
 
     componentDidMount(): void {
@@ -125,11 +125,11 @@ class GameChat extends React.Component<GameChatProps, GameChatState> {
     }
 
     componentWillUnmount(): void {
-        if (this.props.socket) {
-            this.props.socket.off(
-                'chat', this.socket_handler
-            )
-        }
+        // if (this.props.socket) {
+        //     this.props.socket.off(
+        //         'chat', this.socket_handler
+        //     )
+        // }
     }
 
     newestMessageID() {

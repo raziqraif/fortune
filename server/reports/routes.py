@@ -33,13 +33,25 @@ def reports_route(profile):
     for rpt in reports:
         issuer = Profile()
         issuer.id = rpt.issuer.id
-        issuer.username = rpt.issuer.name
+        issuer.username = rpt.issuer.username
         offender = Profile()
         offender.id = rpt.offender.id
-        offender.username = rpt.offender.name
+        offender.username = rpt.offender.username
         game = Game()
         game.id = rpt.game.id
-        game.title = rpt.game.id
+        game.title = rpt.game.name
+
+        report = Report()
+        report.id = rpt.id
+        report.issuer = issuer
+        report.offender = offender
+        report.game = game
+        report.createdAt = rpt.create_at
+        report.flaggedMessage = rpt.message.content
+        report.resolved = rpt.resolved
+        report.takenAction = rpt.takenAction
+
+        resp.reports.append(report)
 
     return jsonify(ReportsResponse.serialize(resp))
 
@@ -49,13 +61,13 @@ def reports_route(profile):
 def create_report_route(profile):
 
     validated_data: dict = CreateReport.deserialize(request.json)
-    game_id = validated_data["gameID"]
-    offender_id = validated_data["offenderID"]
-    flagged_message = validated_data["flaggedMessage"]
-    issuer_id = profile.id
+    try:
+        message_id = validated_data["messageID"]
+        message_id = int(message_id)
+    except:
+        raise BadRequest("Invalid parameter")
 
-    create_report(game_id, issuer_id, offender_id, flagged_message)
-
+    create_report(profile, message_id)
     return jsonify({})
 
 
@@ -67,7 +79,9 @@ def update_report_route(profile, report_id):
         # that
     validated_data: dict = UpdateReport.deserialize(request.json)
     user_action = validated_data['userAction']
-    message = validated_data['message']
+    message = ''
+    if 'message' in validated_data.keys():
+        message = validated_data['message']
 
     update_report(report_id, user_action, message)
 

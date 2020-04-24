@@ -19,14 +19,12 @@ class BaseSerializer(Schema):
 
 
 class CreateReport(BaseSerializer):
-    gameID = fields.Int(required=True)
-    offenderID = fields.Int(required=True)
-    flaggedMessage = fields.Str(required=True)
+    messageID = fields.Int(required=True)
 
 
 class UpdateReport(BaseSerializer):
     userAction = fields.Str(required=True)
-    message = fields.Str(required=True)
+    message = fields.Str()
 
 
 class Profile(BaseSerializer):
