@@ -4,6 +4,8 @@ import { RootState } from '../redux/reducers';
 import Actions from '../redux/actions';
 import { connect } from 'react-redux';
 
+import {toast} from 'react-toastify';
+
 interface RegisterProps {
   register: (
     username: string,
@@ -37,6 +39,9 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       alert("Passwords must be equal.")
     } else {
       this.props.register(this.state.username, this.state.password)
+      toast('Welcome to Fortune!')
+      toast('Click the Play button in the menubar on top to create a new game.')
+      toast('To adjust account options, see achiements, and add friends, click on your username on the top and select Profile')
     }
 
   }

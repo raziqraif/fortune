@@ -6,6 +6,8 @@ import string
 import random
 from werkzeug.exceptions import BadRequest
 import pytz
+import datetime
+import time
 
 from auth.decorators import require_authentication
 from db import Game, GameProfile, Coin, GameCoin, db
@@ -19,7 +21,12 @@ from .serializers import (
     TradeResponse,
     CoinAndPrices,
     Cash,
-)
+    CreateMessageRequest,
+    CreateMessageResponse,
+    PlayersDataResponse,
+    Player,
+    MessagesDataResponse,
+    Message)
 from .services import (
     create_game,
     update_game,
@@ -32,9 +39,13 @@ from .services import (
     get_net_worth_by_game_profile_id,
     get_pricing_by_coins,
     buy_coin,
-    sell_coin
+    sell_coin,
+    create_chat_message,
+    get_players_in_a_game,
+    get_chat_messages_data,
 )
 from achievement.services import add_double_net_worth_achievement_if_necessary, add_goal_by_goal_id_and_profile_id
+
 
 game_bp = Blueprint('game', __name__, url_prefix='/game')
 
@@ -93,6 +104,7 @@ def get(profile, game_id):
 @game_bp.route('/coins', methods=['GET'])
 def get_coins():
     return jsonify(CoinsResponse.serialize(Coin.select(), many=True))
+
 
 @game_bp.route('/<game_id>/coins', methods=['GET'])
 @require_authentication
@@ -212,3 +224,99 @@ def edit(profile, game_id):
 def randomString(length):
     options = string.ascii_uppercase.join(string.digits)
     return ''.join(random.choice(options) for i in range(length))
+
+
+@game_bp.route('<game_id>/chat/players', methods=['GET'])
+@require_authentication
+def players_data_for_chat(profile, game_id):
+    try:
+        int(game_id)
+    except:
+        raise BadRequest('Invalid game id')
+
+    get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
+    # If doesn't exist, BadRequest was already thrown
+
+    players = get_players_in_a_game(game_id)
+    resp = PlayersDataResponse()
+    resp.players = []
+    for ply in players:
+        player = Player()
+        player.id = ply.id
+        player.name = ply.username
+        resp.players.append(player)
+
+    resp.currentPlayerId = profile.id
+
+    return jsonify(PlayersDataResponse.serialize(resp))
+
+
+@game_bp.route('/<game_id>/chat', methods=['POST'])
+@require_authentication
+def create_message(profile, game_id):
+    try:
+        int(game_id)
+    except:
+        raise BadRequest('Invalid game id')
+
+    validated_data: dict = CreateMessageRequest.deserialize(request.json)
+    message = validated_data['message']
+
+    get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
+    # If doesn't exist, BadRequest was already thrown
+
+    message = create_chat_message(profile.id, game_id, message)
+
+    resp = CreateMessageResponse()
+    resp.id = message.id
+    resp.authorId = message.profile.id
+    # resp.createdOn = message.created_on
+    resp.createdOn = int(time.mktime(message.created_on.timetuple())) * 1000
+    resp.message = message.content
+
+    return jsonify(
+        CreateMessageResponse.serialize(resp)
+    )
+
+
+@game_bp.route('/<game_id>/chat', methods=['GET'])
+@require_authentication
+def get_messages_data(profile, game_id):
+    print("REACHED HERE")
+    try:
+        int(game_id)
+    except:
+        raise BadRequest('Invalid game id')
+
+    oldest_id = request.args.get('oldestID')
+    newest_id = request.args.get('newestID')
+    get_new_messages = request.args.get('getNewMessages')
+    get_new_messages = get_new_messages == 'true'   # convert from string
+    try:
+        oldest_id = int(oldest_id)
+        newest_id = int(newest_id)
+        get_new_messages = get_new_messages
+    except:
+        raise BadRequest('Parameters not in correct form')
+
+    get_game_profile_by_profile_id_and_game_id(profile.id, game_id)
+    # If doesn't exist, BadRequest was already thrown
+
+    messages, has_older_messages = get_chat_messages_data(game_id, oldest_id, newest_id, get_new_messages)
+    count = 0
+    resp = MessagesDataResponse()
+    resp.messages = []
+    for msg in messages:
+        count += 1
+        message = Message()
+        message.id = msg.id
+        message.authorId = msg.profile.id
+        # https://stackoverflow.com/questions/5022447/converting-date-from-python-to-javascript
+        message.createdOn = int(time.mktime(msg.created_on.timetuple())) * 1000
+        message.message = msg.content
+        resp.messages.append(message)
+    resp.hasOlderMessages = has_older_messages
+
+    return jsonify(
+        MessagesDataResponse.serialize(resp)
+    )

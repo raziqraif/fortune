@@ -5,6 +5,8 @@ from werkzeug.exceptions import BadRequest, Unauthorized
 
 from db import db, Profile, AuthToken, Game, GameProfile
 
+from notifications.services import send_notification
+
 def create_auth_token(profile: Profile):
     return AuthToken.create(
         profile=profile,
@@ -33,6 +35,9 @@ def register(username: str, password: str):
         profile=profile,
         cash=global_game.starting_cash
     )
+    send_notification(profile, 'Welcome to Fortune!')
+    send_notification(profile, 'Click the Play button in the menubar on top to create a new game.')
+    send_notification(profile, 'To adjust account options, see achiements, and add friends, click on your username on the top and select Profile')
     return create_auth_token(profile)
 
 @db.atomic()
@@ -40,6 +45,8 @@ def login(username: str, password: str):
     profile = Profile.get_or_none(Profile.username == username)
     if profile is None:
         raise BadRequest('A user with this username does not exist')
+    if profile.is_banned:
+        raise BadRequest("This user has been banned.")
     if not bcrypt.checkpw(password.encode(), profile.hashed_password.encode()):
         raise BadRequest('Incorrect password')
     return create_auth_token(profile)

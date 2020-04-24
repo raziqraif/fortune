@@ -19,10 +19,13 @@ from scripts.routes import tickers_bp
 from play.routes import play_bp
 from achievement.routes import achievement_bp, goal_bp
 from join.routes import join_bp
+from users.routes import users_bp
+from reports.routes import reports_bp
 from friends.routes import friends_bp
 from db import * # FIXME get rid of * when you have db migrations
 from notifications.services import register_socketio
 from scripts.service import begin
+
 
 def create_app():
     app = Flask(__name__)
@@ -48,6 +51,8 @@ def create_app():
     app.register_blueprint(tickers_bp)
     app.register_blueprint(play_bp)
     app.register_blueprint(join_bp)
+    app.register_blueprint(users_bp)
+    app.register_blueprint(reports_bp)
     app.register_blueprint(friends_bp)
     app.register_blueprint(achievement_bp)
     app.register_blueprint(goal_bp)
