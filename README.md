@@ -1,18 +1,28 @@
 ![logo](docs/fortune_logo.PNG)
 
 Purdue University CS30700: Software Engineering I
+
 Spring 2020
 
 Instructor: Dr. Jeff Turkstra (jeff@purdue.edu)
+
 Project Coordinator: Szu-Kai Yang (yang878@purdue.edu)
 
+
 Team 11:
+
 Ryan Huff (huff44@purdue.edu)
+
 Sam Kravitz (skravitz@purdue.edu)
+
 Akash Lankala (alankala@purdue.edu)
+
 Raziq Raif Ramli (mramli@purdue.edu)
+
 Tyler Stanish (tstanish@purdue.edu)
+
 Blake Steel (bsteel@purdue.edu)
+
 
 Frontend
 ---------
