@@ -1,15 +1,16 @@
-![logo](docs/fortune_logo.PNG)
+Fortune: A Cryptocurrency Trading Game
+======================================
 
-Purdue University CS30700: Software Engineering I
+### Purdue University CS30700: Software Engineering I
 
-Spring 2020
+#### Spring 2020
 
 Instructor: Dr. Jeff Turkstra (jeff@purdue.edu)
 
 Project Coordinator: Szu-Kai Yang (yang878@purdue.edu)
 
 
-Team 11:
+### Team 11:
 
 Ryan Huff (huff44@purdue.edu)
 
