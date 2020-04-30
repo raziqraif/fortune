@@ -1,4 +1,5 @@
-![logo](docs/fortune_logo.png)
+![logo](docs/fortune_logo.PNG)
+
 Purdue University CS30700: Software Engineering I
 Spring 2020
 
