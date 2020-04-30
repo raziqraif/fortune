@@ -1,0 +1,77 @@
+﻿=== Weekly Team Report (Team 11: Fortune) ===
+Week 4 (Scrum Master: Ryan Huff)
+
+
+2/29/20 0.5 hr:  N/A          Initial work on Retrospective Document - 
+  outline and reviewing rubric
+3/2/20  1 hr  :  N/A      Worked on sprint retro
+3/02/20 1.5 hr:  N/A      Working on and finishing Retrospective
+3/03/20 1.0 hr:  N/A      Creating User story categories in backlog and 
+  selecting and organizing relevant stories from the 
+  backlog to be included in Sprint 2
+3/03/20 3.0 hr:  N/A      Team meeting and finishing Sprint 2 Planning 
+  Document
+3/4/20  2 hr  :  N/A      Researched apis for real-time data
+3/5/20  1 hr  :  39bb7464 Worked on loading token from localStorage across 
+                              page loads
+3/5/20  1 hr  :  0b3f7aca Added require_authentication to some routes and 
+                          updated tests on backend game creation code
+3/05/20 1.0 hr:  be2884b9 Initial work on landing page
+3/05/20 1.0 hr:  0074095a Creating the CoinInfo module and hardcoded (ie 
+  non-dynamic) coin table for the landing page
+3/05/20 1.0 hr:  N/A      Team Meeting and code review of open PRs
+3/6/20  1 hr     N/A            Group meeting to review and make changes to sprint 
+                          2 planning document
+3/6/20  30 min:  N/A            Code review
+3/6/20  1 hr  :  f056ca2e Format data to be sent to frontend
+3/06/20 1.0 hr:  f8651190 Initial work on dynamic row rendering on landing 
+  Page
+3/6/20   4 hrs :  96c4fb5 Create game page
+3/6/20   1 hr  :  c443856 Get game from database by ID in URL on mount
+3/6/20   3 hrs :  22e233b Make cointable skeleton
+3/6/20   2 hrs :  a516ba3 Fill cointable with dummy coin data (for now)
+3/07/20  2 hr :  978918b1 Initial setup for the play page. Added a few 
+  basic components.
+3/7/20   3 hr :  b36c10de Create route framework (untested first draft)
+3/7/20 2.5 hr :  b45e5fc8 Merge in frontend changes and make operational
+3/7/20   3 hr :  581538f5 Learnt how to dynamically render react components 
+  and populate game cards into the play page. 
+3/7/20   2 hr :  N/A      Begin work on tests (incomplete)
+3/8/20   5 hr :  61697b54 Researched and implemented pagination in the play 
+  page (took a while because of several failed 
+  attempts).
+3/8/20   1 hr :  4d59a729 Reorganize the components in the play page.
+
+
+
+
+
+
+________________
+
+
+Week 5 (Plan) (Scrum master: Ryan Huff)
+[Meetings]
+03/10 Stand up meeting
+03/12 Stand up meeting
+
+
+
+
+[Individual Goals]
+Ryan Huff: Finish landing page table, begin work on landing page graphs
+
+
+Sam Kravitz: Display game data on game screen, get coin data from backend and show it in the coin table
+
+
+Akash Lankala: Research and create leaderboard functionality in the application.
+
+
+Raziq Raif Ramli: Get the filter and sort features done on the play page. Start working on the popup page.
+
+
+Tyler Stanish: Implement real-time data fetching on backend with stubbed implementations for development.
+
+
+Blake Steel: Finish tests and get through another endpoint (hopefully faster this time)

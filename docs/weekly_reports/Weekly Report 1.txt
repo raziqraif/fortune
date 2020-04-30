@@ -1,0 +1,95 @@
+﻿=== Weekly Team Report (Team 11: Fortune) ===
+Week 1 (Scrum master: Akash Lankala)
+
+
+2/11/20 1 hr          8340f8b9 Got Flask setup started
+2/11/20 1 hr          c0fc60f1 Added basic blueprint example to backend
+2/11/20 1 hr          c6c02d5f Wrote smoke test for backend and set up testing
+   classes
+2/11/20 30 min    e8a2c89d Got basic Docker setup for local development
+2/11/20 20 min        f8e50697 Researched and implemented CORS handling on backend
+2/12/20 1 hr          f68cfb60 Troubleshot and fixed errors with Docker volumes
+2/12/20 20 min        3a97b0ce Wrote example test for MenuBar
+2/12/20 1 hr          7f8fba90 Added testing Docker compose file for local testing
+2/12/20 1 hr          5e0cbf52 Read documentation and implemented basic
+   serialization example on backend
+2/13/20 2 hr          e08c26c2 Researched and began implementing Redux flow on 
+   frontend
+2/14/20 1 hr          33e7f22e Continued Redux setup, wrote working example​ on
+   frontend with Redux
+2/15/20 3.5 hr        ccc243af Researched Flask and implemented generic error 
+                                   handlers (took a while because encountered a 
+                                   problem when handling 500 error)
+2/15/20 30 min        ccc243af Read about Flask.Blueprint and created a new 
+                                   Blueprint for error handlers.
+
+
+Blake:
+2/10/20 1 hr        5137a91c Read about and use Create-react-app
+2/10/20 20 min        ee93e471 Update readme
+2/12/20 1.5 hr        469994d8 Read about react bootstrap and create menubar
+2/12/20 1.5 hr        ec2d1c72 React routing, typescript, add game page
+2/12/20 4 min        80acc69b Update test to match text
+2/12/20 20 min        24b28cb7 Analyze and read about tests (change test title)
+2/12/20 5 min        5201acc7 Add new test for game page
+2/12/20 15 min        f56bec41 Update menu bar
+2/12/20 15 min        833cf1c9 Add login page and test
+2/12/20 10 min        fd135da6 Add play page and test
+2/12/20 5 min        de2b181c Add register page and test
+2/13/20 1 hr             N/A Team meeting
+2/13/20 1.5 hr        1d7b0ba3 Read on flask, docker and code review this commit
+2/14/20 1 hr             N/A Read on react vs redux state management security
+                                   implications
+
+
+Sam:
+2/11/20 1 hr               N/A Worked on sprint planning document
+2/12/20 2 hr               N/A Started researching Flask
+2/13/20 30 min             N/A Set up local dev environment
+2/13/20 1 hr             N/A Team meeting
+2/16/20 1 hr          669897ea Added create game API endpoint
+2/16/20 1 hr          2f24271d Added update game API endpoint
+2/16/20 30 min         N/A Test other dev’s branches
+2/16/20 1.5 hr         N/A Researched how to use database with Flask
+
+
+
+
+ 
+2/13/20 1 hr:          N/A Team Meeting and initial setup of AWS EC2 Server
+2/13/20 1 hr:        N/A EC2 server ssh-key setup and production environment
+programs (python, docker, node, etc.)
+2/14/20 1hr:        N/A Read up on Flask and React in order to properly approve 
+    of pull requests created by other team members (30 
+    minutes each)
+2/14/20 0.5hr:         N/A Testing functionality and code review of flask
+boilerplate pull request (PR#3) for approval
+2/14/20 0.5hr:         N/A Testing functionality and code review of routing pull 
+    request (PR #4) for approval
+2/14/20 1hr:         N/A Read up on how github routes its “github.io” domains 
+    Created a temporary DNS resolution on duckdns.org for
+    our EC2 server for easier connection via ssh.
+2/15/20 1hr:         N/A Started initial setup of RDS database on AWS and read 
+up on PostgreSQL.
+2/16/20 2hr:         N/A Researched into and attached EC2 Server and RDS database 
+    to the same Virtual Private Cloud for ease of connection between server and database. Updated VPC Security 
+    settings and verified that the database can be connected to via psql command.
+
+
+
+
+
+
+Week 2 (Plan) (Scrum master: Akash Lankala)
+[Meetings]
+02/18 Stand up meeting
+02/20 Stand up meeting
+
+
+[Individual Goals]
+Ryan Huff: Set up database connectivity in Flask
+Sam Kravitz: Add create game API on backend and research authentication methods
+Akash Lankala: Finish up writing/setting up the testing framework, creating test box on create page, and writing tests.
+Raziq Raif Ramli: Finish learning typescript and React and start adding widgets to the create game page.
+Tyler Stanish: Set up backend and state management on frontend
+Blake Steel: Create the “create new game” page

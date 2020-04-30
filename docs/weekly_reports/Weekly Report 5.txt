@@ -1,0 +1,67 @@
+﻿=== Weekly Team Report (Team 11: Fortune) ===
+Week 5 (Scrum Master: Ryan Huff)
+
+
+3/9/20   1 hr    bb63a361  Calculate net worth by adding price of all owned coins
+3/9/20   1 hr    a7185089  Start on coin price graphs (unfinished)
+3/9/20   2 hr    2c8a68aa  fetch game by ID on frontend and add response to state
+3/9/20   1 hr    99c83ec3  Implement get game by ID response in the UI
+3/9/20   1 hr    b218c423  Make a countdown timer for how long is remaining in a game
+3/9/20  1 hr   19745022 Started real-time data gathering
+3/9/20  2 hr   1dcfb0d2 Created stubbed implementation for real-time data service
+3/9/20  2 hr   2ee7691d Unit testing real-time data service
+3/10/20 1 hr   e000c76e  Convert the cointable to a bootstrap table
+3/10/20 2 hr   53542554 Integration testing real-time data service
+3/10/20 1 hr   0a1ce1e1 Updated and fixed integration tests for
+real-time data service
+3/10/20 1 hr   N/A      Group meeting
+3/10/20 30 min db9a4b9d Added 1d %change for ticker and api handling
+3/10/20 2 hr:  c7bf27a3 Grabbing coins from database for landing page
+3/10/20 1 hr:  edcda1d7 Setting up graph component
+3/11/20 3 hr:  debc772b Finished tests for get game by id
+3/11/20 1 hr   91267c46 Started with websockets: reading documentation,
+hello world, CORS
+3/12/20 3 hr   1203892c Got websockets working, a lot of debugging 
+multithreaded code
+3/12/20 1 hr   74a57b78 Fixed real-time data service tests
+                                  broken by websockets
+3/12/20 1.5 hr 9926ec58 Add filter feature for play page.
+3/13/20 1.5 hr N/A         Separate pagination into a new component and make it 
+display a constant number of pages at a time 
+(ongoing).
+3/13/20 45 min N/A      Group meeting
+3/13/20 .5 hr: N/A      Code review of pull requests
+3/13/20 1 hr   N/A        Worked on adding files relevant to Leaderboard feature
+3/14/20 1 hr:  3d07576b General bugfixes to do with the game page’s
+                        Navigation
+3/14/20 3 hr:  b5518f60 Get coins by parameters initial commit (inoperable)
+3/14/20 2 hr:  44bdd2d6 Work on using ApexCharts for graphing
+3/14/20 1 hr:  N/A      Further code review of pull requests
+3/14/20 1 hr:  e951a469 Convert from ApexCharts to react-sparkline
+3/14/20 .25 hr:6c07c6d9 Create random data generator to prototype sparklines
+3/15/20 2 hr   8f19ef4        Created Leaderboard page to display properly
+Week 6 (Plan) (Scrum master: Ryan Huff)
+[Meetings]
+03/24 Stand up meeting via Zoom
+03/26 Stand up meeting via Zoom
+
+
+
+
+[Individual Goals]
+Ryan Huff: Use websockets for graphs, work on global game implementations.
+
+
+Sam Kravitz: Integrate real time coin data into the coin table and create buy/sell/liquidate functionality on frontend.
+
+
+Akash Lankala: Have leaderboard page fetch hiscore data from backend and filter to show in descending order.
+
+
+Raziq Raif Ramli: Finish UI, pull real data from the backend, and redirect players to the real game screen. Write tests.
+
+
+Tyler Stanish: Testing real-time data service and websockets, polish before sprint review
+
+
+Blake Steel: Do some more work on creating api endpoints and tests over spring break and subsequent week.

@@ -1,0 +1,94 @@
+﻿=== Weekly Team Report (Team 11: Fortune) ===
+Week 9 (Scrum Master: Ryan Huff)
+
+
+4/13/20  30 min  N/A             Group meeting
+4/13/20  3.5 hrs a2bf47d   More work on notifications on client
+   and server and debugging
+4/13/20  1 hr    6b43371   Code review for buy/sell endpoint
+4/13/20  30 min  f0db0ad   Verify_authtoken bugfix
+4/13/20  30 min  b85610a   Create AchievementProfile schema in database
+4/14/20  30 min  c7c1be6   Debugging tests and resolving merge conflicts
+4/14/20  15 min  875621c   Fix tslint issues
+4/14/20  30 min  01116ba   buy/sell code review items
+4/14/20  1.5 hr  0a65868   Added ability to view price alerts on frontend
+4/14/20  2 hr    9f8401e   Get landing page working with new combined coins 
+                           and prices data type
+4/14/20  1 hr    N/A           Code review.
+4/14/20  2 hr    0898452   Fix bug where price array would not be updated 
+                           with new price data from websocket
+4/15/20  30 min  N/A       Group meeting
+4/15/20  30 min  N/A       Code review and administration
+4/15/20  2 hr    9b02f6f   Creating and applying testing document for
+                           landing page
+4/16/20  45 min  3b70e6c   Profile doesn’t jump around while clicking tabs
+4/16/20  1 hr    81e108d   Re-initializing socket.io connections on client 
+                           upon login/register and closing them on logout
+4/16/20  30 min  f62fe4d   Added more tests for notifications and price alerts
+4/16/20  1 hr    50cdfd2   Work on automated testing for landing page data
+4/17/20  30 min  3bd6205   Automatic token deletion if token invalid
+4/17/20  2 hr    6559336   Bare bones change username logic and page
+4/17/20  30 min  d3d93bf   Options tab correctly calls backend
+4/17/20  1.5 hr  ab6a8ca   Final touches and testing for change_username
+4/17/20  1 hr    70a921c   Make graphs on landing page update in real time
+4/17/20  2 hr    06979d1   Get game page working with updated data type 
+                           for coins and prices
+4/17/20  30 min  N/A             Group meeting
+4/17/20  30 min  N/A             Code review
+4/18/20  2 hr    4865a10   Make change_password functional
+4/18/20  30 min  fc2bf3b   Add tests for change_password
+4/18/20  1 hr    f1c6e66   Added 24 hour graphing to game page using existing 
+                           landing page implementation
+4/19/20  30 min  2ce7fa6   Resolving merge conflicts and
+   debugging price alerts
+4/19/20  1.5 hr  0d36f80   Graphs now change display when choosing timespan. 
+                           Needs more visual work.
+4/19/20  2 hrs   5e55579   Create api endpoint to retrieve user’s  
+                           AchievementProfile
+4/19/20  2 hrs   18165f3   Add Achievements/Profile to redux store
+4/19/20  2 hrs   9ee0aa1   Create endpoint to return all achievement in game
+4/19/20  1 hr    f519677   Display achievement/profile information on 
+                           profile tab.
+4/19/20  4 hrs   f9b999e   Frontend chat component (was slowed down because 
+   of poor package documentation)
+4/19/20  3 hrs   464d0f3   Design and implement chat APIs (getPlayers, 
+   getMessages, and createMessage)
+4/19/20  2 hrs   dfdebee   Redux store for chat APIs        
+4/13/20  3 hrs   <N/A>     Researched and created Game Leader feature of leaderboard, created box, stored values, tested, etc.
+4/14/20  2 hrs   <N/A>     Continued work on Game Leader box component feature
+4/17/20  5 hrs   672172e   Completed Story 26 and committed main changes to Game Leader feature. Get high scores API implemented for story 26.
+4/18/20  1.5 hr  f9dbede   Cleaned up User Story 26 code for pull request. Reintegrated code with develop branch and retested.
+4/19/20  30 min  02cdcde   Minor mods to leaderboard branch in order to have Docker work with it and for PR.
+4/19/20  3.5 hrs   3f66425   Lots of debugging the branch for Docker startup. Reintegrated code from develop branch to make sure everything is working fine. Final mods for PR. A little bit of research and work in peewee query.
+4/19/20  20 mins  b62ef08  Small modifications for PR. Created PR request.
+
+
+
+
+Week 10 (Plan) (Scrum master: Ryan Huff)
+[Meetings]
+04/20 Online meeting, 10:30AM EDT
+04/22 Online meeting, 10:30AM EDT
+04/24 Online meeting, 10:30AM EDT
+04/24 Sprint 3 Review, 4:15-5PM EDT
+
+
+
+
+[Individual Goals]
+Ryan Huff: Friends feature and end step processes (seamless navigation, color code correction, stress tests)
+
+
+Sam Kravitz: Finalize achievements branch and implement weekly goals
+
+
+Akash Lankala: Get Story 26 pushed into develop. Complete Story 38 and 49 by Monday. Get started and complete notifications and filter by friends by Wednesday.
+
+
+Raziq Raif Ramli: Make sure chat APIs work and integrate them with a websocket. Then, do the admin page.
+
+
+Tyler Stanish: Finalize and polish project before sprint review and final presentations, administrative tasks like code review, resolving merge conflicts, merge historical and real-time data.
+
+
+Blake Steel: Finalize profile page functionality and help others with code.

@@ -1,0 +1,103 @@
+﻿=== Weekly Team Report (Team 11: Fortune) ===
+Week 6 (Scrum Master: Ryan Huff)
+
+
+3/16/20 30 min 448e17f0 Generalize navigations
+3/17/20 30 min N/A      Code review
+3/21/20 3 hr   b4b407d6 Make pagination in the play page smarter. Delegate 
+the logic to a mock API method.
+3/22/20 1 hr   aa4fe19c Several minor bug fixes.
+3/22/20 2 hr   28301a71        Sort feature for play page.
+3/22/20 45 min c5e73ba3        Incorporate tooltips into the play page.
+3/22/20 1.5 hr 7daa167        Modal window to join a new game.
+3/22/20 2 hr   e4993900 Websocket implementation for price and % change
+3/23/20 2 hrs  45066319 Nginx socket debugging and configuration for 
+                        Development
+3/23/20 45 min  999ee58 Allow user to switch between time spans for graphs
+3/23/20 45 min  03877ab Add liquefy axios call
+3/23/30 1.5 hr  40bf4cf Automatically navigate to leaderboard when countdown reaches 0
+3/23/20 1.5hr   6d4625e Add buy/sell button for each coin and write buy/sell axios call
+3/23/20 1 hr    b7da7d5 Add current coin prices to redux store and display on coin table
+3/23/20 1 hr    b2de088 Allow user to order coins based on min/max price
+3/25/20 30 min N/A          Group meeting
+3/25/30 2 hr   ddae3f0a Net worth calculation
+3/25/30 30 min 886c699a Merge conflicts
+3/25/20 30 min 7347b110 Using git-lfs to store historical data files
+3/25/20 1 hr   aa9f438c Added more historical data files and updated 
+                        historical data script
+3/25/20 30 min ad50a8be Fixed tests in integration/test_game.py to use setUp 
+                        method instead of HTTP
+3/25/20 30 min   NA     Group meeting via Zoom
+3/25/20 3 hr   2052c1b2 Modify landing page to use redux instead of websocket
+3/25/20 30 min N/A          Code review
+3/25/20 3hr    f0246df  Rework this component to have satisfy updated acceptance criteria
+3/26/20 1.5 hr 6162154e Wrote more unit and integration tests for
+                        real-time data service
+3/26/20  2 hr  1f23866c Graphing of live data on landing page
+3/27/20 30 min N/A          Group meeting
+3/27/20 30 min N/A          Code review
+3/27/20 15 min a125a572 Fix peewee error
+3/27/20 5 min  304755ad Same error but in different branch
+3/27/20 1 hr   4f0ab593 Code review item, change routing
+3/27/20 1 hr   N/A          Manual testing
+3/27/20 1 hr   aae067af Smoke testing websockets
+3/27/20 30 min 47aad4a6 Make text and graph green/red depending on percentage change
+3/27/20 2 hr   4cd9349b Begin backend work on historical data endpoint
+3/27/20 30 min N/A          Code review
+3/28/20 2 hr   74618319 Seed sample data
+3/28/20 4 hr   4c2a83f7 connect to frontend
+3/28/20 4 hr   f2e1ec06 various bugfixing, attempting to get things running
+3/29/20 30 min 0f8884fa Resolving merge conflicts, other git administration
+3/29/20 1 hr   c31287b3 Initial buy/sell endpoint
+3/29/20 30 min 5415b81b Initial buy/sell tests
+3/29/20 45 min c9d49407 Initial liquefy endpoint
+3/29/20 3 hr   db5980db Finish backend historical info API and begin frontend redux and graphing implementation
+3/29/20 1.5 hr  a7a88ac Code review and bugfix.
+3/29/20 5 hr    9a4baa6        API endpoint for active_games_at_page. (Took a while to figure out serializing/deserializing and querying database and to debug)
+3/29/20 30 min  N/A        Code revie
+w3/29/20 30 min  N/A        API endpoint for joining a new game (Ongoing).
+3/28/20 3 hr    d9cbff1        Figure out redux and integrate active games data from the backend data to frontend.
+3/16/20 3 hr    5818f6d Debugging leaderboard page. Tests now pass and leaderboard displays
+3/17/20 3 hr    N/A     Researched into Postgres SQL querying to join tables, retrieve high score metrics calculated by net value minus starting cash, and display in descending order with username.
+3/18/20 30 mins N/A     More of the same as 3/17. Looked into our database design, coordinated with members on slack, created some test queries.
+3/22/20 1 hr    N/A     Worked on coding table within leaderboard page to display information (not yet committed)
+3/23/20 1 hr    N/A     Same as 3/22. Testing/debugging.
+3/25/20 3 hr    8f19ef4 Committed initial changes related to adding leaderboard feature, researched having the leaderboard page connect to each game via game_ID.
+3/26/20 1 hr    5818f6d  Fixed a bug in the leaderboard routing path
+3/26/20 5 hr    8af466b  Modified Leaderboard.tsx and tested App.tsx to ensure it is working. ReactJS learning and applying information.
+3/27/20 2 hr    N/A     Learned about docker containers and images, set up docker for the database.
+3/27/20 8 hr    N/A     Created table with using mocky API to fetch data
+3/28/20 7 hr    7f14bf4  Fixed and adjusted table features, restructured code, tested to ensure the leaderboard is sorting and displaying correctly
+3/29/20 8 hr    N/A     Worked on pagination feature of leaderboard. Worked on creating notifications for large changes in leaderboard positions. (not yet committed)
+
+
+
+
+Week 7 (Plan) (Scrum master: TBD)
+[Meetings]
+3/30: Sprint 2 Review Preparation - 10:30AM
+4/01: Sprint 3 Planning - 10:30AM
+4/03: Stand up meeting via Zoom - 10:30AM
+
+
+
+
+
+
+[Individual Goals]
+Ryan Huff: Finishing touches on production server, prep for Sprint 2 Review, and begin Sprint 3.
+
+
+Sam Kravitz: Plan for sprint 3 and pick up sprint 2 items that got sent to the backlog
+
+
+Akash Lankala: Complete Sprint 2 leaderboard features by Monday. Work on Sprint retro and Sprint 3 planning docs.
+
+
+Raziq Raif Ramli: Finish join game API and write tests before Sprint review. Plan for sprint 3.
+
+
+Tyler Stanish: Coordinate and combine sprint 2 features and start planning for sprint 3
+
+
+Blake Steel: Merge in all sprint 2 features and plan sprint 3

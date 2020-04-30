@@ -1,0 +1,89 @@
+﻿=== Weekly Team Report (Team 11: Fortune) ===
+Week 10 (Scrum Master: Ryan Huff)
+
+
+4/19/20  30 min   cf2e6c2d    Fixed display username bug on hard refresh
+4/20/20  30 min   N/A         Group meeting
+4/20/20  30 min   aa9f0690    Revisit liquification
+4/20/20  1 hr     e61a7cb4    Quality of life navigation changes
+4/20/20  30 min   N/A               Code review
+4/20/20  2 hr     d452b143          Worked on global timed game and created tests
+4/20/20  30 mins  70f1727     Create manual tests for game page
+4/20/20  45 mins  b07c220     Initial friends page tab and database model
+4/20/20  1 hr     ddfb392     Preliminary friends request route
+4/20/20  15 mins  a19bde0     Code review items for game page
+4/20/20  1 hr     928f86a     Continued work for friend request route
+4/20/20  30 mins  0628ca0     Wrapping up initial friends tab - ready for 
+                              redux
+4/21/20  15 min   0318d908    Trimmed username on frontend and backend
+4/21/20  5 hr     7ff4f0f0    Build admin frontend for Raziq
+4/21/20  1 hr     4b77945     Fix bug where net worth was not displaying on
+                              game screen
+4/21/20  30 mins  0628ca0     Wrapping up initial friends tab - ready for
+                              redux work 
+4/21/20  2 hr     dad77b5     Got game screen to properly display coins owned
+4/21/20  1 hr     6368260     Initial redux work for friend requests
+4/22/20  30 min   N/A         Group meeting
+4/22/20  1 hr         N/A               Testing in production environment
+4/22/20  2 hr         da5e2111          Debugging socket.io problems in production
+4/22/20  2 hr     a63c7f2     Restructure friend request functions; implement 
+                              adding friends route
+4/22/20  1 hr     53bd211     Testing and error handling sending/accepting
+                              requests
+4/22/20  1 hr     465da4c     Creating frontend friend/pending list
+4/22/20  1 hr     198f461     Backend routes for friend/pending lists
+4/22/20  1 hr     dd5e7e0     Finishing touches/error handling for friends
+                              feature
+4/23/20  1 hr     N/A               Code review
+4/23/20  30 min   3a47c89b    Liquefy changes cash and coin amount
+4/23/20  30 min   0c396213    Disable liquefy while loading
+4/23/20  30 mins  aa7f8d2     Creating stress test document
+4/23/20  30 mins  2e174bc     Navigation notifications
+
+
+4/24/20  1 hr     N/A         Group meeting
+4/24/20  1 hr     f74bcf0     Sprint review production server preparation
+4/24/20  2 hr     c71a57d3    Final fixes and preparation for sprint review
+
+
+4/20/20  30 min   N/A         Group meeting
+4/22/20  2 hr     7610a7f     Added way of showing whether a player has achieved a goal on the frontend
+4/22/20  1 hr     N/A         Code review
+4/22/20  30 min   N/A         Group meeting
+4/22/20  2 hr     5a9e5b2     Add goals to db
+4/23/20  1 hr     767ad8e     Debug why achievement data wasn’t being sent to frontend correctly
+4/23/20  1 hr     6baecc1     Create 2 new achievements and goals and add methods to check for them
+4/24/20  30 min   93ec05d     Create goals tab on profile page
+4/24/20  1 hr     N/A         Group meeting
+4/24/20  45 min   N/A         Sprint review
+4/20/20  2 hr        N/A                Worked on get high scores API for Leaderboard
+4/21/20  1 hr        8a4bed7        Wrapper up get high scores API, committed
+4/21/20  3 hr        N/A                Researched peewee orm and writing the query to fetch user information and scores for the leaderboard.
+4/21/20  2 hr        N/A                Researched and created current leader window in the leaderboard page.
+4/21/20  1 hr        N/A                Resolved merge conflicts, created PR for story 26.
+4/22/20  1 hr        er42b2a        Continued work on the query to fetch username and score data for the leaderboard.
+4/22/20  2 hr        N/A                Began work on researching and implementing the notification system for the leaderboard page.
+4/23/20  2 hr        45f2ab        Finished implementing notification feature on the leaderboard page.
+4/23/20  2 hr        64f293        Lots of Docker debugging and resolving merge conflicts with new code
+4/24/20  2 hr        da19da9        Final presentation preparations, getting leaderboard page in demo-able format, manual testing, working on creating PR of the current branch.
+4/24/20  1 hr        7677b3d        Final leaderboard mods and merging all of leaderboard feature implementation into develop code, retesting, and creating a PR.
+
+
+
+
+
+
+
+
+
+
+Week 11 (Plan)
+[Meetings]
+4/29 10:30am - Run through(s) of final presentation
+4/29 7:20pm EDT: Final Presentation
+
+
+
+
+[Team Goals]
+Finish sprint retro and prepare for the final presentation.

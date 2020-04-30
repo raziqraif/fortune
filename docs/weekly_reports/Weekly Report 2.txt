@@ -1,0 +1,129 @@
+﻿=== Weekly Team Report (Team 11: Fortune) ===
+Week 2 (Scrum master: Akash Lankala)
+
+
+<date>        <time>        <commit ID>                <task/topic>
+2/17/20         1 hr          9ea9bb38         Worked on redux and testing
+2/17/20         1 hr          f01e97b8         Planned and started working with ORM
+2/17/20         1 hr          7c0f98b3         Created ORM classes
+2/18/20         2 hr          e7a53208         Thinking about auth, how to do transactions,
+decorator
+2/18/20         1 hr          81cfe584         Had meeting and debugged npm issues with 
+react-scripts
+2/19/20         30 min     N/A                 Debugged Flask and ORM issues
+2/19/20        30 min        86317072        Initial creation of create game page
+2/19/20         1 hr          0c077b98         Docker debugging with db connection issues, finished 
+up db connectivity
+2/20/20        2 hr                6dba9b36        Form creation
+2/20/20        1 hr                f28a3a79        Allow selecting coins
+2/20/20        5 min                4efb9bb0        fix small bug
+2/20/20         2 hr          70e33130         Thought about database, read ORM docs, created tests,
+debugged Docker command in
+                                       test suite
+2/20/20         1 hr          N/A            Group meeting, discussed TypeScript usage with Redux 
+and React
+2/20-21/20        2 hr                4bdfd283        Make typescript strict again
+2/22/20         30 min            a5ff0320         Resolved merge conflicts, code review
+2/22/20        1 hr                N/A                Tested UI conformity between different pages of 
+                                                the game
+2/22/20        2 hr                N/A                Tested framework and smoke tests on client
+2/22/20         45 min        e09738fe        Separate coin selector to make components smaller (I
+lost work and then had to redo it here)
+2/22/20        45 min        40f1ce21        Add redux for coins
+2/22/20        10 min        4ac4b60c        Update test for redux
+
+
+==========================================================================
+2/18/20         1 hr          N/A        Team meeting and initial research about React.
+2/20/20         30 mins    N/A           Review other developers’ branch.
+2/20/20         1.5 hr          N/A               Team meeting and research about using third-party 
+react components.
+2/21/20         1 hr          N/A        Learn html.
+2/22/20         30 mins    N/A           Research Docker
+2/22/20         3 hr          N/A           Review codes for create game page.(Took a while 
+because of research about React, redux, and axios).
+2/23/20         1.5 hr         11d160e7   Research react and implement the date picker 
+component.
+2/23/20         40 mins    62f3532        Replace the date picker in the create game page.
+2/23/20         20 mins    N/A           Read about tests for date-picker.
+
+
+=========================================================================
+
+
+2/18/20          2 hr               N/A   Try and debug npm and postgres issues
+2/20/20          1 hr               N/A   Group meeting
+2/21/20         1 hr                     N/A   Code reviewing and testing pull requests (2)
+2/23/20     3 hr       c5b769a        Research flask routing and Re-create an add game route on the server.
+2/23/20          2 hr      c5fcce71        Re-create edit existing game route on the server.
+
+
+=============================================================================================
+
+
+2/18/20 1 hr:          48f7cf3b Team Meeting and initial work on database 
+   connection
+2/18/20 2 hrs:          8755c890 Research on ORM and adding database initialization 
+   to model.
+2/18/20 1 hr:          96d02fae Changing database connection to use system
+   environment variables rather than hardcoded values
+2/19/20 1 hr:        20e8b4a5 Updating Docker-compose configuration file for
+   environment variables and dependencies
+2/19/20 1 hr:        71a5fbe2 Removed using flask g object for database
+         connections and final testing to make sure task 
+   works
+2/22/20 0.5 hrs:  (PR#8)   Code review and functionality test of PR #8
+2/22/20 2 hrs:          N/A      Begun initial research on deployment via EC2 
+   through Docker and Amazon Elastic Container
+   Service (ECS)
+2/22/20 1 hr:     N/A      Reading up on and updating AWS security group to
+   allow for incoming/outgoing requests and responses
+   from the server.
+2/23/20 0.5 hrs:  N/A      Looking into bug with updated Postgres Docker
+   image breaking initialization of Docker db - will
+   implement fixes later.
+2/23/20 0.5 hrs:  f7155a3e Start on production docker-compose file
+
+
+
+
+
+
+
+
+
+
+Week 2 (Plan) (Scrum master: Akash Lankala)
+[Meetings]
+02/24 Funding meeting with Victory
+02/25 Stand up meeting
+02/27 Stand up meeting
+
+
+
+
+
+
+
+
+
+
+
+
+[Individual Goals]
+Blake Steel: Write tests for create game page, make login page
+
+
+Ryan Huff: Create registration page, get production server ready for hosting our end-product of Sprint 1, in particular setting up docker compose and secure networking in/out of our server
+
+
+Sam Kravitz: Begin implementing a few routes in backend and figure out how to send data to the database and query from it. Ran into significant blocks this week because postgres released a breaking update this week.
+
+
+Akash Lankala: Complete setting up testing framework & smoke tests on client. Research accessing/inserting data on backend, as well as being able to fetch data from the background. With this knowledge, create migration scripts to be applied to the database.
+
+
+Raziq Ramli: Learn to write tests for react components and start writing tests. Improve the method to manage active coins in the create game page.
+
+
+Tyler Stanish: Finish work with authentication decorator and historical data.

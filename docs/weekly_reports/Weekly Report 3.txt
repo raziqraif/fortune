@@ -1,0 +1,85 @@
+﻿=== Weekly Team Report (Team 11: Fortune) ===
+Week 3 (Scrum master: Akash Lankala)
+
+
+<date>        <time>        <commit ID>                <task/topic>
+2/24/20 1 hr   923c81ba Started integration testing require_authentication 
+                        decorator
+2/24/20 1 hr   f6ca7f9d Creating and debugging tests/orm
+2/24/20 1 hr   5382af19 Unit testing for require_authentication decorator
+2/25/20 1 hr   N/A      Searched for historical data/prices/quotes
+2/25/20 1 hr   N/A      Group meeting
+2/25/20 1 hr:  0357796f Begin work on using gunicorn/nginx on production server - experimenting
+with using npm build  for frontend pages vs using a server to serve
+frontend instead.
+2/25/20 1 hr:  b5e14315 Team meeting/fixing issue with postgres image
+2/25/20 2 hr:  7e2a41eb Trial and error with getting nginx and gunicorn to communicate with 
+each other.
+2/26/20 1 hr:  e955fd52 Got production server operational, but only serves backend requests
+- need to figure out a way to connect frontend.
+2/26/20 3 hr   3587e011 Created historical data script, read ORM docs and made 
+                        ORM optimizations
+2/27/20 3 hr   95f7e3a6 Creating initial login page
+2/27/20 1 hr   4401f8b6 Register redirect
+2/27/20 2.5 hr N/A      Group meeting and crunched for first sprint review
+2/27/20 2 hr:  515636f8 Begin work on registration page - basic layout of components, etc.
+2/27/20 1 hr:  e2310cf0 Add redux state/prop skeleton to register page for when the registration
+endpoint is finished
+2/27/20 1 hr:  2bd2a37d Started work on redux endpoint stuff but decided to use other member’s
+implementation instead so I reverted mine
+2/27/20 1 hr:  N/A         Team meeting and code review of various pull requests before our sprint
+review.
+2/27/20 2 hr:  7938f1a9 Added functionality to the confirm password box on the registration
+Page
+2/27/20 4 hr   1ac9a8b2        Add frontend tests for the coin selector component.
+2/28/20 0.5 hr:12722b4d Various merge resolutions and testing functionality after resolutions
+- in preparation for sprint review
+2/28/20 0.5 hr: N/A         Final changes to production server to include last minute pulls before 
+sprint review - not committed because I’m planning to change these changes from hard coded variables to environment variables.
+2/28/19 0.5 hr N/A      Sprint review
+2/28/20 3 hr   665a0228 Adding tests for create game endpoint, migration 
+                        scripts for testing, and debugging nasty ORM bug
+2/28/20 2 hr   1cbc660a        Add frontend tests for the create game page.
+2/29/20 3 hr   23bf695e Error handling on frontend and backend and testing for 
+                        create game, debugging
+
+
+2/25/20 1 hr        N/A Team meeting - discussed final few things to be done for the sprint
+2/26/20 6 hr   fcf44c5d Connect the “adding games” endpoint to the database
+
+
+2/27/20 3 hr   84674092 Connect the “edit games” endpoint to the database
+2/27/20 1 hr           N/A Team meeting - made final adjustments and prepared for sprint review
+2/27/20 1 hr   c152770d Add a “Game coin” to the database for each coin selected when creating a game.
+2/27/20 1 hr       N/A  Code reviews and pull requests.
+
+
+
+
+Week 4 (Plan) (Scrum master: TBD)
+[Meetings]
+03/03 Sprint 2 planning meeting
+03/05 Stand up meeting
+
+
+
+
+
+
+[Individual Goals]
+Blake Steel: Start implementation of game screen off strong.
+
+
+Ryan Huff: Implement using environment variables in production server rather than change the code itself. Possibly work on automation of deployment to production rather than restarting docker-compose each time a new feature is pulled into develop branch. Begin work on portions of game page
+
+
+Sam Kravitz: Work on making protected routes on frontend only render if authorized user is signed in and add more frontend features, such as playing the game itself.
+
+
+Akash Lankala: Main focus on backend schema and migrating database with scripts. Write scripts to access/insert data on the backend, as well as being able to fetch data from the background. With this knowledge, create migration scripts to be applied to the database. Will gain a stronger understanding of how the backend works in this sprint. API will also be introduced this week and connecting the API with the frontend and database will be a focus for this sprint as well.
+
+
+Raziq Ramli: Work on and test pages on the frontend. Pick up how to use enzyme for testing.
+
+
+Tyler Stanish: Real-time data integration

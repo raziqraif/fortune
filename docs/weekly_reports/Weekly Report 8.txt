@@ -1,0 +1,97 @@
+﻿=== Weekly Team Report (Team 11: Fortune) ===
+Week 8 (Scrum Master: Ryan Huff)
+
+
+4/6/20  3 hrs   890a3640 Started web routes and serializers
+                                   for notifications, testing
+4/6/20  30 min  N/A           Code review
+4/6/20  1.5 hrs 4744eabb Testing notifications
+4/6/20  1.5 hrs 9b4c4834 Started working on price alerts and testing it
+4/8/20  2 hr    NA       Migrating production from AWS to Microsoft Azure due 
+ to credit issues
+4/8/20  30 min  f3febe61 Started notifications on frontend
+4/8/20  1 hr    68294525 More work on frontend notifications,
+ debugging price alerts
+4/8/20  1 hr    e4af218f Started price alerts on frontend
+4/8/20  1 hr    03f1c967 Began error handling and figuring out default
+                         values in create price alert form
+4/8/20  30 min  2599670a Refactoring on frontend for cleaner code
+4/9/20  1 hr    NA       Pulling PR 39 into my landing page branch to test 
+ functionality and to redo my implementation with the  
+ new CoinAndPrices type.
+4/9/20  15 min  bfdab2c6 price as float, not int
+4/9/20  6 hr    b544e578 Create Profile page, main blocker was making sure
+                         that when you visit the page your token grabs your
+                         Username and userid.
+4/9/20  15 min  81cf9f5f Code review item
+4/9/20  2 hr    277bcd00         Fix the bug where multiple global games being sent by 
+ the active games API and manual-test the feature.
+4/9/20  3 hr    N/A         Code review pull requests from Sprint 2.
+4/9/20  1 hr    N/A         Tried to debug the delay in loading of coin tables in 
+ The game page as it might impact the responsiveness 
+ user story. Managed to narrow down the reasons but 
+ was not able to fix it.
+4/10/20 30 min  N/A           Standup meeting
+4/10/20 30 min  81a24712 Debugging historical data script
+4/10/20 1 hr    NA       Running and debugging tests in code review branches
+4/10/20 2 hr    NA       Code Review of pull requests on Github
+4/12/20 1 hr    b9ada9a  Fixing bug in newly pulled develop branch
+4/12/20 1 hr    f55c22d  Pulling in new develop branch and fixing issue where 
+ my branch was causing API to crash when the page was 
+ loaded.
+4/12/20 50 min  6f95d5a         Read about database models for chat messages and 
+ implement the required table.
+4/12/20 3 hr    N/A         Research some frontend and backend implementations 
+ for chat feature and tried implementing several react  
+ chat components. (Currently stuck at this because of 
+ problems like the unavailability of typescript 
+ declarations for the tried packages).
+
+
+4/10/20  2 hrs   3b7106  Code review for feature/39
+4/10/20  30 min  N/A           Standup meeting
+4/12/20  45 min  ae7a120 Fixed a bug that caused games that end more than a month in the future show the incorrect end date.
+4/12/20  15 min  ce4be16 Increase the effectiveness of parsing game Id in url
+4/12/20  1 hr    8d1af5  Create Achievements schema in database
+4/12/20  1 hr    6ee851c Created Achievements blueprint and set up routes and serializers file
+4/12/20  1 hr    00c39f2 Add a few starter achievements to the database when the app gets initialized (this took longer than it sounds like it should have because I couldn’t figure out where to add the code for a long time)        
+4/08/20  2 hr   N/A      Continued leaderboard implementation modifications/revisions for future features to be more seamlessly integrated. Will be doing a pull request next.
+4/10/20  1 hr   N/A      Wrote tests for Story #38. Will be committed as soon as they pass.
+
+
+
+
+Week 9 (Plan) (Scrum master: Ryan Huff)
+[Meetings]
+04/13 Online meeting, 10:30AM EDT
+04/15 Online meeting, 10:30AM EDT
+04/17 Online meeting, 10:30AM EDT
+
+
+
+
+[Individual Goals]
+Ryan Huff: Finishing up Sparkline graphs, implementing the global timed game, and friend requests.
+
+
+Sam Kravitz: Make achievements page and allow player’s achievements to be tracked in database
+
+
+Akash Lankala: (Still a hanging task) Get current Leaderboard branch ready to be code reviewed and merged into develop. Complete any hanging stories from Sprint 2. Work on game leader box feature. Set up leaderboard push notifications system.
+
+
+Raziq Raif Ramli: Continue working on the chat component at the frontend. Will consider following online implementations that start from scratch if packages that are compatible with Typescript are not found.
+
+
+Tyler Stanish: More work on notifications, particularly on the client
+
+
+Blake Steel: Motivate team to get code review done,[a][b] implement profile page.
+
+
+
+
+
+
+[a]important
+[b]Noted this

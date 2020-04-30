@@ -1,0 +1,84 @@
+﻿=== Weekly Team Report (Team 11: Fortune) ===
+Week 7 (Scrum Master: Ryan Huff)
+
+
+3/30/20 30 min N/A      Group standup meeting
+3/30/20 2 hr   b10ff4f5 Separate getcoins frontend into simple and regular
+                        Coins
+3/30/20 1.5 hr 778e7986        API endpoint for join game.
+3/30/20 1.5 hr 3264f4cf Integrate join game API to frontend
+3/30/20 45 min c4211bab Fix pagination error and other small fixes.
+3/30/20 1 hr   ba870f38 Add seed data to database.
+3/30/20 1 hr   89f2cf6e Get coins by game id tests
+3/30/20 30 min ac0cf8a6 Start fixing buy/sell stuff
+3/30/20 30 min 8e7a9e86 Fixed auth token bug
+3/30/20 3 hr   0240e72 Got historical data graphing operational
+3/30/20 2 hr   892a65b Implementing erroneous data handling and sorting
+3/30/20 2 hr   fee0cf5  Fix final issues in my branch to get it ready to merge
+   39cd91f
+   fa21ab7
+3/31/20 2 hr   30e7aed Merging features for sprint review
+3/31/20 1 hr   f2dead3d Tests on buy/sell endpoint
+3/31/20 45 min 4acd3931 Additional get coins by game id tests
+3/31/20 30 min 398d9713 Liquefy endpoint tests
+3/31/20 1.5 hr 59917b74 Fix code conflicts for get coins
+3/31/20 4 hr   7ca35bda Got buy/sell working
+3/31/20 30 min N/A          Group standup meeting
+3/31/20 1 hr   N/A          Code review
+3/31/30 2 hr   N/A          Prepared branch for sprint 2 review
+3/31/20 1 hr   N/A      Sprint 2 review
+3/31/20 1.5 hr 30137c45 Fix some branches’ failing tests and add some 
+frontend tests.
+3/31/20  1.25 hr 5350e989        Code review and fixed the wrong coin amount returned by the 
+API.
+3/31/20  30 min  80b41cd6 Bugfix (global game not showing on the play page).
+3/31/20 30 min N/A        Code review
+4/1/20  30 min NA       Group meeting online
+4/1/20  1 hr   N/A          Sprint 2 retro
+4/2/20  30 min N/A          Code review
+4/2/20  2 hr   N/A          Sprint 3 planning document
+4/2/20  1 hr   599b78f0 Finish fixing code conflicts for get coins
+4/3/20  2 hr   fb23dc0c Started figuring out per-client socket.io messages
+4/3/20  1 hr   e44acbf1 Researched toast notification components and
+                                  added toasts
+4/3/20  1 hr   86a65fdb Started notifications with socketio on backend
+4/4/20  1 hr   153bbca5 Worked on notifications
+3/30/20 2 hr   N/A          Leaderboard implementation modifications/revisions for future features to be more seamlessly integrated. Visual changes.
+3/30/20 1 hr   N/A          Researched table features and implemented drop-down bars into the leaderboard.
+3/30/20 5 hr   8af466b  Leaderboard reconstructed. Displays with drop-down bar, the top leader is shown, proper sorting implemented, pagination with multiple options implemented, data is taken locally.
+3/31/20 2 hr   5dd54bb  Debugging and both manual and unit testing. Getting branch to demo-able format.
+4/01/20 1 hr   dda8228  Cleaned up code, retested features, worked on adding API call as one of the last features before code review.
+
+
+
+
+
+
+
+
+Week 8 (Plan) (Scrum master: Ryan Huff)
+[Meetings]
+04/06 Stand up meeting, 10:30AM EDT via Zoom
+04/08 Stand up meeting, 10:30AM EDT via Zoom
+04/10 Stand up meeting, 10:30AM EDT via Zoom
+
+
+
+
+[Individual Goals]
+Ryan Huff: Catch up development branch and remaining stories from sprint 2, begin work on friends feature
+
+
+Sam Kravitz: Finish up code reviews from sprint 2 and start working on achievements page
+
+
+Akash Lankala: Get the current Leaderboard branch ready to be code reviewed and merged into develop. Work on the game leader feature. Set up a leaderboard push notifications system.
+
+
+Raziq Raif Ramli: Figure out why multiple global games are showing up on the play page and fix that. Write missing tests from sprint 2. Start working on the group chat feature.
+
+
+Tyler Stanish: Work on notifications, debug/fix websocket performance
+
+
+Blake Steel: Get everything from sprint 2 pulled into dev.
